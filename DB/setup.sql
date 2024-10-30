@@ -83,3 +83,47 @@ create table `BillingInfo` (
 );
 	
 
+
+create table if not exists `Courier` (
+    `CourierID` int NOT NULL AUTO_INCREMENT,
+    `Name` varchar(255),
+    `Phone` int NOT NULL,
+    `Email` varchar(255) NOT NULL,
+    `TimeJoined` timestamp default CURRENT_TIMESTAMP NOT NULL,
+    `Capacity` int default 0,
+    PRIMARY KEY (`CourierID`)
+);
+
+create table if not exists `DeliveryRegion` (
+    `RegionID` int NOT NULL AUTO_INCREMENT,
+    `Name` varchar(255) NOT NULL,
+    `Population` int,
+    `SEIFA` int,
+    PRIMARY KEY (`RegionID`)
+);
+
+create table if not exists `CourierDeliversToDeliveryRegion` (
+    `CourierID` int NOT NULL,
+    `RegionID` int NOT NULL,
+    `DeliveryCost` int NOT NULL,
+    PRIMARY KEY (`CourierID`, `RegionID`),
+    FOREIGN KEY (`CourierID`) REFERENCES `Courier`(`CourierID`) ON DELETE CASCADE,    -- dont want to update IDs
+    FOREIGN KEY (`RegionID`) REFERENCES `DeliveryRegion`(`RegionID`) ON DELETE CASCADE
+);
+
+-- not working properly yet, "but i think this is the proper way" (particpation constraint)
+-- DELIMITER //
+
+-- CREATE TRIGGER ensure_courier_has_region
+-- AFTER INSERT ON Courier
+-- FOR EACH ROW
+-- BEGIN
+--     DECLARE region_count INT;
+--     SELECT COUNT(*) INTO region_count FROM CourierDeliversToDeliveryRegion WHERE CourierID = NEW.CourierID;
+--     IF region_count = 0 THEN
+--         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Each courier must have at least one region.';
+--     END IF;
+-- END //
+
+-- DELIMITER ;
+
