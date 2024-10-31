@@ -78,7 +78,7 @@ create table `BillingInfo` (
     	`addressID` int not null,  /* should refer to other table */
     	primary key (`billingID`),
     	foreign key (`customerID`) references Customer(`customerID`) on delete cascade,
-	foreign key (`addressID`) references Address(`addressID`) on delete restrict,
+		foreign key (`addressID`) references Address(`addressID`) on delete restrict,
     	check (`creditCardEXP` regexp '^(0[1-9]|1[0-2])/([0-9]{2})$') -- Enforce mm/yy format
 );
 	
@@ -112,6 +112,28 @@ create table if not exists `CourierDeliversToDeliveryRegion` (
     FOREIGN KEY (`CourierID`) REFERENCES `Courier`(`CourierID`) ON DELETE CASCADE,    -- dont want to update IDs
     FOREIGN KEY (`RegionID`) REFERENCES `DeliveryRegion`(`RegionID`) ON DELETE CASCADE
 );
+
+
+create table if not exists `User` (
+	`name` varchar(255) NOT NULL,
+	`email` varchar(255) NOT NULL, -- enforced format
+	`username` varchar(255) NOT NULL, -- needs to be encrypted
+	`password` varchar(255) NOT NULL, -- needs to be encrypted
+	PRIMARY KEY (`username`),
+    CONSTRAINT `chk_valid_email` CHECK (`email` LIKE '%_@__%.__%')
+);
+
+create table if not exists `ProductManager` ( -- ProductManager IS A User
+	`username` varchar(255) NOT NULL PRIMARY KEY REFERENCES User(`username`)
+);
+
+create table if not exists `SalesManager` ( -- SalesManager IS A User
+		`username` varchar(255) NOT NULL PRIMARY KEY REFERENCES User(`username`)
+);
+
+create table if not exists `ProdManagerContactsCourier` ( --Going to get to this tomorrow -Areeb :)
+
+)
 
 -- not working properly yet, "but i think this is the proper way" (particpation constraint)
 -- DELIMITER //
