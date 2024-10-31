@@ -75,7 +75,7 @@ create table `BillingInfo` (
     	`creditCardNo` varbinary(128) not null, /* Encrypted credit card number */
     	`creditCardEXP` varchar(5) not null, /* Enforced format mm/yy */
     	`creditCardCVV` varbinary(128) not null, /* Encrypted CVV */
-    	`addressID` varchar(255) not null,  /* should refer to other table */
+    	`addressID` int not null,  /* should refer to other table */
     	primary key (`billingID`),
     	foreign key (`customerID`) references Customer(`customerID`) on delete cascade,
 	foreign key (`addressID`) references Address(`addressID`) on delete restrict,
@@ -91,7 +91,9 @@ create table if not exists `Courier` (
     `Email` varchar(255) NOT NULL,
     `TimeJoined` timestamp default CURRENT_TIMESTAMP NOT NULL,
     `Capacity` int default 0,
-    PRIMARY KEY (`CourierID`)
+	`addressID` int NOT NULL,
+    PRIMARY KEY (`CourierID`),
+	FOREIGN KEY (`addressID`) REFERENCES `Address`(`addressID`) ON DELETE RESTRICT
 );
 
 create table if not exists `DeliveryRegion` (
