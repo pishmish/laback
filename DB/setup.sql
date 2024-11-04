@@ -76,7 +76,7 @@ create table if not exists `ProductManager` ( -- ProductManager IS A User
 	`username` varchar(255) NOT NULL,
 	`supplierID` int NOT NULL,
 	FOREIGN KEY (`username`) REFERENCES User(`username`),
-	FOREIGN KEY (`supplierID`) REFERENCES Supplier(`supplierID`)
+	FOREIGN KEY (`supplierID`) REFERENCES Supplier(`supplierID`) 
 );
 
 create table if not exists `SalesManager` ( -- SalesManager IS A User
@@ -207,6 +207,34 @@ create table if not exists `OrderOrderItemsProduct` (
 	FOREIGN KEY (`orderID`) REFERENCES `Order`(`orderID`) ON DELETE CASCADE,
 	FOREIGN KEY (`productID`) REFERENCES `Product`(`productID`) ON DELETE CASCADE
 );
+
+create table if not exists `ProdManagerCreatesCategory` (
+	`creationDate` date NOT NULL,
+	`productManagerUsername` varchar(255),
+	`categoryID` int not null,
+	FOREIGN KEY (`productManagerUsername`) REFERENCES `ProductManager`(`username`) ON DELETE RESTRICT,
+	FOREIGN KEY (`categoryID`) REFERENCES `Category`(`categoryID`) ON DELETE RESTRICT,
+	PRIMARY KEY (`productManagerUsername`,`categoryID`)
+);
+
+create table if not exists `Review` ( -- a "customer writes review" and "review rates product" table
+    `reviewID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `reviewContent` TEXT NOT NULL,
+    `reviewStars` INT CHECK (`reviewStars` BETWEEN 1 AND 5), -- Star rating constraint (1 to 5)
+    `customerID` INT NOT NULL,
+	`productID` INT NOT NULL,
+	PRIMARY KEY (`reviewID`)
+    FOREIGN KEY (`customerID`) REFERENCES `Customer`(`customerID`) -- chatgpt wanted ON DELETE CASCADE but idk
+	FOREIGN KEY (`productID`) REFERENCES `Product`(`productID`)
+);
+
+
+
+create table if not
+
+create
+
+
 
 /* what needs to be done now is reviews, returns and all the related tables to those */
 
