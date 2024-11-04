@@ -17,4 +17,7 @@ This guide is tailored for internal use by the team. To start the backend server
 ## setup.sql comments:
 
 * Attribute names across the tables have an inconsistent capitalisation of the first letter.
+* Should the manager tables have "ON DELETE RESTRICT"?
+* courierID nerede ProdManagerContactsCourier'da?
+* also i feel like there should be a lot more "ON DELETE CASCADES" than there are? idk
 
