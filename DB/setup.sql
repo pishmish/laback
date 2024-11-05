@@ -2,7 +2,11 @@ create database if not exists `zadados`;
 
 use zadados;
 
-create table `Address` (
+create database if not exists `zadados`;
+
+use zadados;
+
+create table if not exists `Address` (
 	`addressID` int not null auto_increment unique,
 	`addressTitle` varchar(64) not null,
 	`country` varchar(64) not null,
@@ -12,7 +16,7 @@ create table `Address` (
 	`streetAddress` varchar(255) not null,
 	`longitude` decimal(10,8),
 	`latitude` decimal(8,6),
-	primary key (`addressID`),
+	primary key (`addressID`)
 );
 
 create table if not exists `Supplier` (
@@ -86,53 +90,6 @@ create table if not exists `SalesManager` ( -- SalesManager IS A User
 	FOREIGN KEY (`supplierID`) REFERENCES Supplier(`supplierID`)
 );
 
-create table if not exists `ProdManagerContactsCourier` (
-    `deliveryAddressID` int NOT NULL,
-    `capacityPoints` int NOT NULL,
-    `productManagerUsername` varchar(255),
-    FOREIGN KEY (`deliveryAddressID`) REFERENCES `Address`(`addressID`) ON DELETE RESTRICT,
-    foreign key (`courierID`) references `Courier`(`courierID`) on delete restrict,
-    foreign key (`productManagerUsername`) references `ProductManager`(`username`) on delete restrict,
-    primary key (`courierID`, `productManagerUsername`)
-);
-
-create table `Customer` (
-    `customerID` int not null auto_increment unique,
-    `username` varchar(255) not null,
-    `addressID` int not null,
-    `timeJoined` timestamp not null default current_timestamp,
-    `phone` varchar(15),
-    `taxID` varchar(20),
-    `wishlist` int,
-    primary key (`customerID`),
-    foreign key (`wishlist`) references Wishlist(`wishlistID`) on delete restrict,
-    foreign key (`username`) references User(`username`) on delete cascade,
-    foreign key (`addressID`) references Address(`addressID`) on delete restrict
-);
-
-create table `Wishlist` (
-    `wishlistID` int not null auto_increment unique,
-    `productID` int not null,
-    `addedTime` timestamp not null default current_timestamp,
-    `customerID` int not null,
-    primary key (`wishlistID`, `customerID`, `productID`),
-    foreign key (`customerID`) references Customer(`customerID`) on delete cascade,
-    foreign key (`productID`) references Product(`productID`) on delete cascade
-);
-
-create table `BillingInfo` (
-    	`billingID` int not null auto_increment unique,
-    	`customerID` int not null,
-    	`creditCardNo` varbinary(128) not null, /* Encrypted credit card number */
-    	`creditCardEXP` varchar(5) not null, /* Enforced format mm/yy */
-    	`creditCardCVV` varbinary(128) not null, /* Encrypted CVV */
-    	`addressID` int not null,  /* should refer to other table */
-    	primary key (`billingID`),
-    	foreign key (`customerID`) references Customer(`customerID`) on delete cascade,
-		foreign key (`addressID`) references Address(`addressID`) on delete restrict,
-    	check (`creditCardEXP` regexp '^(0[1-9]|1[0-2])/([0-9]{2})$') -- Enforce mm/yy format
-);
-	
 create table if not exists `Courier` (
     `courierID` int NOT NULL AUTO_INCREMENT,
     `name` varchar(255),
@@ -145,6 +102,52 @@ create table if not exists `Courier` (
 	FOREIGN KEY (`addressID`) REFERENCES `Address`(`addressID`) ON DELETE RESTRICT
 );
 
+create table if not exists `ProdManagerContactsCourier` (
+    `deliveryAddressID` int NOT NULL,
+    `capacityPoints` int NOT NULL,
+    `productManagerUsername` varchar(255),
+    `courierID` int NOT NULL,
+    FOREIGN KEY (`deliveryAddressID`) REFERENCES `Address`(`addressID`) ON DELETE RESTRICT,
+    foreign key (`courierID`) references `Courier`(`courierID`) on delete restrict,
+    foreign key (`productManagerUsername`) references `ProductManager`(`username`) on delete restrict,
+    primary key (`courierID`, `productManagerUsername`)
+);
+
+create table if not exists `Customer` (
+    `customerID` int not null auto_increment unique,
+    `username` varchar(255) not null,
+    `addressID` int not null,
+    `timeJoined` timestamp not null default current_timestamp,
+    `phone` varchar(15),
+    `taxID` varchar(20),
+    primary key (`customerID`),
+    foreign key (`username`) references User(`username`) on delete cascade,
+    foreign key (`addressID`) references Address(`addressID`) on delete restrict
+);
+
+create table if not exists`Wishlist` ( -- customer and wishlist tables are interdependent, need each other to be created so cant be created
+    `wishlistID` int not null auto_increment unique,
+    `productID` int not null,
+    `addedTime` timestamp not null default current_timestamp,
+    `customerID` int not null,
+    primary key (`wishlistID`, `customerID`, `productID`),
+    foreign key (`customerID`) references Customer(`customerID`) on delete cascade,
+    foreign key (`productID`) references Product(`productID`) on delete cascade
+); -- needs to be normalised
+
+create table if not exists `BillingInfo` (
+    	`billingID` int not null auto_increment unique,
+    	`customerID` int not null,
+    	`creditCardNo` varbinary(128) not null, /* Encrypted credit card number */
+    	`creditCardEXP` varchar(5) not null, /* Enforced format mm/yy */
+    	`creditCardCVV` varbinary(128) not null, /* Encrypted CVV */
+    	`addressID` int not null,  /* should refer to other table */
+    	primary key (`billingID`),
+    	foreign key (`customerID`) references Customer(`customerID`) on delete cascade,
+		foreign key (`addressID`) references Address(`addressID`) on delete restrict,
+    	check (`creditCardEXP` regexp '^(0[1-9]|1[0-2])/([0-9]{2})$') -- Enforce mm/yy format
+);
+	
 create table if not exists `DeliveryRegion` (
     `regionID` int NOT NULL AUTO_INCREMENT,
     `name` varchar(255) NOT NULL,
@@ -217,20 +220,50 @@ create table if not exists `ProdManagerCreatesCategory` (
 	PRIMARY KEY (`productManagerUsername`,`categoryID`)
 );
 
-create table if not exists `Review` ( -- a "customer writes review" and "review rates product" table
+create table if not exists `Review` ( -- a "customer writes review" / "review rates product" / "prodmanager approves review" table
     `reviewID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `reviewContent` TEXT NOT NULL,
     `reviewStars` INT CHECK (`reviewStars` BETWEEN 1 AND 5), -- Star rating constraint (1 to 5)
     `customerID` INT NOT NULL,
 	`productID` INT NOT NULL,
-	PRIMARY KEY (`reviewID`)
-    FOREIGN KEY (`customerID`) REFERENCES `Customer`(`customerID`) -- chatgpt wanted ON DELETE CASCADE but idk
+	`productManagerUsername` varchar(255),
+	`approvalStatus` BOOLEAN DEFAULT FALSE,
+	FOREIGN KEY (`productManagerUsername`) REFERENCES `ProductManager`(`username`),
+    FOREIGN KEY (`customerID`) REFERENCES `Customer`(`customerID`), -- chatgpt wanted ON DELETE CASCADE but idk
 	FOREIGN KEY (`productID`) REFERENCES `Product`(`productID`)
 );
 
 
 
-create table if not
+
+
+create table
+
+
+
+/* what needs to be done now is reviews, returns and all the related tables to those */
+
+-- not working properly yet, "but i think this is the proper way" (particpation constraint)
+-- DELIMITER //
+
+-- CREATE TRIGGER ensure_courier_has_region
+-- AFTER INSERT ON Courier
+-- FOR EACH ROW
+-- BEGIN
+--     DECLARE region_count INT;
+--     SELECT COUNT(*) INTO region_count FROM CourierDeliversToDeliveryRegion WHERE CourierID = NEW.CourierID;
+--     IF region_count = 0 THEN
+--         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Each courier must have at least one region.';
+--     END IF;
+-- END //
+
+-- DELIMITER ;
+
+
+
+
+
+
 
 create
 
