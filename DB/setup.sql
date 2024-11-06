@@ -6,6 +6,8 @@ create database if not exists `zadados`;
 
 use zadados;
 
+
+
 create table if not exists `Address` (
 	`addressID` int not null auto_increment unique,
 	`addressTitle` varchar(64) not null,
@@ -22,7 +24,7 @@ create table if not exists `Address` (
 create table if not exists `Supplier` (
 	`supplierID` int NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
-	`phone` int,
+	`phone` BIGINT,
 	`timeJoined` timestamp default CURRENT_TIMESTAMP,
 	`addressID` int NOT NULL,
 	PRIMARY KEY (`supplierID`),
@@ -34,7 +36,7 @@ create table if not exists `Product` (
 	`stock` int not null,
 	`name` varchar(255) not null,
 	`unitPrice` decimal(8,2) not null,
-	`overallRating` decimal(1,1),
+	`overallRating` decimal(2,1),
 	`discountPercentage` int(3) not null default 0,
 	`description` text,
 	`timeListed` timestamp not null default current_timestamp,
@@ -59,7 +61,7 @@ create table if not exists `Category` (
 	primary key (`categoryID`)
 );
 
-create table if not exists `CategoryCategorizesProduct` (
+create table if not exists `CategoryCategorizesProduct` ( -- if many to many this is okay, otherwise merge with product table
 	`categoryID` int not null,
 	`productID` int not null,
 	primary key (`categoryID`, `productID`),
@@ -93,7 +95,7 @@ create table if not exists `SalesManager` ( -- SalesManager IS A User
 create table if not exists `Courier` (
     `courierID` int NOT NULL AUTO_INCREMENT,
     `name` varchar(255),
-    `phone` int NOT NULL,
+    `phone` BIGINT NOT NULL,
     `email` varchar(255) NOT NULL,
     `timeJoined` timestamp default CURRENT_TIMESTAMP NOT NULL,
     `capacity` int default 0,
@@ -118,7 +120,7 @@ create table if not exists `Customer` (
     `username` varchar(255) not null,
     `addressID` int not null,
     `timeJoined` timestamp not null default current_timestamp,
-    `phone` varchar(15),
+    `phone` BIGINT,
     `taxID` varchar(20),
     primary key (`customerID`),
     foreign key (`username`) references User(`username`) on delete cascade,
@@ -234,10 +236,41 @@ create table if not exists `Review` ( -- a "customer writes review" / "review ra
 );
 
 
+create table if not exists `RestockLog` ( -- a "prodManager restocks product" table
+	`recordID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`productID` INT NOT NULL,
+	`productManagerUsername` varchar(255),
+	`quantity` int,
+	FOREIGN KEY (`productManagerUsername`) REFERENCES `ProductManager`(`username`)
+	FOREIGN KEY (`productID`) REFERENCES `Product`(`productID`)
+);
 
+CREATE TABLE IF NOT EXISTS `PriceUpdateLog` (
+    `updateID` INT NOT NULL AUTO_INCREMENT,
+    `productID` INT NOT NULL,
+    `newPrice` DECIMAL(8, 2) NOT NULL,
+    `updateTime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	`discountPercent` INT(3) not null default 0, 
+	`salesManagerUsername` varchar(255),
+    PRIMARY KEY (`updateID`),
+    FOREIGN KEY (`productID`) REFERENCES `Product`(`productID`) ON DELETE CASCADE
+);
 
+-- trigger for updating the product prices automatically
+DELIMITER //
 
-create table
+CREATE TRIGGER update_product_price
+AFTER INSERT ON PriceUpdateLog
+FOR EACH ROW
+BEGIN
+    -- Update the price in the Product table when a new price update is logged
+    UPDATE Product
+    SET unitPrice = NEW.newPrice,  -- Update the price
+        discountPercentage = NEW.discountPercent  -- Update the discount percentage directly
+    WHERE productID = NEW.productID;
+END //
+
+DELIMITER ;
 
 
 
@@ -287,3 +320,7 @@ create
 
 -- DELIMITER ;
 
+
+--UPDATED BIGINT ON PHONE NUMBERS
+-- created trigger
+-- customer makes an order?
