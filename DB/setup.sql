@@ -272,6 +272,30 @@ END //
 
 DELIMITER ;
 
+create table if not exists `CustomerReturnRequests` (
+	`requestID` INT NOT NULL AUTO_INCREMENT,
+	`orderID` INT NOT NULL,
+	`productID` INT NOT NULL,
+	`quantity` INT,
+	primary key(`requestID`),
+	foreign key(`orderID`) references `OrderOrderItemsProduct`(`orderID`),
+	foreign key(`productID`) references `OrderOrderItemsProduct`(`productID`)
+);
+
+create table if not exists `SalesManagerRefundApprovalLog` (
+	`requestID` int not null,
+	`salesManagerUsername` VARCHAR(255),
+	`returnStatus` boolean default false,
+	foreign key(`requestID`) references `CustomerReturnRequests`(`requestID`),
+	foreign key(`salesManagerUsername`) references `SalesManager`(`username`)
+	primary key(`requestID`)
+);
+
+
+-- salesManager ApprovesRefund returns
+-- returns MustBe Order
+-- returns restocks order
+-- customer requests a return
 
 
 /* what needs to be done now is reviews, returns and all the related tables to those */
