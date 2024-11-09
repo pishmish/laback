@@ -14,10 +14,14 @@ This guide is tailored for internal use by the team. To start the backend server
 
 5. To start the server, run `npm run dev`
 
-## setup.sql comments:
+## Setting up the database on MySQL:
 
-* Attribute names across the tables have an inconsistent capitalisation of the first letter.
-* Should the manager tables have "ON DELETE RESTRICT"?
-* courierID nerede ProdManagerContactsCourier'da?
-* also i feel like there should be a lot more "ON DELETE CASCADES" than there are? idk
+1. You need to have MySQL installed and running on your computer.
 
+2. head to the terminal and navigate to `./laback/DB`
+
+3. Run the following command to create the tables: `mysql -u root -p < setup.sql`
+
+4. Run the following command to populate the tables: `mysql -u root -p < sampleData.sql`
+
+5. Run the following command to drop to database and reset everything: `mysql -u root -p < reset.sql`
