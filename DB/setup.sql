@@ -134,7 +134,7 @@ create table if not exists `Customer` (
 create table if not exists `Wishlist` (
 	`wishlistID` int not null auto_increment unique,
 	`customerID` int not null,
-	primary key (`wishlistID`),
+	primary key (`wishlistID`, `customerID`),
 	foreign key (`customerID`) references Customer(`customerID`) on delete cascade
 );
 
@@ -193,6 +193,7 @@ create table if not exists `Cart` (
 create table if not exists `CartContainsProduct` (
 	`cartID` int NOT NULL,
 	`productID` int not null,
+	`quantity` int not null,
 	PRIMARY KEY (`cartID`, `productID`),
 	FOREIGN KEY (`cartID`) REFERENCES `Cart`(`cartID`) ON DELETE CASCADE,
 	FOREIGN KEY (`productID`) REFERENCES `Product`(`productID`) ON DELETE CASCADE
@@ -204,7 +205,7 @@ create table if not exists `Order` (
 	`timeOrdered` timestamp not null default CURRENT_TIMESTAMP,
 	`totalPrice` decimal (8,2) NOT NULL,
 	/* Delivers relationship */
-	`deliveryID` int,
+	`deliveryID` int NOT NULL AUTO_INCREMENT unique,
 	`deliveryStatus` varchar(64),
 	`deliveryAddressID` int NOT NULL,
 	`estimatedArrival` date,
@@ -242,9 +243,10 @@ create table if not exists `ProductManagerRestocksProduct` (
 	`productID` INT NOT NULL,
 	`productManagerUsername` varchar(64) not null,
 	`quantity` int,
+	`restockTime` timestamp not null default CURRENT_TIMESTAMP,
 	FOREIGN KEY (`productManagerUsername`) REFERENCES `ProductManager`(`username`) on delete restrict,
 	FOREIGN KEY (`productID`) REFERENCES `Product`(`productID`) on delete cascade,
-	primary key (`productID`, `productManagerUsername`)
+	primary key (`productID`, `productManagerUsername`, `restockTime`)
 );
 
 CREATE TABLE IF NOT EXISTS `SalesManagerManagesPriceProduct` (
@@ -255,7 +257,7 @@ CREATE TABLE IF NOT EXISTS `SalesManagerManagesPriceProduct` (
 	`salesManagerUsername` varchar(64) not null,
 	FOREIGN KEY (`productID`) REFERENCES `Product`(`productID`) ON DELETE cascade, 
 	foreign key(`salesManagerUsername`) references `SalesManager`(`username`) on delete restrict,
-	primary key (`productID`, `salesManagerUsername`)
+	primary key (`productID`, `salesManagerUsername`, `updateTime`)
 );
 
 create table if not exists `Review` (
