@@ -205,7 +205,7 @@ create table if not exists `Order` (
 	`timeOrdered` timestamp not null default CURRENT_TIMESTAMP,
 	`totalPrice` decimal (8,2) NOT NULL,
 	/* Delivers relationship */
-	`deliveryID` int NOT NULL AUTO_INCREMENT unique,
+	`deliveryID` int NOT NULL unique,
 	`deliveryStatus` varchar(64),
 	`deliveryAddressID` int NOT NULL,
 	`estimatedArrival` date,
@@ -347,4 +347,3 @@ begin
 end; //
 
 DELIMITER ;
-

@@ -106,7 +106,7 @@ INSERT INTO Address (addressTitle, streetAddress, city, province, zipCode, count
 INSERT INTO Address (addressTitle, streetAddress, city, province, zipCode, country, longitude, latitude) VALUES
 ('Customer 1 Billing 1', 'Büyükdere Caddesi No:245', 'Sarıyer', 'İstanbul', '34398', 'Turkey', 29.0264, 41.1171),       /*-- Billing Info 1*/
 ('Customer 2 Billing 1', 'Atatürk Bulvarı No:123', 'Kızılay', 'Ankara', '06640', 'Turkey', NULL, NULL),          /*-- Billing Info 2*/
-('Customer 3 Billing 1', 'İzmir Caddesi No:456', 'Bornova', 'İzmir', '35000', 'Turkey', 27.2161, 38.4192);           /*-- Billing Info 3*/
+('Customer 3 Billing 1', 'İzmir Caddesi No:456', 'Bornova', 'İzmir', '35000', 'Turkey', 27.2161, 38.4192),           /*-- Billing Info 3*/
 ('Customer 1 Billing 2', 'Cumhuriyet Caddesi No:678', 'Kadıköy', 'İstanbul', '34710', 'Turkey', 29.0394, 40.9871),  /*-- Billing Info 4*/
 ('Customer 2 Billing 2', 'Gaziosmanpaşa Bulvarı No:102', 'Çankaya', 'Ankara', '06550', 'Turkey', 32.8599, 39.9336); /*-- Billing Info 5*/
 
@@ -307,11 +307,11 @@ VALUES
 
 
 
-/*/*-- Pictures Table*/
+/*-- Pictures Table*/
 /* Inserting three pictures for each productID*/
 /*-- HandBags*/
 /* Inserting three pictures for each productID from 1 to 18 */
-INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
+/*INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
     (1, 'path/to/picture1-1.jpg'), 
     (1, 'path/to/picture1-2.jpg'), 
     (1, 'path/to/picture1-3.jpg'),
@@ -598,8 +598,8 @@ INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES
 
     (69, 'path/to/picture69-1.jpg'), 
     (69, 'path/to/picture69-2.jpg'), 
-    (69, 'path/to/picture69-3.jpg');
-*/
+    (69, 'path/to/picture69-3.jpg');*/
+
 
 
 
@@ -820,7 +820,7 @@ insert into `ProdManagerContactsCourier` (`deliveryAddressID`, `capacityPoints`,
 insert into `Customer` (`username`, `addressID`, `phone`, `taxID`) values 
 ('evadavis', 1, 90689837852, NULL),
 ('frankmiller', 2, 90457822013, NULL),
-('evegreen', 3, 90586735267, NULL),
+('evegreen', 3, 90586735267, NULL);
 
 
 
@@ -879,7 +879,7 @@ INSERT INTO `DeliveryRegion` (`name`, `population`, `SEIFA`) VALUES
 
 
 /*CourierDeliversToDeliveryRegion Table*/
-INSERT INTO `CourierDeliversToDeliveryRegion` (`courierID`, `deliveryRegionID`, `deliveryCost`) VALUES
+INSERT INTO `CourierDeliversToDeliveryRegion` (`courierID`, `regionID`, `deliveryCost`) VALUES
 (1, 1, 100),
 (1, 2, 150),
 (1, 3, 200),
@@ -921,9 +921,9 @@ INSERT INTO `CartContainsProduct` (`cartID`, `productID`, `quantity`) VALUES
 
 
 /*Order Table*/
-INSERT INTO `Order` (`orderNumber`, `totalPrice`, `deliveryStatus`, `deliveryAddressID`, `estimatedArrival`, `courierID`, `cartID`, `customerID`) VALUES
-(1001, 234.97, 'Processing', 4, '2023-12-10', 1, 1, 1),
-(1002, 450.97, 'Shipped', 5, '2023-12-02', 2, 2, 2);
+INSERT INTO `Order` (`orderNumber`, `totalPrice`, `deliveryID`, `deliveryStatus`, `deliveryAddressID`, `estimatedArrival`, `courierID`, `cartID`, `customerID`) VALUES
+(1001, 234.97, 123134, 'Processing', 4, '2023-12-10', 1, 1, 1),
+(1002, 450.97, 324234, 'Shipped', 5, '2023-12-02', 2, 2, 2);
 
 
 
@@ -978,15 +978,15 @@ INSERT INTO `ProdManagerCreatesCategory` (`productManagerUsername`, `categoryID`
 
 /*ProductManagerRestocksProduct Table*/
 INSERT INTO `ProductManagerRestocksProduct` (`productID`, `productManagerUsername`, `quantity`) VALUES
+(32, 'alicejohnson', 3),
 (53, 'alicejohnson', 10),
 (4, 'bobsmith', 18),
 (12, 'alicejohnson', 24),
 (23, 'bobsmith', 25),
-(34, 'alicejohnson', 3),
-(34, 'alicejohnson', 75),
 (51, 'alicejohnson', 88),
 (7, 'bobsmith', 3),
-(61, 'bobsmith', 37);
+(61, 'bobsmith', 37),
+(34, 'alicejohnson', 75);
 
 
 
@@ -1025,8 +1025,8 @@ INSERT INTO `Review` (`reviewContent`, `reviewStars`, `customerID`, `productID`,
 
 /*Returns Table*/
 INSERT INTO `Returns` (`returnStatus`, `reason`, `orderID`, `productID`, `quantity`, `customerID`) VALUES
-('Pending', 'Product was damaged upon arrival.', 1, 26, 1, 2),
-('Approved', 'Size was too big.', 2, 10, 1, 1);
+('Pending', 'Product was damaged upon arrival.', 1, 23, 1, 2),
+('Approved', 'Size was too big.', 2, 51, 1, 1);
 
 
 
