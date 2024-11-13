@@ -12,7 +12,7 @@ This guide is tailored for internal use by the team. To start the backend server
 
 4. Install the dependencies by running `npm install`
 
-5. To start the server, run `npm run dev`
+5. To start the server, run `npm run dev`, CTRL + C to stop the server.
 
 ## Setting up the database on MySQL:
 

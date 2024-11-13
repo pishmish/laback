@@ -383,10 +383,11 @@ VALUES
     (18, 'path/to/picture18-1.jpg'), 
     (18, 'path/to/picture18-2.jpg'), 
     (18, 'path/to/picture18-3.jpg');
+*/
 
 /*-- Backpacks*/
 /* Inserting three pictures for each productID from 19 to 33 */
-INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
+/*INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
     (19, 'path/to/picture19-1.jpg'), 
     (19, 'path/to/picture19-2.jpg'), 
     (19, 'path/to/picture19-3.jpg'),
@@ -446,10 +447,11 @@ INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES
     (33, 'path/to/picture33-1.jpg'), 
     (33, 'path/to/picture33-2.jpg'), 
     (33, 'path/to/picture33-3.jpg');
+*/
 
 /*-- Luggage*/
 /* Inserting three pictures for each productID from 34 to 48 */
-INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
+/*INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
     (34, 'path/to/picture34-1.jpg'), 
     (34, 'path/to/picture34-2.jpg'), 
     (34, 'path/to/picture34-3.jpg'),
@@ -508,11 +510,11 @@ INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES
 
     (48, 'path/to/picture48-1.jpg'), 
     (48, 'path/to/picture48-2.jpg'), 
-    (48, 'path/to/picture48-3.jpg');
+    (48, 'path/to/picture48-3.jpg');*/
 
 /*-- Travel Bags*/
 /* Inserting three pictures for each productID from 49 to 60 */
-INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
+/*INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
     (49, 'path/to/picture49-1.jpg'), 
     (49, 'path/to/picture49-2.jpg'), 
     (49, 'path/to/picture49-3.jpg'),
@@ -560,10 +562,11 @@ INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES
     (60, 'path/to/picture60-1.jpg'), 
     (60, 'path/to/picture60-2.jpg'), 
     (60, 'path/to/picture60-3.jpg');
+    */
 
 /*-- Sports Bags*/
 /* Inserting three pictures for each productID from 61 to 69 */
-INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
+/*INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
     (61, 'path/to/picture61-1.jpg'), 
     (61, 'path/to/picture61-2.jpg'), 
     (61, 'path/to/picture61-3.jpg'),
@@ -775,9 +778,9 @@ insert into `User` (`name`, `email`, `username`, `password`) values
 ('Charlie Brown', 'charlie.sales@company.com', 'charliebrown', SHA2('CB123', 256)), 
 ('David Williams', 'david.sales@company.com', 'davidwilliams', SHA2('DW123', 256)),
 
-('Eva Davis', 'eva.davis@company.com', 'evadavis', SHA2('ED123', 256)), 
-('Frank Miller', 'frank.miller@company.com', 'frankmiller', SHA2('FM123', 256)),
-('Eve Green', 'eve.green@company.com', 'evegreen', SHA2('EG123', 256));
+('Eva Davis', 'eva.davis@gmail.com', 'evadavis', SHA2('ED123', 256)), 
+('Frank Miller', 'frank.miller@yahoo.com', 'frankmiller', SHA2('FM123', 256)),
+('Eve Green', 'eve.green@gmail.com', 'evegreen', SHA2('EG123', 256));
 
 
 
