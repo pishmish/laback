@@ -46,6 +46,10 @@
 -- ('Sports Duffle Bags', 'Durable duffle bags for sports gear'),
 -- ('Cooler Bags', 'Insulated bags to keep food and drinks cool');*/
 
+
+/* Choose database */
+
+USE `zadados`;
 /*-- Main Categories*/
 INSERT INTO Category (name, description) VALUES
 ('Handbags', 'Discover stylish handbags for every occasion, from casual outings to formal events. Designed for elegance and practicality.'),
