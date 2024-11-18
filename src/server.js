@@ -5,7 +5,10 @@ require('express-async-errors');
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const routes = require('./routes/StoreAPI'); // Import the router
+
+// Import routes from
+const storeapi = require('./routes/StoreAPI');
+const userapi = require('./routes/UserAPI');
 
 const app = express();
 const PORT = process.env.PORT || 5001; //port is 5001
@@ -13,12 +16,13 @@ const PORT = process.env.PORT || 5001; //port is 5001
 // Middleware
 app.use(bodyParser.json());
 
-// Use the routes defined in route.js
-app.use('/', routes);
+// Use the storeapi defined in route.js
+app.use('/store', storeapi);
+app.use('/user', userapi);
 
 //home page message:
 app.get('/', (req, res) => {
-    res.send('Welcome to the API. Access all products at /api/Product');
+    res.send('Api is running, put the extension you need (currently /store) to access relevant calls');
   });
 
 // Start the server
