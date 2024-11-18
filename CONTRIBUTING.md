@@ -25,3 +25,17 @@ This guide is tailored for internal use by the team. To start the backend server
 4. Run the following command to populate the tables: `mysql -u root -p < sampleData.sql`
 
 5. Run the following command to drop to database and reset everything: `mysql -u root -p < reset.sql`
+
+## Setting up the `.env` file:
+
+```
+MYSQL_HOST =
+MYSQL_USER =
+MYSQL_PASSWORD =
+MYSQL_DB =
+MYSQL_DIALECT =  # this is for sequelize
+
+NODE_ENV = 'development'
+```
+
+and then fill up the values with your own MySQL credentials.
