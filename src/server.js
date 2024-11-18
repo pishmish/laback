@@ -1,4 +1,3 @@
-require('dotenv').config()
 require('express-async-errors');
 //async errors
 //^^ above code was written by musab earlier. I've left it in. -Areeb
