@@ -35,6 +35,7 @@ create table if not exists `Product` (
 	`description` text,
 	`timeListed` timestamp not null default current_timestamp,
 	`brand` varchar(64),
+	`color` varchar(64),
 	`showProduct` boolean default true,
 	`supplierID` int not null,
 	`material` varchar(64),
