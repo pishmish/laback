@@ -63,22 +63,27 @@ router.delete('/category/:id', (req, res) => {
 });
 
 //Section : Reviews
-router.get('product/:id/reviews', (req, res) => {
-  return reviewsController.getAllReviews(req, res, req.params.id);
+router.get('/product/:id/reviews', (req, res) => {
+  return reviewsController.getAllReviews(req, res);
 });
 
-router.get('product/:id/reviews/:reviewId', (req, res) => {
-  return reviewsController.getReviewById(req, res, req.params.id, req.params.reviewId);
+router.get('/product/:id/reviews/:reviewId', (req, res) => {
+  return reviewsController.getReviewById(req, res);
 });
 
-router.post('product/:id/reviews', (req, res) => {
+router.post('/product/:id/reviews', (req, res) => {
   //TODO: requires authentication
-  return reviewsController.createReview(req, res, req.params.id);
+  return reviewsController.createReview(req, res);
+});
+
+router.put('/product/:id/reviews/:reviewId', (req, res) => {
+  //TODO: requires authentication
+  return reviewsController.updateReview(req, res);
 });
 
 router.delete('/reviews/:reviewId', (req, res) => {
   //TODO: requires authentication
-  return reviewsController.deleteReview(req, res, req.params.id, req.params.reviewId);
+  return reviewsController.deleteReview(req, res);
 });
 
 //export the router:
