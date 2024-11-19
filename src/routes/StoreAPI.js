@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-// //import controller
-const controller = require('../controllers/Store');
+// //import controllers
+const productController = require('../controllers/product');
+const categoryController = require('../controllers/category');
+const reviewsController = require('../controllers/reviews');
 
 // Routes:
 
@@ -11,9 +13,68 @@ router.get('/', (req, res) => {
   res.send('Store API, welcome!');
 });
 
-//Create example (for inputting in//Read example (Product table)
 router.get('/product', (req, res) => {
-  return controller.getAllProducts(req, res); //calls the controller function to get all products
+  return productController.getAllProducts(req, res); //calls the controller function to get all products
+});
+
+router.get('/product/:id', (req, res) => {
+  return productController.getProductById(req, res);
+});
+
+router.post('/product', (req, res) => {
+  //TODO: requires authentication
+  return productController.createProduct(req, res);
+});
+
+router.put('/product/:id', (req, res) => {
+  //TODO: requires authentication
+  return productController.updateProduct(req, res);
+});
+
+router.delete('/product/:id', (req, res) => {
+  //TODO: requires authentication
+  return productController.deleteProduct(req, res, req.params.id);
+});
+
+router.get('/category', (req, res) => {
+  return categoryController.getAllCategories(req, res);
+});
+
+router.get('/category/:name', (req, res) => {
+  return categoryController.getCategoryByName(req, res, req.params.name);
+});
+
+router.post('/category', (req, res) => {
+  //TODO: requires authentication
+  return categoryController.createCategory(req, res);
+});
+
+router.put('/category/:id', (req, res) => {
+  //TODO:: requires authentication
+  return categoryController.updateCategory(req, res, req.params.id);
+});
+
+router.delete('/category/:id', (req, res) => {
+  //TODO: requires authentication
+  return categoryController.deleteCategory(req, res, req.params.id);
+});
+
+router.get('product/:id/reviews', (req, res) => {
+  return reviewsController.getAllReviews(req, res, req.params.id);
+});
+
+router.get('product/:id/reviews/:reviewId', (req, res) => {
+  return reviewsController.getReviewById(req, res, req.params.id, req.params.reviewId);
+});
+
+router.post('product/:id/reviews', (req, res) => {
+  //TODO: requires authentication
+  return reviewsController.createReview(req, res, req.params.id);
+});
+
+router.delete('/reviews/:reviewId', (req, res) => {
+  //TODO: requires authentication
+  return reviewsController.deleteReview(req, res, req.params.id, req.params.reviewId);
 });
 
 //export the router:
