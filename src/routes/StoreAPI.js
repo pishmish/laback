@@ -13,6 +13,8 @@ router.get('/', (req, res) => {
   res.send('Store API, welcome!');
 });
 
+
+//Section : Products
 router.get('/product', (req, res) => {
   return productController.getAllProducts(req, res); //calls the controller function to get all products
 });
@@ -33,15 +35,16 @@ router.put('/product/:id', (req, res) => {
 
 router.delete('/product/:id', (req, res) => {
   //TODO: requires authentication
-  return productController.deleteProduct(req, res, req.params.id);
+  return productController.deleteProduct(req, res);
 });
 
+//Section : Categories
 router.get('/category', (req, res) => {
   return categoryController.getAllCategories(req, res);
 });
 
 router.get('/category/:name', (req, res) => {
-  return categoryController.getCategoryByName(req, res, req.params.name);
+  return categoryController.getCategoryByName(req, res);
 });
 
 router.post('/category', (req, res) => {
@@ -51,14 +54,15 @@ router.post('/category', (req, res) => {
 
 router.put('/category/:id', (req, res) => {
   //TODO:: requires authentication
-  return categoryController.updateCategory(req, res, req.params.id);
+  return categoryController.updateCategory(req, res);
 });
 
 router.delete('/category/:id', (req, res) => {
   //TODO: requires authentication
-  return categoryController.deleteCategory(req, res, req.params.id);
+  return categoryController.deleteCategory(req, res);
 });
 
+//Section : Reviews
 router.get('product/:id/reviews', (req, res) => {
   return reviewsController.getAllReviews(req, res, req.params.id);
 });
