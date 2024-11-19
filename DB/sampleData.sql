@@ -312,298 +312,91 @@ VALUES
 /*-- Pictures Table*/
 /* Inserting three pictures for each productID*/
 /*-- HandBags*/
-/* Inserting three pictures for each productID from 1 to 18 */
-/*INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
-    (1, 'path/to/picture1-1.jpg'), 
-    (1, 'path/to/picture1-2.jpg'), 
-    (1, 'path/to/picture1-3.jpg'),
-
-    (2, 'path/to/picture2-1.jpg'), 
-    (2, 'path/to/picture2-2.jpg'), 
-    (2, 'path/to/picture2-3.jpg'),
-
-    (3, 'path/to/picture3-1.jpg'), 
-    (3, 'path/to/picture3-2.jpg'), 
-    (3, 'path/to/picture3-3.jpg'),
-
-    (4, 'path/to/picture4-1.jpg'), 
-    (4, 'path/to/picture4-2.jpg'), 
-    (4, 'path/to/picture4-3.jpg'),
-
-    (5, 'path/to/picture5-1.jpg'), 
-    (5, 'path/to/picture5-2.jpg'), 
-    (5, 'path/to/picture5-3.jpg'),
-
-    (6, 'path/to/picture6-1.jpg'), 
-    (6, 'path/to/picture6-2.jpg'), 
-    (6, 'path/to/picture6-3.jpg'),
-
-    (7, 'path/to/picture7-1.jpg'), 
-    (7, 'path/to/picture7-2.jpg'), 
-    (7, 'path/to/picture7-3.jpg'),
-
-    (8, 'path/to/picture8-1.jpg'), 
-    (8, 'path/to/picture8-2.jpg'), 
-    (8, 'path/to/picture8-3.jpg'),
-
-    (9, 'path/to/picture9-1.jpg'), 
-    (9, 'path/to/picture9-2.jpg'), 
-    (9, 'path/to/picture9-3.jpg'),
-
-    (10, 'path/to/picture10-1.jpg'), 
-    (10, 'path/to/picture10-2.jpg'), 
-    (10, 'path/to/picture10-3.jpg'),
-
-    (11, 'path/to/picture11-1.jpg'), 
-    (11, 'path/to/picture11-2.jpg'), 
-    (11, 'path/to/picture11-3.jpg'),
-
-    (12, 'path/to/picture12-1.jpg'), 
-    (12, 'path/to/picture12-2.jpg'), 
-    (12, 'path/to/picture12-3.jpg'),
-
-    (13, 'path/to/picture13-1.jpg'), 
-    (13, 'path/to/picture13-2.jpg'), 
-    (13, 'path/to/picture13-3.jpg'),
-
-    (14, 'path/to/picture14-1.jpg'), 
-    (14, 'path/to/picture14-2.jpg'), 
-    (14, 'path/to/picture14-3.jpg'),
-
-    (15, 'path/to/picture15-1.jpg'), 
-    (15, 'path/to/picture15-2.jpg'), 
-    (15, 'path/to/picture15-3.jpg'),
-
-    (16, 'path/to/picture16-1.jpg'), 
-    (16, 'path/to/picture16-2.jpg'), 
-    (16, 'path/to/picture16-3.jpg'),
-
-    (17, 'path/to/picture17-1.jpg'), 
-    (17, 'path/to/picture17-2.jpg'), 
-    (17, 'path/to/picture17-3.jpg'),
-
-    (18, 'path/to/picture18-1.jpg'), 
-    (18, 'path/to/picture18-2.jpg'), 
-    (18, 'path/to/picture18-3.jpg');
-*/
+INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
+    (1, 'assets/images/1.png'), 
+    (2, 'assets/images/2.png'),
+    (3, 'assets/images/3.png'), 
+    (4, 'assets/images/4.png'),
+    (5, 'assets/images/5.png'), 
+    (6, 'assets/images/6.png'),
+    (7, 'assets/images/7.png'), 
+    (8, 'assets/images/8.png'),
+    (9, 'assets/images/9.png'), 
+    (10, 'assets/images/10.png'),
+    (11, 'assets/images/11.png'), 
+    (12, 'assets/images/12.png'),
+    (13, 'assets/images/13.png'), 
+    (14, 'assets/images/14.png'),
+    (15, 'assets/images/15.png'), 
+    (16, 'assets/images/16.png'),
+    (17, 'assets/images/17.png'), 
+    (18, 'assets/images/18.png');
 
 /*-- Backpacks*/
-/* Inserting three pictures for each productID from 19 to 33 */
-/*INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
-    (19, 'path/to/picture19-1.jpg'), 
-    (19, 'path/to/picture19-2.jpg'), 
-    (19, 'path/to/picture19-3.jpg'),
-
-    (20, 'path/to/picture20-1.jpg'), 
-    (20, 'path/to/picture20-2.jpg'), 
-    (20, 'path/to/picture20-3.jpg'),
-
-    (21, 'path/to/picture21-1.jpg'), 
-    (21, 'path/to/picture21-2.jpg'), 
-    (21, 'path/to/picture21-3.jpg'),
-
-    (22, 'path/to/picture22-1.jpg'), 
-    (22, 'path/to/picture22-2.jpg'), 
-    (22, 'path/to/picture22-3.jpg'),
-
-    (23, 'path/to/picture23-1.jpg'), 
-    (23, 'path/to/picture23-2.jpg'), 
-    (23, 'path/to/picture23-3.jpg'),
-
-    (24, 'path/to/picture24-1.jpg'), 
-    (24, 'path/to/picture24-2.jpg'), 
-    (24, 'path/to/picture24-3.jpg'),
-
-    (25, 'path/to/picture25-1.jpg'), 
-    (25, 'path/to/picture25-2.jpg'), 
-    (25, 'path/to/picture25-3.jpg'),
-
-    (26, 'path/to/picture26-1.jpg'), 
-    (26, 'path/to/picture26-2.jpg'), 
-    (26, 'path/to/picture26-3.jpg'),
-
-    (27, 'path/to/picture27-1.jpg'), 
-    (27, 'path/to/picture27-2.jpg'), 
-    (27, 'path/to/picture27-3.jpg'),
-
-    (28, 'path/to/picture28-1.jpg'), 
-    (28, 'path/to/picture28-2.jpg'), 
-    (28, 'path/to/picture28-3.jpg'),
-
-    (29, 'path/to/picture29-1.jpg'), 
-    (29, 'path/to/picture29-2.jpg'), 
-    (29, 'path/to/picture29-3.jpg'),
-
-    (30, 'path/to/picture30-1.jpg'), 
-    (30, 'path/to/picture30-2.jpg'), 
-    (30, 'path/to/picture30-3.jpg'),
-
-    (31, 'path/to/picture31-1.jpg'), 
-    (31, 'path/to/picture31-2.jpg'), 
-    (31, 'path/to/picture31-3.jpg'),
-
-    (32, 'path/to/picture32-1.jpg'), 
-    (32, 'path/to/picture32-2.jpg'), 
-    (32, 'path/to/picture32-3.jpg'),
-
-    (33, 'path/to/picture33-1.jpg'), 
-    (33, 'path/to/picture33-2.jpg'), 
-    (33, 'path/to/picture33-3.jpg');
-*/
+INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
+    (19, 'assets/images/19.png'), 
+    (20, 'assets/images/20.png'),
+    (21, 'assets/images/21.png'), 
+    (22, 'assets/images/22.png'),
+    (23, 'assets/images/23.png'), 
+    (24, 'assets/images/24.png'),
+    (25, 'assets/images/25.png'), 
+    (26, 'assets/images/26.png'),
+    (27, 'assets/images/27.png'), 
+    (28, 'assets/images/28.png'),
+    (29, 'assets/images/29.png'), 
+    (30, 'assets/images/30.png'), 
+    (31, 'assets/images/31.png'),
+    (32, 'assets/images/32.png'), 
+    (33, 'assets/images/33.png');
 
 /*-- Luggage*/
-/* Inserting three pictures for each productID from 34 to 48 */
-/*INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
-    (34, 'path/to/picture34-1.jpg'), 
-    (34, 'path/to/picture34-2.jpg'), 
-    (34, 'path/to/picture34-3.jpg'),
-
-    (35, 'path/to/picture35-1.jpg'), 
-    (35, 'path/to/picture35-2.jpg'), 
-    (35, 'path/to/picture35-3.jpg'),
-
-    (36, 'path/to/picture36-1.jpg'), 
-    (36, 'path/to/picture36-2.jpg'), 
-    (36, 'path/to/picture36-3.jpg'),
-
-    (37, 'path/to/picture37-1.jpg'), 
-    (37, 'path/to/picture37-2.jpg'), 
-    (37, 'path/to/picture37-3.jpg'),
-
-    (38, 'path/to/picture38-1.jpg'), 
-    (38, 'path/to/picture38-2.jpg'), 
-    (38, 'path/to/picture38-3.jpg'),
-
-    (39, 'path/to/picture39-1.jpg'), 
-    (39, 'path/to/picture39-2.jpg'), 
-    (39, 'path/to/picture39-3.jpg'),
-
-    (40, 'path/to/picture40-1.jpg'), 
-    (40, 'path/to/picture40-2.jpg'), 
-    (40, 'path/to/picture40-3.jpg'),
-
-    (41, 'path/to/picture41-1.jpg'), 
-    (41, 'path/to/picture41-2.jpg'), 
-    (41, 'path/to/picture41-3.jpg'),
-
-    (42, 'path/to/picture42-1.jpg'), 
-    (42, 'path/to/picture42-2.jpg'), 
-    (42, 'path/to/picture42-3.jpg'),
-
-    (43, 'path/to/picture43-1.jpg'), 
-    (43, 'path/to/picture43-2.jpg'), 
-    (43, 'path/to/picture43-3.jpg'),
-
-    (44, 'path/to/picture44-1.jpg'), 
-    (44, 'path/to/picture44-2.jpg'), 
-    (44, 'path/to/picture44-3.jpg'),
-
-    (45, 'path/to/picture45-1.jpg'), 
-    (45, 'path/to/picture45-2.jpg'), 
-    (45, 'path/to/picture45-3.jpg'),
-
-    (46, 'path/to/picture46-1.jpg'), 
-    (46, 'path/to/picture46-2.jpg'), 
-    (46, 'path/to/picture46-3.jpg'),
-
-    (47, 'path/to/picture47-1.jpg'), 
-    (47, 'path/to/picture47-2.jpg'), 
-    (47, 'path/to/picture47-3.jpg'),
-
-    (48, 'path/to/picture48-1.jpg'), 
-    (48, 'path/to/picture48-2.jpg'), 
-    (48, 'path/to/picture48-3.jpg');*/
+INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
+    (34, 'assets/images/34.png'), 
+    (35, 'assets/images/35.png'), 
+    (36, 'assets/images/36.png'),
+    (37, 'assets/images/37.png'), 
+    (38, 'assets/images/38.png'),
+    (39, 'assets/images/39.png'), 
+    (40, 'assets/images/40.png'),
+    (41, 'assets/images/41.png'), 
+    (42, 'assets/images/42.png'),
+    (43, 'assets/images/43.png'), 
+    (44, 'assets/images/44.png'),
+    (45, 'assets/images/45.png'), 
+    (46, 'assets/images/46.png'),
+    (47, 'assets/images/47.png'), 
+    (48, 'assets/images/48.png');
 
 /*-- Travel Bags*/
-/* Inserting three pictures for each productID from 49 to 60 */
-/*INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
-    (49, 'path/to/picture49-1.jpg'), 
-    (49, 'path/to/picture49-2.jpg'), 
-    (49, 'path/to/picture49-3.jpg'),
-
-    (50, 'path/to/picture50-1.jpg'), 
-    (50, 'path/to/picture50-2.jpg'), 
-    (50, 'path/to/picture50-3.jpg'),
-
-    (51, 'path/to/picture51-1.jpg'), 
-    (51, 'path/to/picture51-2.jpg'), 
-    (51, 'path/to/picture51-3.jpg'),
-
-    (52, 'path/to/picture52-1.jpg'), 
-    (52, 'path/to/picture52-2.jpg'), 
-    (52, 'path/to/picture52-3.jpg'),
-
-    (53, 'path/to/picture53-1.jpg'), 
-    (53, 'path/to/picture53-2.jpg'), 
-    (53, 'path/to/picture53-3.jpg'),
-
-    (54, 'path/to/picture54-1.jpg'), 
-    (54, 'path/to/picture54-2.jpg'), 
-    (54, 'path/to/picture54-3.jpg'),
-
-    (55, 'path/to/picture55-1.jpg'), 
-    (55, 'path/to/picture55-2.jpg'), 
-    (55, 'path/to/picture55-3.jpg'),
-
-    (56, 'path/to/picture56-1.jpg'), 
-    (56, 'path/to/picture56-2.jpg'), 
-    (56, 'path/to/picture56-3.jpg'),
-
-    (57, 'path/to/picture57-1.jpg'), 
-    (57, 'path/to/picture57-2.jpg'), 
-    (57, 'path/to/picture57-3.jpg'),
-
-    (58, 'path/to/picture58-1.jpg'), 
-    (58, 'path/to/picture58-2.jpg'), 
-    (58, 'path/to/picture58-3.jpg'),
-
-    (59, 'path/to/picture59-1.jpg'), 
-    (59, 'path/to/picture59-2.jpg'), 
-    (59, 'path/to/picture59-3.jpg'),
-
-    (60, 'path/to/picture60-1.jpg'), 
-    (60, 'path/to/picture60-2.jpg'), 
-    (60, 'path/to/picture60-3.jpg');
-    */
+INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
+    (49, 'assets/images/49.png'), 
+    (50, 'assets/images/50.png'),
+    (51, 'assets/images/51.png'), 
+    (52, 'assets/images/52.png'),
+    (53, 'assets/images/53.png'), 
+    (54, 'assets/images/54.png'),
+    (55, 'assets/images/55.png'), 
+    (56, 'assets/images/56.png'),
+    (57, 'assets/images/57.png'), 
+    (58, 'assets/images/58.png'),
+    (59, 'assets/images/59.png'), 
+    (60, 'assets/images/60.png');
 
 /*-- Sports Bags*/
-/* Inserting three pictures for each productID from 61 to 69 */
-/*INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
-    (61, 'path/to/picture61-1.jpg'), 
-    (61, 'path/to/picture61-2.jpg'), 
-    (61, 'path/to/picture61-3.jpg'),
-
-    (62, 'path/to/picture62-1.jpg'), 
-    (62, 'path/to/picture62-2.jpg'), 
-    (62, 'path/to/picture62-3.jpg'),
-
-    (63, 'path/to/picture63-1.jpg'), 
-    (63, 'path/to/picture63-2.jpg'), 
-    (63, 'path/to/picture63-3.jpg'),
-
-    (64, 'path/to/picture64-1.jpg'), 
-    (64, 'path/to/picture64-2.jpg'), 
-    (64, 'path/to/picture64-3.jpg'),
-
-    (65, 'path/to/picture65-1.jpg'), 
-    (65, 'path/to/picture65-2.jpg'), 
-    (65, 'path/to/picture65-3.jpg'),
-
-    (66, 'path/to/picture66-1.jpg'), 
-    (66, 'path/to/picture66-2.jpg'), 
-    (66, 'path/to/picture66-3.jpg'),
-
-    (67, 'path/to/picture67-1.jpg'), 
-    (67, 'path/to/picture67-2.jpg'), 
-    (67, 'path/to/picture67-3.jpg'),
-
-    (68, 'path/to/picture68-1.jpg'), 
-    (68, 'path/to/picture68-2.jpg'), 
-    (68, 'path/to/picture68-3.jpg'),
-
-    (69, 'path/to/picture69-1.jpg'), 
-    (69, 'path/to/picture69-2.jpg'), 
-    (69, 'path/to/picture69-3.jpg');*/
+INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES 
+    (61, 'assets/images/61.png'), 
+    (62, 'assets/images/62.png'), 
+    (63, 'assets/images/63.png'),
+    (64, 'assets/images/64.png'), 
+    (65, 'assets/images/65.png'),
+    (66, 'assets/images/66.png'), 
+    (67, 'assets/images/67.png'),
+    (68, 'assets/images/68.png'), 
+    (69, 'assets/images/69.png'),
+    (70, 'assets/images/70.png'), 
+    (71, 'assets/images/71.png'),
+    (72, 'assets/images/72.png');
 
 
 
