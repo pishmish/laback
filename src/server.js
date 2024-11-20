@@ -9,6 +9,10 @@ const bodyParser = require('body-parser');
 const storeapi = require('./routes/StoreAPI');
 const userapi = require('./routes/UserAPI');
 
+//middleware 
+const notFoundMiddleware = require('./middleware/not-found');
+const errorMiddleware = require('./middleware/error-handler');
+
 const app = express();
 const PORT = process.env.PORT || 5001; //port is 5001
 
@@ -23,6 +27,9 @@ app.use('/user', userapi);
 app.get('/', (req, res) => {
     res.send('Api is running, put the extension you need (currently /store) to access relevant calls');
   });
+
+app.use(notFoundMiddleware);
+app.use(errorMiddleware);
 
 // Start the server
 app.listen(PORT, () => {
