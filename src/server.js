@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 
 // Import routes from
 const storeapi = require('./routes/StoreAPI');
-const userapi = require('./routes/UserAPI');
+//const userapi = require('./routes/UserAPI'); uncomment later
 
 //middleware 
 const notFoundMiddleware = require('./middleware/not-found');
@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 
 // Use the storeapi defined in route.js
 app.use('/store', storeapi);
-app.use('/user', userapi);
+//app.use('/user', userapi); uncomment later too
 
 //home page message:
 app.get('/', (req, res) => {
@@ -31,11 +31,11 @@ app.get('/', (req, res) => {
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+//Start the server if the file is run directly
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
 
-
-
-
+module.exports = app; // Export the app for testing
