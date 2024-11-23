@@ -184,11 +184,11 @@ create table if not exists `Cart` (
 	`totalPrice` decimal(8,2) NOT NULL default 0,
 	`numProducts` int NOT NULL default 0,
 	`fingerprint` varchar(255),
-	`temporary` boolean NOT NULL default true,
+	`temporary` boolean NOT NULL default true,			/* probably remove this*/
 	`timeCreated` timestamp not null default CURRENT_TIMESTAMP, /* So that we can tell when to delete it */
-	`customerID` int,
+	`customerID` int,									/* probably remove this*/
 	PRIMARY KEY (`cartID`),
-	FOREIGN KEY (`customerID`) REFERENCES `Customer`(`customerID`) ON DELETE CASCADE
+	FOREIGN KEY (`customerID`) REFERENCES `Customer`(`customerID`) ON DELETE CASCADE /* probably remove this*/
 );
 
 create table if not exists `CartContainsProduct` (
