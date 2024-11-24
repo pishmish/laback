@@ -60,10 +60,133 @@ const deleteProduct = async (req, res) => {
   }
 }
 
+const searchNames = async (query) => {
+  try {
+    let sql = 'SELECT * FROM `Product` WHERE name LIKE ?';
+    const [results, fields] = await db.promise().query(sql, ['%' + query + '%']);
+    return results;
+  } catch(err) {
+    throw err;
+  }
+}
+
+const searchDescriptions = async (query) => {
+  try {
+    let sql = 'SELECT * FROM `Product` WHERE description LIKE ?';
+    const [results, fields] = await db.promise().query(sql, ['%' + query + '%']);
+    return results;
+  } catch(err) {
+    throw err;
+  }
+}
+
+const searchMaterials = async (query) => {
+  try {
+    let sql = 'SELECT * FROM `Product` WHERE material LIKE ?';
+    const [results, fields] = await db.promise().query(sql, ['%' + query + '%']);
+    return results;
+  } catch(err) {
+    throw err;
+  }
+}
+
+const searchColors = async (query) => {
+  try {
+    let sql = 'SELECT * FROM `Product` WHERE color LIKE ?';
+    const [results, fields] = await db.promise().query(sql, ['%' + query + '%']);
+    return results;
+  } catch(err) {
+    throw err;
+  }
+}
+
+const rankSearchResults = (query, results) => {
+  // Convert query to lowercase for case-insensitive matching
+  const lowerCaseQuery = query.toLowerCase();
+
+  let rankedResults = [];
+  for (let i = 0; i < results.length; i++) {
+    let rank = 0;
+
+    // Convert fields to lowercase before checking for inclusion
+    if (results[i].name.toLowerCase().includes(lowerCaseQuery)) {
+      rank += 3;
+    }
+    if (results[i].description.toLowerCase().includes(lowerCaseQuery)) {
+      rank += 2;
+    }
+    if (results[i].material.toLowerCase().includes(lowerCaseQuery)) {
+      rank += 1;
+    }
+    if (results[i].color.toLowerCase().includes(lowerCaseQuery)) {
+      rank += 1;
+    }
+
+    results[i].rank = rank;
+    rankedResults.push(results[i]);
+  }
+
+  // Sort results by rank in descending order
+  rankedResults.sort((a, b) => b.rank - a.rank);
+  return rankedResults;
+};
+
+const searchProducts = async (req, res) => {
+  try {
+    let query = req.query.q;
+    //check if query is an array, if not, make it an array
+    if (!Array.isArray(query)) {
+      query = [query];
+      console.log("Query converted into array");
+    }
+    let results = [];
+    for (let i = 0; i < query.length; i++) {
+      let names = await searchNames(query[i]);
+      let descriptions = await searchDescriptions(query[i]);
+      let materials = await searchMaterials(query[i]);
+      let colors = await searchColors(query[i]);
+      rankedResults = rankSearchResults(query[i], names.concat(descriptions, materials, colors));
+      results = results.concat(rankedResults);
+    }
+    //remove duplicates and report the removal
+    let uniqueResults = [];
+    let duplicateCount = 0;
+    for (let i = 0; i < results.length; i++) {
+      let isUnique = true;
+      for (let j = 0; j < uniqueResults.length; j++) {
+        if (results[i].productID == uniqueResults[j].productID) {
+          isUnique = false;
+          duplicateCount++;
+          //add the rank of the duplicate to the original
+          uniqueResults[j].rank += results[i].rank;
+          break;
+        }
+      }
+      if (isUnique) {
+        uniqueResults.push(results[i]);
+      }
+    }
+
+    //sork the unique results by rank
+    uniqueResults.sort((a, b) => b.rank - a.rank);
+    let message = uniqueResults.length + " results found";
+    res.status(200).json(
+      {
+        msg: message,
+        results: uniqueResults
+      }
+    );
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error searching products"});
+  }
+}
+
 module.exports = {
     getAllProducts,
     getProductById,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    searchProducts
 }
