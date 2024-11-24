@@ -77,7 +77,7 @@ create table if not exists `User` (
 	`password` varchar(64) NOT NULL, /* Encrypt password using SHA256 */
 	PRIMARY KEY (`username`),
 	CONSTRAINT `chk_valid_email_user` CHECK (`email` LIKE '%_@__%.__%'),
-	constraint `chk_encrypted_password` CHECK (LENGTH(`password`) = 64)
+	constraint `chk_encrypted_password` CHECK (LENGTH(`password`) >= 60)
 );
 
 create table if not exists `ProductManager` (
