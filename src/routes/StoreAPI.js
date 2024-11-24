@@ -86,5 +86,10 @@ router.delete('/reviews/:reviewId', (req, res) => {
   return reviewsController.deleteReview(req, res);
 });
 
+//Section : Search
+router.get('/search', (req, res) => {
+  return productController.searchProducts(req, res);
+});
+
 //export the router:
 module.exports = router;
