@@ -9,7 +9,7 @@ const cron = require('node-cron');
 
 // Import routes from
 const storeapi = require('./routes/StoreAPI');
-// //const userapi = require('./routes/UserAPI'); uncomment later
+const userapi = require('./routes/UserAPI');
 const cartapi = require('./routes/CartAPI');
 
 //middleware 
@@ -25,7 +25,7 @@ app.use(cookieParser());
 
 // Use the storeapi defined in route.js
 app.use('/store', storeapi);
-// //app.use('/user', userapi); uncomment later too
+app.use('/user', userapi);
 app.use('/cart', cartapi);
 
 //cron job for cleaning expired carts every day at midnight (may also gets rid of original carts in sampleData.sql)

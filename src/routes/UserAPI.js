@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 
 //Section : User Registration, login, and profile management
 router.post('/register', (req, res) => {
-  return userController.registerUser(req, res);
+  return userController.registerCustomer(req, res);
 });
 
 router.post('/login', (req, res) => {
@@ -39,7 +39,7 @@ router.delete('/removeuser', (req, res) => {
 });
 
 //Section : User billingInfo management
-router.get('/billing/', (req, res) => {
+router.get('/billing', (req, res) => {
   //TODO: requires authentication, derive user id from token
   return billingController.getBillingInfo(req, res);
 });
