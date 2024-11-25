@@ -1,4 +1,4 @@
-store
+ store
   GET /product/
   GET /prodcut/:id
   POST /product/ (admin)
@@ -25,12 +25,25 @@ cart
   PUT /product/:productID
   DELETE /product/:productID
 user
-  POST /register (ensure inclusion in isa relationship)
+  POST /register
   POST /login 
-  GET /profile
+  GET /profile (only for customers)
   PUT /profile
-  POST? /logout
   DELETE /removeuser
+  ----------- (billing) (only for customer user)
+  GET /billing/ (gets all billing profiles for customer)
+  GET /billing/:billingid
+  POST /billing
+  PUT /billing/:billingid
+  DELETE /billing/:billingid
+  ----------- (address)
+  GET /address
+  
+address (auth)
+  GET /:addressid
+  POST /newaddress
+  PUT /:addressid
+  DELETE /:addressid
 order
   GET /
   GET /:id
