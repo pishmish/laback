@@ -39,28 +39,23 @@ router.delete('/removeuser', authenticateToken, (req, res) => {
 });
 
 //Section : User billingInfo management
-router.get('/billing', (req, res) => {
-  //TODO: requires authentication, derive user id from token
+router.get('/billing', authenticateToken, authenticateRole('customer'), (req, res) => {
   return billingController.getBillingInfo(req, res);
 });
 
-router.get('/billing/:id', (req, res) => {
-  //TODO: requires authentication
+router.get('/billing/:id', authenticateToken, authenticateRole('customer'), (req, res) => {
   return billingController.getBillingInfoById(req, res);
 });
 
-router.post('/billing', (req, res) => {
-  //TODO: requires authentication
+router.post('/billing', authenticateToken, authenticateRole('customer'), (req, res) => {
   return billingController.createBillingInfo(req, res);
 });
 
-router.put('/billing/:id', (req, res) => {
-  //TODO: requires authentication
+router.put('/billing/:id', authenticateToken, authenticateRole('customer'), (req, res) => {
   return billingController.updateBillingInfo(req, res);
 });
 
-router.delete('/billing/:id', (req, res) => {
-  //TODO: requires authentication
+router.delete('/billing/:id', authenticateToken, authenticateRole('customer'), (req, res) => {
   return billingController.deleteBillingInfo(req, res);
 });
 
