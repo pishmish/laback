@@ -55,7 +55,7 @@ const registerCustomerInternal = async (req, res) => {
     return true;
   } catch(err) {
     console.log(err);
-    throw err;
+    return res.status(500).json({msg: "Error registering customer"});
 }}
 
 const registerCustomer = async (req, res) => {
@@ -114,14 +114,13 @@ const loginUser = async (req, res) => {
 
     //check user role
     let role = await checkRole(user.username); //we know the user exists.
-    console.log(role);
 
     bcrypt.compare(password, user.password, (err, isMatch) => {
       if (err) {
         throw err;
       }
       if (!isMatch) {
-        throw new Error('Invalid credentials');
+        return res.status(401).json({msg: "Invalid credentials"});
       } else {
         //user logged in with correct password. Create a token
         const token = jwt.sign({id: user.username, role: role}, process.env.JWT_SECRET, {
@@ -138,16 +137,11 @@ const loginUser = async (req, res) => {
         return res.status(200).json({msg: "User logged in"});
       }
     });
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      throw new Error('Invalid credentials');
-    }
 
     return;
   } catch(err) {
     console.log(err);
-    throw err;
+    return res.status(500).json({msg: "Error logging in"});
   }
 }
 
@@ -188,14 +182,55 @@ const getUserProfile = async (req, res) => {
     });
   } catch(err) {
     console.log(err);
-    throw err;
+    return res.status(500).json({msg: "Error getting user profile"});
   }
 }
 
 const updateUserProfile = async (req, res) => {
+  //allows user to update name, password
+  // if the user is a customer, they can also update their phone. Address is upto addressAPI.
+  try {
+    const {name, password, phone} = req.body;
+    
+    if (name) {
+      let sql = 'UPDATE `User` SET name = ? WHERE username = ?';
+      const [results, fields] = await db.promise().query(sql, [name, req.username]);
+    }
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(password, salt);
+
+      let sql = 'UPDATE `User` SET password = ? WHERE username = ?';
+      const [results, fields] = await db.promise().query(sql, [hash, req.username]);
+    }
+
+    //Customer specific
+    if (req.role == 'customer' && phone) {
+      let sql = 'UPDATE `Customer` SET phone = ? WHERE username = ?';
+      const [results, fields] = await db.promise().query(sql, [phone, req.username]);
+    }
+
+    return res.status(200).json({
+      msg: "User updated"
+    });
+
+  } catch(err) {
+    console.log(err);
+    return res.status(500).json({msg: "Error updating user"});
+  }
 }
 
 const deleteUser = async (req, res) => {
+  try{
+    let sql = 'DELETE FROM `User` WHERE username = ?';
+    const [results, fields] = await db.promise().query(sql, [req.username]);
+    return res.status(200).json({msg: "User deleted"});
+  } catch(err) {
+    console.log(err);
+    throw err;
+    return res.status(500).json({msg: "Error deleting user"});
+  }
 }
 
 module.exports = {
