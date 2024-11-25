@@ -30,13 +30,11 @@ router.get('/profile', authenticateToken, authenticateRole('customer'), (req, re
   return userController.getUserProfile(req, res);
 });
 
-router.put('/profile', (req, res) => {
-  //TODO: requires authentication
+router.put('/profile', authenticateToken, (req, res) => {
   return userController.updateUserProfile(req, res);
 });
 
-router.delete('/removeuser', (req, res) => {
-  //TODO: requires authentication
+router.delete('/removeuser', authenticateToken, (req, res) => {
   return userController.deleteUser(req, res);
 });
 
