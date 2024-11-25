@@ -36,6 +36,10 @@ MYSQL_DB =
 MYSQL_DIALECT =  # this is for sequelize
 
 NODE_ENV = 'development'
+
+JWT_SECRET = 
+JWT_EXPIRE = 
+JWT_COOKIE = 
 ```
 
 and then fill up the values with your own MySQL credentials.

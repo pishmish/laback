@@ -1,6 +1,9 @@
+require('dotenv').config();
 const db = require('../config/database');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
 const registerUser = async (req, res) => {
   try{
@@ -70,6 +73,54 @@ const registerCustomer = async (req, res) => {
 
 
 const loginUser = async (req, res) => {
+  try {
+    const {username, password} = req.body;
+
+    if (!username || !password) {
+      throw new Error('Please fill in all fields');
+    }
+
+    let sql = 'SELECT * FROM `User` WHERE username = ?';
+    const [results, fields] = await db.promise().query(sql, [username]);
+
+    if (results.length == 0) {
+      throw new Error('Invalid credentials');
+    }
+
+    const user = results[0];
+    bcrypt.compare(password, user.password, (err, isMatch) => {
+      if (err) {
+        throw err;
+      }
+      if (!isMatch) {
+        throw new Error('Invalid credentials');
+      } else {
+        //user logged in with correct password. Create a token
+        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {
+          expiresIn: process.env.JWT_EXPIRE
+        });
+
+        res.cookie('authToken', token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: process.env.JWT_COOKIE
+        });
+
+        return res.status(200).json({msg: "User logged in"});
+      }
+    });
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      throw new Error('Invalid credentials');
+    }
+
+    return;
+  } catch(err) {
+    console.log(err);
+    throw err;
+  }
 }
 
 const getUserProfile = async (req, res) => {
