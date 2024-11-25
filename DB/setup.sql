@@ -159,7 +159,7 @@ create table if not exists `BillingInfo` (
     	foreign key (`customerID`) references Customer(`customerID`) on delete cascade,
 	foreign key (`addressID`) references Address(`addressID`) on delete restrict,
     	check (`creditCardEXP` regexp '^(0[1-9]|1[0-2])/([0-9]{2})$'), /* Enforce mm/yy format */
-	check (LENGTH(`creditCardNo`) = 64)
+	check (LENGTH(`creditCardNo`) >= 60 )
 );
 	
 create table if not exists `DeliveryRegion` (
