@@ -71,6 +71,29 @@ const registerCustomer = async (req, res) => {
     res.status(500).json({msg: "Error registering user"});
 }}
 
+const checkRole = async (username) => {
+  let sql = 'SELECT * FROM `Customer` WHERE username = ?';
+  const [results, fields] = await db.promise().query(sql, [username]);
+
+  let sql2 = 'SELECT * FROM `ProductManager` WHERE username = ?';
+  const [results2, fields2] = await db.promise().query(sql2, [username]);
+
+  let sql3 = 'SELECT * FROM `SalesManager` WHERE username = ?';
+  const [results3, fields3] = await db.promise().query(sql3, [username]);
+
+  if ((results2 && results2.length >0) || (results3 && results3.length >0)) {
+    if (results2.length>0) {
+      return 'productManager';
+    } else {
+      return 'salesManager';
+    }
+  } else if (results && results.length>0) {
+      return 'customer';
+  } else {
+    //this is dependent on the implementation of the calling function
+    return 'admin';
+  }
+}
 
 const loginUser = async (req, res) => {
   try {
@@ -88,6 +111,11 @@ const loginUser = async (req, res) => {
     }
 
     const user = results[0];
+
+    //check user role
+    let role = await checkRole(user.username); //we know the user exists.
+    console.log(role);
+
     bcrypt.compare(password, user.password, (err, isMatch) => {
       if (err) {
         throw err;
@@ -96,7 +124,7 @@ const loginUser = async (req, res) => {
         throw new Error('Invalid credentials');
       } else {
         //user logged in with correct password. Create a token
-        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {
+        const token = jwt.sign({id: user.username, role: role}, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRE
         });
 
