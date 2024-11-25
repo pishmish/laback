@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+//Middleware
+const { authenticateToken, authenticateRole } = require('../middleware/auth-handler');
+
 //import controllers
 const userController = require('../controllers/user');
 const billingController = require('../controllers/billing');
@@ -23,8 +26,7 @@ router.post('/login', (req, res) => {
   return userController.loginUser(req, res);
 });
 
-router.get('/profile', (req, res) => {
-  //TODO: requires authentication
+router.get('/profile', authenticateToken, authenticateRole('customer'), (req, res) => {
   return userController.getUserProfile(req, res);
 });
 

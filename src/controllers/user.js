@@ -152,6 +152,44 @@ const loginUser = async (req, res) => {
 }
 
 const getUserProfile = async (req, res) => {
+  //get customer profile (this will probably be expanded later)
+  try {
+    let sql = 'SELECT * FROM `Customer` WHERE username = ?';
+    const [results, fields] = await db.promise().query(sql, [req.username]);
+    if (results.length == 0) {
+      throw new Error('User not found');
+    }
+
+    let customer = results[0];
+
+    let sql2 = 'SELECT * FROM `Address` WHERE addressID = ?';
+    const [results2, fields2] = await db.promise().query(sql2, [customer.addressID]);
+    let address = results2[0];
+
+    //add orders here
+    let sql3 = 'SELECT * FROM `Order` WHERE customerID = ?';
+    const [results3, fields3] = await db.promise().query(sql3, [customer.customerID]);
+
+    //get user
+    let sql4 = 'SELECT * FROM `User` WHERE username = ?';
+    const [results4, fields4] = await db.promise().query(sql4, [req.username]);
+
+    let user = results4[0];
+    //remove the things that should be removed
+    delete user.password;
+    delete customer.addressID;
+    delete customer.customerID;
+
+    return res.status(200).json({
+      customer: customer,
+      address: address,
+      orders: results3,
+      user: user
+    });
+  } catch(err) {
+    console.log(err);
+    throw err;
+  }
 }
 
 const updateUserProfile = async (req, res) => {
