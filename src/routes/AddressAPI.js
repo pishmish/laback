@@ -12,7 +12,7 @@ router.get('/:addressid', (req, res) => {
     return addressController.getAddress(req, res);
 });
 
-router.get('/:userid', (req, res) => {
+router.get('/:username', (req, res) => {
     //TODO: require authentication
     return addressController.getUserAddress(req, res);
 });
@@ -31,3 +31,7 @@ router.delete('/:addressid', (req, res) => {
     //TODO: require authentication
     return addressController.deleteAddress(req, res);
 });
+
+module.exports = router;
+
+
