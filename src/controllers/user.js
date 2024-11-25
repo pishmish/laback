@@ -171,7 +171,6 @@ const getUserProfile = async (req, res) => {
     let user = results4[0];
     //remove the things that should be removed
     delete user.password;
-    delete customer.addressID;
     delete customer.customerID;
 
     return res.status(200).json({
