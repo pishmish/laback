@@ -41,7 +41,7 @@ address (auth)
   POST /newaddress
   PUT /:addressid
   DELETE /:addressid
-  GET /address/:username
+  GET /:username
 order
   GET /
   GET /:id
