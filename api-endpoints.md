@@ -36,14 +36,12 @@ user
   POST /billing
   PUT /billing/:billingid
   DELETE /billing/:billingid
-  ----------- (address)
-  GET /address
-  
 address (auth)
   GET /:addressid
   POST /newaddress
   PUT /:addressid
   DELETE /:addressid
+  GET /address/:username
 order
   GET /
   GET /:id
