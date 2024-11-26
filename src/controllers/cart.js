@@ -15,6 +15,7 @@ const getOrCreateCart = async (req, res) => {
       // Set the new fingerprint as a cookie
       res.cookie('fingerprint', fingerprint, {
         httpOnly: true, // Prevent client-side access to the cookie
+        security: true, // Secure cookie (HTTPS only)
         maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expiration (1 week)
       });
       console.log('New fingerprint created:', fingerprint);
@@ -92,6 +93,7 @@ const addProductToCart = async (req, res) => {
       // Set the new fingerprint as a cookie
       res.cookie('fingerprint', fingerprint, {
         httpOnly: true, // Prevent client-side access to the cookie
+        security: true, // Secure cookie (HTTPS only)
         maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expiration (1 week)
       });
       console.log('New fingerprint created:', fingerprint);
