@@ -62,6 +62,10 @@ router.delete('/category/:id', (req, res) => {
   return categoryController.deleteCategory(req, res);
 });
 
+router.get('/category/:name/products', (req, res) => {
+  return categoryController.getCategoryProducts(req, res);
+});
+
 //Section : Reviews
 router.get('/product/:id/reviews', (req, res) => {
   return reviewsController.getAllReviews(req, res);
