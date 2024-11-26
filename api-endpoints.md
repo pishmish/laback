@@ -10,6 +10,7 @@
   POST /category/ (admin)
   PUT /category/:id
   DELETE /category/:id
+  GET /category/:name/products
   -----------
   GET /product/:id/reviews
   GET /product/:id/reviews/:reviewid
