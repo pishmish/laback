@@ -182,11 +182,339 @@ const searchProducts = async (req, res) => {
   }
 }
 
+//Section : Sort
+
+//dont need this one
+// const sortProductsByID = async (req, res) => {
+//   try {
+//     let sql = 'SELECT * FROM `Product` ORDER BY productID';
+//     const [results, fields] = await db.promise().query(sql);
+//     res.status(200).json(results);
+//   } catch(err) {
+//     console.log(err);
+//     res.status(500).json({msg: "Error sorting products (by ID)"});
+//   }
+// }
+
+const sortProductsByStockAscending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY stock';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by stock ascending"});
+  }
+}
+
+const sortProductsByStockDescending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY stock DESC';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by stock descending"});
+  }
+}
+
+const sortProductsByNameAscending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY name';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by name ascending"});
+  }
+}
+
+const sortProductsByNameDescending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY name DESC';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by name descending"});
+  }
+}
+
+const sortProductsByPriceAscending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY unitPrice';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by unitPrice ascending"});
+  }
+}
+
+const sortProductsByPriceDescending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY unitPrice DESC';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by unitPrice descending"});
+  }
+}
+
+const sortProductsByRatingAscending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY overallRating';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by overallRating ascending"});
+  }
+}
+
+const sortProductsByRatingDescending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY overallRating DESC';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by overallRating descending"});
+  }
+}
+
+const sortProductsByDiscountAscending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY discountPercentage';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by discountPercentage ascending"});
+  }
+}
+
+const sortProductsByDiscountDescending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY discountPercentage DESC';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by discountPercentage descending"});
+  }
+}
+
+const sortProductsByTimeListedAscending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY timeListed';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by timeListed ascending"});
+  }
+}
+
+const sortProductsByTimeListedDescending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY timeListed DESC';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by timeListed descending"});
+  }
+}
+
+const sortProductsByBrandAscending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY brand';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by brand ascending"});
+  }
+}
+
+const sortProductsByBrandDescending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY brand DESC';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by brand descending"});
+  }
+}
+
+const sortProductsByColorAscending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY color';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by color ascending"});
+  }
+}
+
+const sortProductsByColorDescending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY color DESC';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by color descending"});
+  }
+}
+
+const sortProductsBySupplierAscending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY supplierID';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by supplierID ascending"});
+  }
+}
+
+const sortProductsBySupplierDescending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY supplierID DESC';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by supplierID descending"});
+  }
+}
+
+const sortProductsByMaterialAscending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY material';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by material ascending"});
+  }
+}
+
+const sortProductsByMaterialDescending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY material DESC';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by material descending"});
+  }
+}
+
+const sortProductsByCapacityAscending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY capacityLitres';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by capacityLitres ascending"});
+  }
+}
+
+const sortProductsByCapacityDescending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY capacityLitres DESC';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by capacityLitres descending"});
+  }
+}
+
+const sortProductsByWarrantyAscending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY warrantyMonths';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by warrantyMonths ascending"});
+  }
+}
+
+const sortProductsByWarrantyDescending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY warrantyMonths DESC';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by warrantyMonths descending"});
+  }
+}
+
+const sortProductsByPopularityAscending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY popularity';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by popularity ascending"});
+  }
+}
+
+const sortProductsByPopularityDescending = async (req, res) => {
+  try {
+    let sql = 'SELECT * FROM `Product` ORDER BY popularity DESC';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error sorting products by popularity descending"});
+  }
+}
+
+
 module.exports = {
     getAllProducts,
     getProductById,
     createProduct,
     updateProduct,
     deleteProduct,
-    searchProducts
-}
+    searchProducts,
+    // sortProductsByID,
+    sortProductsByStockAscending,
+    sortProductsByStockDescending,
+    sortProductsByNameAscending,
+    sortProductsByNameDescending,
+    sortProductsByPriceAscending,
+    sortProductsByPriceDescending,
+    sortProductsByRatingAscending,
+    sortProductsByRatingDescending,
+    sortProductsByDiscountAscending,
+    sortProductsByDiscountDescending,
+    sortProductsByTimeListedAscending,
+    sortProductsByTimeListedDescending,
+    sortProductsByBrandAscending,
+    sortProductsByBrandDescending,
+    sortProductsByColorAscending,
+    sortProductsByColorDescending,
+    sortProductsBySupplierAscending,
+    sortProductsBySupplierDescending,
+    sortProductsByMaterialAscending,
+    sortProductsByMaterialDescending,
+    sortProductsByCapacityAscending,
+    sortProductsByCapacityDescending,
+    sortProductsByWarrantyAscending,
+    sortProductsByWarrantyDescending,
+    sortProductsByPopularityAscending,
+    sortProductsByPopularityDescending
+  };
