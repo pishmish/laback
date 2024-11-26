@@ -61,6 +61,10 @@ const getCategoryProducts = async (req, res) => {
     let sql3 = 'SELECT * FROM `Category` WHERE name = ?';
     const [category, fields3] = await db.promise().query(sql3, [req.params.name]);
 
+    if (category.length == 0) {
+      return res.status(404).json({msg: "Category not found"});
+    }
+
 
     //get the products of the category
     let sql2 = 'SELECT * FROM `CategoryCategorizesProduct` WHERE categoryID = ?';
