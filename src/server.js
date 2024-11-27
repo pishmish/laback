@@ -11,6 +11,7 @@ const cron = require('node-cron');
 const storeapi = require('./routes/StoreAPI');
 const userapi = require('./routes/UserAPI');
 const cartapi = require('./routes/CartAPI');
+const addressapi = require('./routes/AddressAPI');
 
 //middleware 
 const notFoundMiddleware = require('./middleware/not-found');
@@ -27,16 +28,23 @@ app.use(cookieParser());
 app.use('/store', storeapi);
 app.use('/user', userapi);
 app.use('/cart', cartapi);
+app.use('/address', addressapi);
 
-//cron job for cleaning expired carts every day at midnight (may also gets rid of original carts in sampleData.sql)
-cron.schedule('0 0 * * *', async () => {
-  try {
-    await pool.promise().query('DELETE FROM Cart WHERE timeCreated < NOW() - INTERVAL 7 DAY');
-    console.log('Expired carts deleted');
-  } catch (err) {
-    console.error('Error deleting expired carts:', err);
-  }
-});
+
+// Schedule the cron job, but only if not in the test environment
+if (process.env.NODE_ENV !== "test") {
+  //cron job for cleaning expired carts every day at midnight (may also gets rid of original carts in sampleData.sql)
+  cron.schedule('0 0 * * *', async () => {
+    try 
+    {
+      await pool.promise().query('DELETE FROM Cart WHERE timeCreated < NOW() - INTERVAL 7 DAY');
+      console.log('Expired carts deleted');
+    } catch (err) {
+      console.error('Error deleting expired carts:', err);
+    }
+  });
+}
+
 
 //home page message:
 app.get('/', (req, res) => {
