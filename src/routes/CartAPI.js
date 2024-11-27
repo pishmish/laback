@@ -5,8 +5,13 @@ const router = express.Router();
 const cartController = require('../controllers/cart');
 // const cartContainsProductController = require('../controllers/cartContainsProduct');
 
-// Fetch or create a temporary cart using cookies
+//sample sanity route
 router.get('/', (req, res) => {
+    res.send('Cart API, welcome!');
+});
+
+// Fetch or create a temporary cart using cookies
+router.get('/fetch', (req, res) => {
     return cartController.getOrCreateCart(req, res);
 });
 
