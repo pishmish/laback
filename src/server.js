@@ -6,6 +6,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cron = require('node-cron');
+const cors = require('cors'); // Import cors
+const path = require('path'); // Import path
 
 // Import routes from
 const storeapi = require('./routes/StoreAPI');
@@ -23,6 +25,13 @@ const PORT = process.env.PORT || 5001; //port is 5001 for now
 // Middleware
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true // Allow credentials
+})); // Use CORS middleware and restrict to your frontend's URL
+
+// Serve static files from the "src/assets" directory
+app.use('/assets', express.static(path.join(__dirname, 'src/assets')));
 
 // Use the storeapi defined in route.js
 app.use('/store', storeapi);
