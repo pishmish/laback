@@ -9,6 +9,8 @@ const bodyParser = require('body-parser');
 const storeapi = require('./routes/StoreAPI');
 //const userapi = require('./routes/UserAPI'); uncomment later
 
+const deliveryapi = require('./routes/DeliveryAPI'); // added
+
 //middleware 
 const notFoundMiddleware = require('./middleware/not-found');
 const errorMiddleware = require('./middleware/error-handler');
@@ -22,6 +24,9 @@ app.use(bodyParser.json());
 // Use the storeapi defined in route.js
 app.use('/store', storeapi);
 //app.use('/user', userapi); uncomment later too
+
+// Use the DeliveryAPI defined 
+app.use('/delivery', deliveryapi);
 
 //home page message:
 app.get('/', (req, res) => {
