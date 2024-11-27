@@ -77,7 +77,7 @@ create table if not exists `User` (
 	`password` varchar(64) NOT NULL, /* Encrypt password using SHA256 */
 	PRIMARY KEY (`username`),
 	CONSTRAINT `chk_valid_email_user` CHECK (`email` LIKE '%_@__%.__%'),
-	constraint `chk_encrypted_password` CHECK (LENGTH(`password`) = 64)
+	constraint `chk_encrypted_password` CHECK (LENGTH(`password`) >= 60)
 );
 
 create table if not exists `ProductManager` (
@@ -159,7 +159,7 @@ create table if not exists `BillingInfo` (
     	foreign key (`customerID`) references Customer(`customerID`) on delete cascade,
 	foreign key (`addressID`) references Address(`addressID`) on delete restrict,
     	check (`creditCardEXP` regexp '^(0[1-9]|1[0-2])/([0-9]{2})$'), /* Enforce mm/yy format */
-	check (LENGTH(`creditCardNo`) = 64)
+	check (LENGTH(`creditCardNo`) >= 60 )
 );
 	
 create table if not exists `DeliveryRegion` (
@@ -184,11 +184,11 @@ create table if not exists `Cart` (
 	`totalPrice` decimal(8,2) NOT NULL default 0,
 	`numProducts` int NOT NULL default 0,
 	`fingerprint` varchar(255),
-	`temporary` boolean NOT NULL default true,
+	`temporary` boolean NOT NULL default true,			/* probably remove this*/
 	`timeCreated` timestamp not null default CURRENT_TIMESTAMP, /* So that we can tell when to delete it */
-	`customerID` int,
+	`customerID` int,									/* probably remove this*/
 	PRIMARY KEY (`cartID`),
-	FOREIGN KEY (`customerID`) REFERENCES `Customer`(`customerID`) ON DELETE CASCADE
+	FOREIGN KEY (`customerID`) REFERENCES `Customer`(`customerID`) ON DELETE CASCADE /* probably remove this*/
 );
 
 create table if not exists `CartContainsProduct` (

@@ -698,21 +698,21 @@ INSERT INTO `CourierDeliversToDeliveryRegion` (`courierID`, `regionID`, `deliver
 INSERT INTO `Cart` (`totalPrice`, `numProducts`, `fingerprint`, `temporary`, `customerID`) VALUES
 (234.97, 3, 'abc123', FALSE, 1),
 (450.97, 5, 'def456', FALSE, 2),
-(49.99, 1, 'ghi789', TRUE, 3);  /*when user logs in true cart is merged into false*/
+(49.99, 1, 'ghi789', TRUE, null);  /*when user logs in true cart is merged into false*/
 
 
 
 
 /*CartContainsProduct Table*/
 INSERT INTO `CartContainsProduct` (`cartID`, `productID`, `quantity`) VALUES
-(1, 5, 1),
+/*(1, 5, 1),
 (1, 12, 1),
-(1, 23, 1),     /*when cart is merged or linked to user, these values disappear and transferred to OrderOrderItemsProduct table*/
+(1, 23, 1),     when user orders, these values disappear and transferred to OrderOrderItemsProduct table
 (2, 34, 1),
 (2, 45, 1),
 (2, 51, 1),
 (2, 7, 1),
-(2, 61, 1),
+(2, 61, 1),*/
 (3, 7, 1);
 
 
