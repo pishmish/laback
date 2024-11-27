@@ -1,4 +1,5 @@
-const  db  = require('../config/database');
+const db = require('../config/database');
+const path = require('path');
 
 const getAllProducts = async (req, res) => {
 
@@ -25,6 +26,25 @@ const getProductById = async (req, res) => {
     res.status(500).json({msg: "Error retrieving product"});
   }
 }
+
+const getProductImage = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const sql = 'SELECT picturePath FROM `Pictures` WHERE productID = ?';
+    const [results, fields] = await db.promise().query(sql, [id]);
+
+    if (results.length > 0) {
+      const imagePath = results[0].picturePath;
+      const absolutePath = path.join(__dirname, '..', imagePath); // Adjust the path as necessary
+      res.sendFile(absolutePath);
+    } else {
+      res.status(404).json({ msg: "Image not found" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Error retrieving image" });
+  }
+};
 
 const createProduct = async (req, res) => {
   try {
@@ -581,38 +601,39 @@ const searchAndOrSortProducts = async (req, res) => {
 
 
 module.exports = {
-    getAllProducts,
-    getProductById,
-    createProduct,
-    updateProduct,
-    deleteProduct,
-    searchProducts,
-    // sortProductsByID,
-    searchAndOrSortProducts,
-    // sortProductsByStockAscending,
-    // sortProductsByStockDescending,
-    // sortProductsByNameAscending,
-    // sortProductsByNameDescending,
-    // sortProductsByPriceAscending,
-    // sortProductsByPriceDescending,
-    // sortProductsByRatingAscending,
-    // sortProductsByRatingDescending,
-    // sortProductsByDiscountAscending,
-    // sortProductsByDiscountDescending,
-    // sortProductsByTimeListedAscending,
-    // sortProductsByTimeListedDescending,
-    // sortProductsByBrandAscending,
-    // sortProductsByBrandDescending,
-    // sortProductsByColorAscending,
-    // sortProductsByColorDescending,
-    // sortProductsBySupplierAscending,
-    // sortProductsBySupplierDescending,
-    // sortProductsByMaterialAscending,
-    // sortProductsByMaterialDescending,
-    // sortProductsByCapacityAscending,
-    // sortProductsByCapacityDescending,
-    // sortProductsByWarrantyAscending,
-    // sortProductsByWarrantyDescending,
-    // sortProductsByPopularityAscending,
-    // sortProductsByPopularityDescending
-  };
+  getAllProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  searchProducts,
+  // sortProductsByID,
+  searchAndOrSortProducts,
+  // sortProductsByStockAscending,
+  // sortProductsByStockDescending,
+  // sortProductsByNameAscending,
+  // sortProductsByNameDescending,
+  // sortProductsByPriceAscending,
+  // sortProductsByPriceDescending,
+  // sortProductsByRatingAscending,
+  // sortProductsByRatingDescending,
+  // sortProductsByDiscountAscending,
+  // sortProductsByDiscountDescending,
+  // sortProductsByTimeListedAscending,
+  // sortProductsByTimeListedDescending,
+  // sortProductsByBrandAscending,
+  // sortProductsByBrandDescending,
+  // sortProductsByColorAscending,
+  // sortProductsByColorDescending,
+  // sortProductsBySupplierAscending,
+  // sortProductsBySupplierDescending,
+  // sortProductsByMaterialAscending,
+  // sortProductsByMaterialDescending,
+  // sortProductsByCapacityAscending,
+  // sortProductsByCapacityDescending,
+  // sortProductsByWarrantyAscending,
+  // sortProductsByWarrantyDescending,
+  // sortProductsByPopularityAscending,
+  // sortProductsByPopularityDescending
+  getProductImage
+};

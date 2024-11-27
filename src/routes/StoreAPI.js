@@ -23,6 +23,10 @@ router.get('/product/:id', (req, res) => {
   return productController.getProductById(req, res);
 });
 
+router.get('/product/:id/image', (req, res) => {
+  return productController.getProductImage(req, res);
+});
+
 router.post('/product', (req, res) => {
   //TODO: requires authentication
   return productController.createProduct(req, res);
