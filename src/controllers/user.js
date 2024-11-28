@@ -122,7 +122,24 @@ const loginUser = async (req, res) => {
     const user = userResults[0];
 
     // Check user role
-    const role = await checkRole(user.username);
+    let role = 'customer'; // Default role
+
+    // Check if the user is a Product Manager
+    const productManagerSql = 'SELECT * FROM `ProductManager` WHERE username = ?';
+    const [productManagerResults] = await db.promise().query(productManagerSql, [username]);
+
+    if (productManagerResults.length > 0) {
+      role = 'productManager';
+    } else {
+      // Check if the user is a Sales Manager
+      const salesManagerSql = 'SELECT * FROM `SalesManager` WHERE username = ?';
+      const [salesManagerResults] = await db.promise().query(salesManagerSql, [username]);
+
+      if (salesManagerResults.length > 0) {
+        role = 'salesManager';
+      }
+    }
+
     console.log(`Role for user ${username}: ${role}`);
 
     // Verify password
