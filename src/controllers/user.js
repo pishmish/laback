@@ -72,78 +72,84 @@ const registerCustomer = async (req, res) => {
 }}
 
 const checkRole = async (username) => {
-  let sql = 'SELECT * FROM `Customer` WHERE username = ?';
-  const [results, fields] = await db.promise().query(sql, [username]);
+  try {
+    console.log(`Checking role for username: ${username}`);
 
-  let sql2 = 'SELECT * FROM `ProductManager` WHERE username = ?';
-  const [results2, fields2] = await db.promise().query(sql2, [username]);
+    // Check roles in order
+    let sql = 'SELECT * FROM `Customer` WHERE username = ?';
+    const [customerResults] = await db.promise().query(sql, [username]);
+    if (customerResults.length > 0) {
+      return 'customer';
+    }
 
-  let sql3 = 'SELECT * FROM `SalesManager` WHERE username = ?';
-  const [results3, fields3] = await db.promise().query(sql3, [username]);
-
-  if ((results2 && results2.length >0) || (results3 && results3.length >0)) {
-    if (results2.length>0) {
+    let sql2 = 'SELECT * FROM `ProductManager` WHERE username = ?';
+    const [productManagerResults] = await db.promise().query(sql2, [username]);
+    if (productManagerResults.length > 0) {
       return 'productManager';
-    } else {
+    }
+
+    let sql3 = 'SELECT * FROM `SalesManager` WHERE username = ?';
+    const [salesManagerResults] = await db.promise().query(sql3, [username]);
+    if (salesManagerResults.length > 0) {
       return 'salesManager';
     }
-  } else if (results && results.length>0) {
-      return 'customer';
-  } else {
-    //this is dependent on the implementation of the calling function
-    return 'admin';
+
+    console.log('No specific role found for username:', username);
+    return 'admin'; // Default to admin if no other roles match
+  } catch (error) {
+    console.error('Error in checkRole:', error);
+    throw new Error('Failed to determine user role');
   }
-}
+};
 
 const loginUser = async (req, res) => {
   try {
-    const {username, password} = req.body;
+    const { username, password } = req.body;
 
+    // Validate input
     if (!username || !password) {
-      throw new Error('Please fill in all fields');
+      return res.status(400).json({ msg: 'Please fill in all fields' });
     }
 
-    let sql = 'SELECT * FROM `User` WHERE username = ?';
-    const [results, fields] = await db.promise().query(sql, [username]);
+    // Fetch user details
+    const sql = 'SELECT * FROM `User` WHERE username = ?';
+    const [userResults] = await db.promise().query(sql, [username]);
 
-    if (results.length == 0) {
-      throw new Error('Invalid credentials');
+    if (userResults.length === 0) {
+      return res.status(401).json({ msg: 'Invalid username or password' });
     }
 
-    const user = results[0];
+    const user = userResults[0];
 
-    //check user role
-    let role = await checkRole(user.username); //we know the user exists.
+    // Check user role
+    const role = await checkRole(user.username);
+    console.log(`Role for user ${username}: ${role}`);
 
-    bcrypt.compare(password, user.password, (err, isMatch) => {
-      if (err) {
-        throw err;
-      }
-      if (!isMatch) {
-        return res.status(401).json({msg: "Invalid credentials"});
-      } else {
-        //user logged in with correct password. Create a token
-        const token = jwt.sign({id: user.username, role: role}, process.env.JWT_SECRET, {
-          expiresIn: process.env.JWT_EXPIRE
-        });
+    // Verify password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ msg: 'Invalid username or password' });
+    }
 
-        res.cookie('authToken', token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-          maxAge: process.env.JWT_COOKIE
-        });
-
-        return res.status(200).json({msg: "User logged in"});
-      }
+    // Create JWT token
+    const token = jwt.sign({ id: user.username, role }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE,
     });
 
-    return;
-  } catch(err) {
-    console.log(err);
-    return res.status(500).json({msg: "Error logging in"});
+    // Set cookie with the token
+    res.cookie('authToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: parseInt(process.env.JWT_COOKIE),
+    });
+
+    return res.status(200).json({ msg: 'User logged in', role });
+  } catch (error) {
+    console.error('Error in loginUser:', error);
+    return res.status(500).json({ msg: 'Error logging in' });
   }
-}
+};
 
 const getUserProfile = async (req, res) => {
   //get customer profile (this will probably be expanded later)
