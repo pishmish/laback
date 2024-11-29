@@ -42,7 +42,7 @@ router.delete('/product/:id', (req, res) => {
   return productController.deleteProduct(req, res);
 });
 
-//Section : Categories
+// Section: Categories
 router.get('/category', (req, res) => {
   return categoryController.getAllCategories(req, res);
 });
@@ -57,7 +57,7 @@ router.post('/category', (req, res) => {
 });
 
 router.put('/category/:id', (req, res) => {
-  //TODO:: requires authentication
+  //TODO: requires authentication
   return categoryController.updateCategory(req, res);
 });
 
@@ -73,6 +73,10 @@ router.get('/category/:name/products', (req, res) => {
 //Section : Reviews
 router.get('/product/:id/reviews', (req, res) => {
   return reviewsController.getAllReviews(req, res);
+});
+
+router.get('/product/:id/reviews/approved', (req, res) => {
+  return reviewsController.getApprovedReviews(req, res);
 });
 
 router.get('/product/:id/reviews/:reviewId', (req, res) => {

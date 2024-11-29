@@ -11,6 +11,17 @@ const getAllReviews = async (req, res) => {
   }
 }
 
+const getApprovedReviews = async (req, res) => {
+  try {
+    const sql = 'SELECT * FROM `Review` WHERE productID = ? AND approvalStatus = 1';
+    const [results, fields] = await db.promise().query(sql, [req.params.id]);
+    res.status(200).json(results);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: 'Error retrieving reviews' });
+  }
+};
+
 const getReviewById = async (req, res) => {
   try{
     let sql = 'SELECT * FROM `Review` WHERE reviewID = ?';
@@ -99,6 +110,7 @@ const deleteReview = async (req, res) => {
 
 module.exports = {
   getAllReviews,
+  getApprovedReviews,
   getReviewById,
   createReview,
   updateReview,
