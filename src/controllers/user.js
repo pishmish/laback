@@ -121,6 +121,16 @@ const loginUser = async (req, res) => {
 
     const user = userResults[0];
 
+    // Fetch customerID from the Customer table
+    const customerSql = 'SELECT customerID FROM `Customer` WHERE username = ?';
+    const [customerResults] = await db.promise().query(customerSql, [username]);
+
+    if (customerResults.length === 0) {
+      return res.status(404).json({ msg: 'Customer not found' });
+    }
+
+    const customerID = customerResults[0].customerID;
+
     // Check user role
     let role = 'customer'; // Default role
 
@@ -149,7 +159,7 @@ const loginUser = async (req, res) => {
     }
 
     // Create JWT token
-    const token = jwt.sign({ id: user.username, role }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user.username, role, customerID }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE,
     });
 
@@ -161,7 +171,7 @@ const loginUser = async (req, res) => {
       maxAge: parseInt(process.env.JWT_COOKIE),
     });
 
-    return res.status(200).json({ msg: 'User logged in', role });
+    return res.status(200).json({ msg: 'User logged in', token, role });
   } catch (error) {
     console.error('Error in loginUser:', error);
     return res.status(500).json({ msg: 'Error logging in' });
