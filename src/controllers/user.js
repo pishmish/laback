@@ -121,32 +121,31 @@ const loginUser = async (req, res) => {
 
     const user = userResults[0];
 
+    // Initialize customerID outside the if block
+    let customerID = null;
+    let role = 'customer'; // Default role
+
     // Fetch customerID from the Customer table
     const customerSql = 'SELECT customerID FROM `Customer` WHERE username = ?';
     const [customerResults] = await db.promise().query(customerSql, [username]);
-
-    if (customerResults.length === 0) {
-      return res.status(404).json({ msg: 'Customer not found' });
-    }
-
-    const customerID = customerResults[0].customerID;
-
-    // Check user role
-    let role = 'customer'; // Default role
-
-    // Check if the user is a Product Manager
-    const productManagerSql = 'SELECT * FROM `ProductManager` WHERE username = ?';
-    const [productManagerResults] = await db.promise().query(productManagerSql, [username]);
-
-    if (productManagerResults.length > 0) {
-      role = 'productManager';
+    
+    if (customerResults.length > 0) {
+      customerID = customerResults[0].customerID;
     } else {
-      // Check if the user is a Sales Manager
-      const salesManagerSql = 'SELECT * FROM `SalesManager` WHERE username = ?';
-      const [salesManagerResults] = await db.promise().query(salesManagerSql, [username]);
-
-      if (salesManagerResults.length > 0) {
-        role = 'salesManager';
+      // Check if the user is a Product Manager
+      const productManagerSql = 'SELECT * FROM `ProductManager` WHERE username = ?';
+      const [productManagerResults] = await db.promise().query(productManagerSql, [username]);
+      if (productManagerResults.length > 0) {
+        role = 'productManager';
+      } else {
+        // Check if the user is a Sales Manager
+        const salesManagerSql = 'SELECT * FROM `SalesManager` WHERE username = ?';
+        const [salesManagerResults] = await db.promise().query(salesManagerSql, [username]);
+        if (salesManagerResults.length > 0) {
+          role = 'salesManager';
+        } else {
+          return res.status(404).json({ msg: 'User not found' });
+        }
       }
     }
 
@@ -159,7 +158,11 @@ const loginUser = async (req, res) => {
     }
 
     // Create JWT token
-    const token = jwt.sign({ id: user.username, role, customerID }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ 
+      id: user.username, 
+      role,
+      customerID // This will be null for non-customer roles
+    }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE,
     });
 

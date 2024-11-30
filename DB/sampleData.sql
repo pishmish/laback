@@ -558,7 +558,7 @@ insert into `CategoryCategorizesProduct` (`categoryID`, `productID`) values
 /*-- Inserting 6 users (2 Product Managers, 2 Sales Managers, and 3 Customers)*/
 insert into `User` (`name`, `email`, `username`, `password`) values
 ('Alice Johnson', 'alice.product@company.com', 'alicejohnson', '$2b$12$EGE5qYOuRRHhMujtiaAq/emPDYdnTip.wRFWevb56Yn1fyT.X.eZK'), /*password: AJ123*/
-('Bob Smith', 'bob.product@company.com', 'bobsmith', '$2b$12$tfJNQbtRo1y78scL5IMQp.92Fwf77SCD3uMLlv8eoS8M4DUeDNwkO'), /*password: BS123*/
+('Bob Smith', 'bob.product@company.com', 'bobsmith', '$2b$12$XazL/WqkSUkcKc9eVNBbqeWEsDmiJjSEUER/ojrgMJPpX8NT.dXCu'), /*password: BS123*/
 
 ('Charlie Brown', 'charlie.sales@company.com', 'charliebrown', '$2b$12$B23U7bCQBQgH48XYdMXAw.mbKvbI/xPS2WrDc6fK3V74uxfXdMgWG'), /*password: CB123*/
 ('David Williams', 'david.sales@company.com', 'davidwilliams', '$2b$12$pTJ2KOQlyXFEJkcV8RnL6OlWVvl.xekWmt1GkZG29QIWJ6ZGvsvmq'), /*password: DW123*/

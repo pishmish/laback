@@ -93,9 +93,18 @@ router.put('/product/:id/reviews/:reviewId', (req, res) => {
   return reviewsController.updateReview(req, res);
 });
 
+router.put('/reviews/:reviewId', (req, res) => {
+  //TODO: requires authentication
+  return reviewsController.updateReview(req, res);
+});
+
 router.delete('/reviews/:reviewId', (req, res) => {
   //TODO: requires authentication
   return reviewsController.deleteReview(req, res);
+});
+
+router.get('/reviews/pending/:productManagerUsername', (req, res) => {
+  return reviewsController.getPendingReviews(req, res);
 });
 
 //Section : Search
