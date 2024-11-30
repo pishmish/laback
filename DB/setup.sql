@@ -271,7 +271,7 @@ create table if not exists `Review` (
 	`productID` INT NOT NULL,
 	/* ProdManagerApprovesReview relationship */
 	`productManagerUsername` varchar(64),
-	`approvalStatus` BOOLEAN DEFAULT FALSE,
+	`approvalStatus` INT DEFAULT 0, /* 0=pending, 1=approved, 2=rejected */
 	FOREIGN KEY (`productManagerUsername`) REFERENCES `ProductManager`(`username`) on delete restrict,
 	FOREIGN KEY (`customerID`) REFERENCES `Customer`(`customerID`) on delete no action,
 	FOREIGN KEY (`productID`) REFERENCES `Product`(`productID`) on delete cascade,
