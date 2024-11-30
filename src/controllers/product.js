@@ -27,6 +27,40 @@ const getProductById = async (req, res) => {
   }
 }
 
+const getProductForManager = async (req, res) => {
+  try {
+    const username = req.params.username; // Use const instead of global variable
+
+    // Get supplierID from ProductManager table
+    const productManagerSql = 'SELECT supplierID FROM `ProductManager` WHERE username = ?';
+    const [productManagerResults] = await db.promise().query(productManagerSql, [username]);
+
+    let supplierID;
+
+    if (productManagerResults.length > 0) {
+      supplierID = productManagerResults[0].supplierID;
+    } else {
+      // Check SalesManager table if not found in ProductManager
+      const salesManagerSql = 'SELECT supplierID FROM `SalesManager` WHERE username = ?';
+      const [salesManagerResults] = await db.promise().query(salesManagerSql, [username]);
+      
+      if (salesManagerResults.length === 0) {
+        return res.status(404).json({ msg: "Manager not found" });
+      }
+      supplierID = salesManagerResults[0].supplierID;
+    }
+
+    // Get products for the supplier
+    const productsSql = 'SELECT * FROM `Product` WHERE supplierID = ?';
+    const [results] = await db.promise().query(productsSql, [supplierID]);
+    
+    return res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    return res.status(500).json({ msg: "Error retrieving products" });
+  }
+}
+
 const getProductImage = async (req, res) => {
   try {
     const id = req.params.id;
@@ -603,6 +637,8 @@ const searchAndOrSortProducts = async (req, res) => {
 module.exports = {
   getAllProducts,
   getProductById,
+  //getProductBySupplierId,
+  getProductForManager,
   createProduct,
   updateProduct,
   deleteProduct,

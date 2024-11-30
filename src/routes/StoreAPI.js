@@ -23,6 +23,14 @@ router.get('/product/:id', (req, res) => {
   return productController.getProductById(req, res);
 });
 
+//router.get('/product/supplier/:id', (req, res) => {
+//  return productController.getProductBySupplierId(req, res);
+//});
+
+router.get('/product/admin/:username', (req, res) => {
+  return productController.getProductForManager(req, res);
+});
+
 router.get('/product/:id/image', (req, res) => {
   return productController.getProductImage(req, res);
 });
