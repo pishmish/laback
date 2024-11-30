@@ -118,6 +118,23 @@ const updateReview = async (req, res) => {
       req.params.reviewId
     ]);
 
+    // If review is approved, update product's overall rating
+    if (updatedReview.approvalStatus === 1) {
+      // Get all approved reviews for this product
+      const getApprovedReviewsSql = 'SELECT reviewStars FROM `Review` WHERE productID = ? AND approvalStatus = 1';
+      const [approvedReviews] = await db.promise().query(getApprovedReviewsSql, [updatedReview.productID]);
+
+      if (approvedReviews.length > 0) {
+        // Calculate average rating
+        const totalStars = approvedReviews.reduce((sum, review) => sum + review.reviewStars, 0);
+        const averageRating = (totalStars / approvedReviews.length).toFixed(2);
+
+        // Update product's overall rating
+        const updateProductSql = 'UPDATE `Product` SET overallRating = ? WHERE productID = ?';
+        await db.promise().query(updateProductSql, [averageRating, updatedReview.productID]);
+      }
+    }
+
     res.status(200).json({ msg: "Review updated" });
   } catch(err) {
     console.log(err);
