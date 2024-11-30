@@ -287,13 +287,6 @@ VALUES
 (75, 'Athlète Forme', 55.00, 4.5, 8, 'Durable and lightweight, designed for your workout gear.', 'Vitesse Actif', 1, 'Nylon', 32.0, 12, 'SN-GB-F02', 90, 'Gray'),
 (70, 'Gym Elité', 59.99, 4.7, 12, 'Perfect gym bag with multiple pockets and strong zippers.', 'Élan Sportif', 1, 'Canvas', 28.0, 12, 'SN-GB-F03', 88, 'Navy');
 
-/*-- Products for Yoga Bags */
-INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
-VALUES
-(60, 'Yoga Zen', 45.99, 4.8, 10, 'Stylish yoga bag with space for your mat and accessories.', 'Calme Santé', 1, 'Cotton', 15.0, 12, 'SN-YB-F01', 92, 'Beige'),
-(55, 'Sérénité Yoga', 49.50, 4.6, 12, 'Compact and sleek, ideal for yoga practitioners on the go.', 'Liberté Zen', 1, 'Canvas', 13.0, 12, 'SN-YB-F02', 89, 'Olive Green'),
-(50, 'Harmonie Sérénité', 52.00, 4.7, 8, 'Well-structured bag for carrying all your yoga gear.', 'Esprit Yoga', 1, 'Polyester', 14.0, 12, 'SN-YB-F03', 91, 'Light Gray');
-
 /*-- Products for Sports Duffle Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
@@ -393,10 +386,7 @@ INSERT INTO `Pictures` (`productID`, `picturePath`) VALUES
     (66, 'assets/images/66.png'), 
     (67, 'assets/images/67.png'),
     (68, 'assets/images/68.png'), 
-    (69, 'assets/images/69.png'),
-    (70, 'assets/images/70.png'), 
-    (71, 'assets/images/71.png'),
-    (72, 'assets/images/72.png');
+    (69, 'assets/images/69.png');
 
 
 
@@ -567,15 +557,15 @@ insert into `CategoryCategorizesProduct` (`categoryID`, `productID`) values
 /* -- User Table */
 /*-- Inserting 6 users (2 Product Managers, 2 Sales Managers, and 3 Customers)*/
 insert into `User` (`name`, `email`, `username`, `password`) values
-('Alice Johnson', 'alice.product@company.com', 'alicejohnson', SHA2('AJ123', 256)),
-('Bob Smith', 'bob.product@company.com', 'bobsmith', SHA2('BS123', 256)), 
+('Alice Johnson', 'alice.product@company.com', 'alicejohnson', '$2b$12$EGE5qYOuRRHhMujtiaAq/emPDYdnTip.wRFWevb56Yn1fyT.X.eZK'), /*password: AJ123*/
+('Bob Smith', 'bob.product@company.com', 'bobsmith', '$2b$12$tfJNQbtRo1y78scL5IMQp.92Fwf77SCD3uMLlv8eoS8M4DUeDNwkO'), /*password: BS123*/
 
-('Charlie Brown', 'charlie.sales@company.com', 'charliebrown', SHA2('CB123', 256)), 
-('David Williams', 'david.sales@company.com', 'davidwilliams', SHA2('DW123', 256)),
+('Charlie Brown', 'charlie.sales@company.com', 'charliebrown', '$2b$12$B23U7bCQBQgH48XYdMXAw.mbKvbI/xPS2WrDc6fK3V74uxfXdMgWG'), /*password: CB123*/
+('David Williams', 'david.sales@company.com', 'davidwilliams', '$2b$12$pTJ2KOQlyXFEJkcV8RnL6OlWVvl.xekWmt1GkZG29QIWJ6ZGvsvmq'), /*password: DW123*/
 
-('Eva Davis', 'eva.davis@gmail.com', 'evadavis', SHA2('ED123', 256)), 
-('Frank Miller', 'frank.miller@yahoo.com', 'frankmiller', SHA2('FM123', 256)),
-('Eve Green', 'eve.green@gmail.com', 'evegreen', SHA2('EG123', 256));
+('Eva Davis', 'eva.davis@gmail.com', 'evadavis', '$2b$12$Am60sgiHr6mu1BPfPpX5n.JqOUKsMGVsgocnXISyWsG/WeERalurW'), /*password: ED123*/
+('Frank Miller', 'frank.miller@yahoo.com', 'frankmiller', '$2b$12$4ttyt.gmQi6Ov3sG4TbI2ulaeDfcA7PaudhIcVyNi/oNRQR0zKFky'), /*password: FM123*/
+('Eve Green', 'eve.green@gmail.com', 'evegreen', '$2b$12$4Awi28tlIbNQ2nt15DDAZ.WJdxHPGXpaS7X6Z/1Lxm5ojBQxK2LYO'); /*password: EG123*/
 
 
 
@@ -807,16 +797,16 @@ INSERT INTO `SalesManagerManagesPriceProduct` (`productID`, `newPrice`, `discoun
 
 /*Review Table*/
 INSERT INTO `Review` (`reviewContent`, `reviewStars`, `customerID`, `productID`, `productManagerUsername`, `approvalStatus`) VALUES
-('Great product, highly recommend!', 5, 1, 1, 'alicejohnson', TRUE),
-('Good value for the price.', 4, 2, 12, 'alicejohnson', TRUE),
-('Average quality, could be better.', 3, 3, 33, 'bobsmith', FALSE),
-('Not satisfied with the product.', 2, 3, 4, 'alicejohnson', FALSE),
-('Excellent quality and fast shipping.', 5, 2, 45, 'alicejohnson', TRUE),
-('Product arrived damaged.', 1, 2, 26, 'alicejohnson', FALSE),
-('Very comfortable and stylish.', 4, 1, 27, 'alicejohnson', TRUE),
-('Would not buy again.', 2, 3, 18, 'bobsmith', FALSE),
-('Exceeded my expectations!', 5, 1, 9, 'bobsmith', TRUE),
-('Decent product for the price.', 3, 1, 10, 'bobsmith', TRUE);
+('Great product, highly recommend!', 5, 1, 1, 'alicejohnson', 1),
+('Good value for the price.', 4, 2, 12, 'alicejohnson', 1),
+('Average quality, could be better.', 3, 3, 33, 'bobsmith', 2),
+('Not satisfied with the product.', 2, 3, 4, 'alicejohnson', 2),
+('Excellent quality and fast shipping.', 5, 2, 45, 'alicejohnson', 1),
+('Product arrived damaged.', 1, 2, 26, 'alicejohnson', 2),
+('Very comfortable and stylish.', 4, 1, 27, 'alicejohnson', 1),
+('Would not buy again.', 2, 3, 18, 'bobsmith', 2),
+('Exceeded my expectations!', 5, 1, 9, 'bobsmith', 1),
+('Decent product for the price.', 3, 1, 10, 'bobsmith', 1);
 
 
 
