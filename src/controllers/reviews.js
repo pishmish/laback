@@ -88,14 +88,42 @@ const createReview = async (req, res) => {
 
 const updateReview = async (req, res) => {
   try {
-    let sql = 'UPDATE `Review` SET reviewContent = ?, reviewStars = ?, customerID = ?, productID = ?, productManagerUsername = ?, approvalStatus = ? WHERE reviewID = ?';
-    const [results, fields] = await db.promise().query(sql, [req.body.reviewContent, req.body.reviewStars, req.body.customerID, req.params.id, req.body.productManagerUsername, req.body.approvalStatus, req.params.reviewId]);
-    res.status(200).json({msg: "Review updated"});
+    // First get the existing review
+    const getReviewSql = 'SELECT * FROM `Review` WHERE reviewID = ?';
+    const [existingReview] = await db.promise().query(getReviewSql, [req.params.reviewId]);
+
+    if (existingReview.length === 0) {
+      return res.status(404).json({ msg: "Review not found" });
+    }
+
+    // Merge existing data with updates
+    const updatedReview = {
+      reviewContent: req.body.reviewContent ?? existingReview[0].reviewContent,
+      reviewStars: req.body.reviewStars ?? existingReview[0].reviewStars,
+      customerID: req.body.customerID ?? existingReview[0].customerID,
+      productID: req.body.productID ?? existingReview[0].productID,
+      productManagerUsername: req.body.productManagerUsername ?? existingReview[0].productManagerUsername,
+      approvalStatus: req.body.approvalStatus ?? existingReview[0].approvalStatus
+    };
+
+    // Update with merged data
+    const updateSql = 'UPDATE `Review` SET reviewContent = ?, reviewStars = ?, customerID = ?, productID = ?, productManagerUsername = ?, approvalStatus = ? WHERE reviewID = ?';
+    await db.promise().query(updateSql, [
+      updatedReview.reviewContent,
+      updatedReview.reviewStars,
+      updatedReview.customerID,
+      updatedReview.productID, 
+      updatedReview.productManagerUsername,
+      updatedReview.approvalStatus,
+      req.params.reviewId
+    ]);
+
+    res.status(200).json({ msg: "Review updated" });
   } catch(err) {
     console.log(err);
-    res.status(500).json({msg: "Error updating review"});
+    res.status(500).json({ msg: "Error updating review" });
   }
-}
+};
 
 const deleteReview = async (req, res) => {
   try {
@@ -108,11 +136,29 @@ const deleteReview = async (req, res) => {
   }
 }
 
+const getPendingReviews = async (req, res) => {
+  try {
+    // Get productManagerUsername from request parameters
+    const { productManagerUsername } = req.params;
+
+    // SQL query to fetch pending reviews for the product manager
+    const sql = 'SELECT * FROM `Review` WHERE productManagerUsername = ? AND approvalStatus = 0';
+    const [results, fields] = await db.promise().query(sql, [productManagerUsername]);
+
+    // Return results
+    res.status(200).json(results);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: 'Error retrieving pending reviews' });
+  }
+};
+
 module.exports = {
   getAllReviews,
   getApprovedReviews,
   getReviewById,
   createReview,
   updateReview,
-  deleteReview
+  deleteReview,
+  getPendingReviews
 };
