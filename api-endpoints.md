@@ -19,6 +19,8 @@
   DELETE /reviews/:reviewid
   -----
   GET /search?q=
+  -----
+  POST /sort?sortBy=&sortOrder=
 cart
   GET /
   -----------
