@@ -345,7 +345,6 @@ const deleteProductFromCart = async (req, res) => {
   }
 };
 
-
 //Merge carts on login using cookies and customerID
 ///creates a new permanent cart if none exists, deletes the temporary cart if it exists, and clears the fingerprint cookie
 const mergeCartsOnLogin = async (req, res) => {
@@ -413,6 +412,39 @@ const mergeCartsOnLogin = async (req, res) => {
     res.status(500).json({ error: 'Failed to merge carts.' });
   }
 };
+
+
+//encapsulated function for internal use (namely for PDFAPI)
+
+async function getCartData(req) {
+  let cartData;
+
+  // Create a mock response object with the necessary methods
+  const mockRes = {
+    status(code) {
+      // Allow chaining by returning the same mock object
+      this.statusCode = code;
+      return this;
+    },
+    json(data) {
+      cartData = data; // Capture the JSON response data
+    },
+    send(data) {
+      cartData = data; // Capture data if `send` is used
+    }
+  };
+
+  // Call getOrCreateCart with the mock response
+  await getOrCreateCart(req, mockRes);
+
+  // Check if cartData was populated
+  if (!cartData) {
+    throw new Error('No data returned from getOrCreateCart');
+  }
+
+  return cartData;
+}
+
 
 // const getOrCreateCart = async (req, res) => {
 //   try {
@@ -656,13 +688,16 @@ const mergeCartsOnLogin = async (req, res) => {
   // });
 
   //
+
+
+  
   
   module.exports = {
     getOrCreateCart,
     addProductToCart,
     removeProductFromCart,
     deleteProductFromCart,
-    mergeCartsOnLogin
+    getCartData
   };
   
 
