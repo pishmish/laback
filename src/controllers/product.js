@@ -273,7 +273,7 @@ const sortProductsUtil = (products, sortBy, sortOrder) => {
     let fieldB = b[sortBy];
 
     // Convert to float if sorting by unitPrice
-    if (sortBy === 'unitPrice' || sortBy === 'discountPercentage', sortBy === 'overallRating', sortBy === 'timeListed', sortBy === 'popularity', sortBy === 'capacityLitres', sortBy === 'warrantyMonths', sortBy === 'stock') {
+    if (sortBy === 'unitPrice' || sortBy === 'discountPercentage'|| sortBy === 'overallRating'|| sortBy === 'timeListed'|| sortBy === 'popularity'|| sortBy === 'capacityLitres'|| sortBy === 'warrantyMonths'|| sortBy === 'stock') {
       fieldA = parseFloat(fieldA);
       fieldB = parseFloat(fieldB);
     }
