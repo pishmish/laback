@@ -413,9 +413,10 @@ const mergeCartsOnLogin = async (req, res) => {
   }
 };
 
+const deletePermanentCartOnLogout = async (req, res) => {
+
 
 //encapsulated function for internal use (namely for PDFAPI)
-
 async function getCartData(req) {
   let cartData;
 
@@ -698,6 +699,7 @@ async function getCartData(req) {
     removeProductFromCart,
     deleteProductFromCart,
     mergeCartsOnLogin,
+    deletePermanentCartOnLogout,
     getCartData
   };
   

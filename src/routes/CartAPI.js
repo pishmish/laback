@@ -35,6 +35,11 @@ router.post('/merge', (req, res) => {
     return cartController.mergeCart(req, res);
 });
 
+//delete permanent cart if it is empty on logout
+router.delete('/permanent', (req, res) => {
+    return cartController.deletePermanentCartOnLogout(req, res);
+});
+
 // Fetch products in the cart
 router.get('/products', (req, res) => {
     return cartContainsProductController.getCartProducts(req, res); // Yeni API endpoint
