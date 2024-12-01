@@ -26,6 +26,10 @@ const getOrCreateCart = async (req, res) => {
           [0, 0, customerID, false]
         );
         cartID = result.insertId;
+        [rows] = await pool.promise().query(
+          'SELECT * FROM Cart WHERE customerID = ? AND temporary = false',
+          [customerID]
+        );
         console.log('New permanent cart created with ID:', cartID);
       } else {
         cartID = rows[0].cartID;
@@ -50,6 +54,10 @@ const getOrCreateCart = async (req, res) => {
           [0, 0, fingerprint, true]
         );
         cartID = result.insertId;
+        [rows] = await pool.promise().query(
+          'SELECT * FROM Cart WHERE fingerprint = ? AND temporary = true',
+          [fingerprint]
+        );
         console.log('New temporary cart created with ID:', cartID);
       } else {
         // Check if a cart exists for the current fingerprint, and ensure it is not older than 7 days
