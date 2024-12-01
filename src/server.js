@@ -14,7 +14,7 @@ const storeapi = require('./routes/StoreAPI');
 const userapi = require('./routes/UserAPI');
 const cartapi = require('./routes/CartAPI');
 const addressapi = require('./routes/AddressAPI');
-const pdfapi = require('./routes/PDFAPI');
+const invoiceapi = require('./routes/InvoiceAPI');
 const deliveryapi = require('./routes/DeliveryAPI');
 
 //middleware 
@@ -40,7 +40,7 @@ app.use('/store', storeapi);
 app.use('/user', userapi);
 app.use('/cart', cartapi);
 app.use('/address', addressapi);
-app.use('/pdf', pdfapi);
+app.use('/invoice', invoiceapi);
 app.use('/delivery', deliveryapi);
 
 
