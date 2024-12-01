@@ -30,6 +30,11 @@ router.delete('/product/:productID', (req, res) => {
     return cartController.deleteProductFromCart(req, res);
 });
 
+//merge cart
+router.post('/merge', (req, res) => {
+    return cartController.mergeCart(req, res);
+});
+
 // Fetch products in the cart
 router.get('/products', (req, res) => {
     return cartContainsProductController.getCartProducts(req, res); // Yeni API endpoint
