@@ -22,11 +22,12 @@
   -----
   POST /sort?sortBy=&sortOrder=
 cart
-  GET /
+  GET /fetch
   -----------
   POST /product/:productID
   PUT /product/:productID
   DELETE /product/:productID
+  POST /merge
 user
   POST /register
   POST /login 
