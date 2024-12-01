@@ -691,6 +691,7 @@ async function getCartData(req) {
     addProductToCart,
     removeProductFromCart,
     deleteProductFromCart,
+    getCartData
   };
   
 
