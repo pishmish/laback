@@ -10,15 +10,16 @@ const getOrCreateCart = async (req, res) => {
     const customerID = req.customerID || null; // Get customerID if the user is logged in, otherwise null
 
     let cartID;
+    let rows;
 
     if (customerID) {
       // User is logged in, use permanent cart
-      const [permCartRows] = await pool.promise().query(
+      [rows] = await pool.promise().query(
         'SELECT * FROM Cart WHERE customerID = ? AND temporary = false',
         [customerID]
       );
 
-      if (permCartRows.length === 0) {
+      if (rows.length === 0) {
         // Create a new permanent cart if none exists
         const [result] = await pool.promise().query(
           'INSERT INTO Cart (totalPrice, numProducts, customerID, temporary) VALUES (?, ?, ?, ?)',
@@ -27,7 +28,7 @@ const getOrCreateCart = async (req, res) => {
         cartID = result.insertId;
         console.log('New permanent cart created with ID:', cartID);
       } else {
-        cartID = permCartRows[0].cartID;
+        cartID = rows[0].cartID;
       }
     } else {
       // User is not logged in, use temporary cart
@@ -52,7 +53,7 @@ const getOrCreateCart = async (req, res) => {
         console.log('New temporary cart created with ID:', cartID);
       } else {
         // Check if a cart exists for the current fingerprint, and ensure it is not older than 7 days
-        const [rows] = await pool.promise().query(
+        [rows] = await pool.promise().query(
           'SELECT * FROM Cart WHERE fingerprint = ? AND temporary = true AND timeCreated > NOW() - INTERVAL 7 DAY',
           [fingerprint]
         );
@@ -81,10 +82,15 @@ const getOrCreateCart = async (req, res) => {
     return res.status(200).json({
       cartID: cartID,
       loggedIn: !!customerID, // Return whether the user is logged in
+      temporary: !!rows[0].temporary, // Return whether the cart is temporary
       fingerprint: fingerprint, // Return the fingerprint
       customerID: customerID,  // Return the customerID
-      products: cartProducts
+      totalPrice: rows[0].totalPrice,
+      numProducts: rows[0].numProducts,
+      timeCreated: rows[0].timeCreated,
+      products: cartProducts // Return the products in the cart
     });
+    
   } catch (err) {
     console.error('Error fetching or creating cart:', err);
     res.status(500).json({ error: 'Failed to fetch or create cart.' });
@@ -327,7 +333,7 @@ const deleteProductFromCart = async (req, res) => {
     );
 
     res.status(200).json({ 
-      message: 'Product removed from cart successfully.',
+      message: 'Product deleted from cart successfully.',
       cartID: cartID,
       loggedIn: !!customerID,
       fingerprint: fingerprint,
