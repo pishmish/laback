@@ -236,101 +236,145 @@ const searchProducts = async (req, res) => {
   }
 }
 
-//without params (sort by productID)
-//with no query, sort by sortBy and sortOrder (default to productID, asc if missing)
-//with query, search and sort (default to rank, desc if missing)
-const searchAndOrSortProducts = async (req, res) => {
+const sortProducts = (req, res) => {
   try {
-    let query = req.query.q;
-    let sortBy = req.query.sortBy;  
-    let sortOrder = req.query.sortOrder;   
+    let products = req.body.products || req.body; // Handle both formats
+    const { sortBy, sortOrder } = req.query;
 
-    // console.log("Query: " + query);
-    // console.log("Sort by: " + sortBy);
-    // console.log("Sort order: " + sortOrder);
-
-    // //if no query, just sort
-    if (!query) {
-      if(sortBy == undefined && sortOrder == undefined)
-      {
-        sortBy = 'productID';
-        sortOrder = 'ASC';
-        let sql = 'SELECT * FROM `Product` ORDER BY ' + sortBy + ' ' + sortOrder;
-        const [results, fields] = await db.promise().query(sql);
-        return res.status(200).json(results);
-      }
-      else{
-        console.log("No query, just sorting");
-        let sql = 'SELECT * FROM `Product` ORDER BY ' + sortBy + ' ' + sortOrder.toUpperCase();
-        const [results, fields] = await db.promise().query(sql);
-        return res.status(200).json(results);
-      }
+    if (!products || !Array.isArray(products)) {
+      return res.status(400).json({ msg: 'Invalid products array' });
     }
 
-    // let query;
-    //check if q is an array, if not, make it an array
-    if (!Array.isArray(query)) {
-      query = [query];
-      console.log("Query converted into array");
-    }
-    let results = [];
-    for (let i = 0; i < query.length; i++) {
-      let names = await searchNames(query[i]);
-      let descriptions = await searchDescriptions(query[i]);
-      let materials = await searchMaterials(query[i]);
-      let colors = await searchColors(query[i]);
-      rankedResults = rankSearchResults(query[i], names.concat(descriptions, materials, colors));
-      results = results.concat(rankedResults);
-    }
-    //remove duplicates and report the removal
-    let uniqueResults = [];
-    let duplicateCount = 0;
-    for (let i = 0; i < results.length; i++) {
-      let isUnique = true;
-      for (let j = 0; j < uniqueResults.length; j++) {
-        if (results[i].productID == uniqueResults[j].productID) {
-          isUnique = false;
-          duplicateCount++;
-          // //add the rank of the duplicate to the original
-          uniqueResults[j].rank += results[i].rank;
-          break;
-        }
-      }
-      if (isUnique) {
-        uniqueResults.push(results[i]);
-      }
-    }
-
-    //if sortBy and sortOrder are provided, sort the unique results by sortBy and sortOrder
-    if (sortBy != undefined && sortOrder != undefined) {
-      //sort the unique results by sortBy and sortOrder
-      uniqueResults.sort((a, b) => {
-        const fieldA = a[sortBy];
-        const fieldB = b[sortBy];
-    
-        if (sortOrder.toUpperCase() === 'ASC') {
-          return fieldA - fieldB;
-        } else { // DESC
-          return fieldB - fieldA;
-        }
-      });
-    }
-    else {
-      //sort the unique results by rank
-      uniqueResults.sort((a, b) => b.rank - a.rank);
-    }
-    let message = uniqueResults.length + " results found";
-    res.status(200).json(
-      {
-        msg: message,
-        results: uniqueResults
-      }
-    );
-  } catch(err) {
-    console.log(err);
-    res.status(500).json({msg: "Error searching products"});
+    const sortedProducts = sortProductsUtil(products, sortBy, sortOrder);
+    res.status(200).json(sortedProducts);
+  } catch (err) {
+    console.error('Error sorting products:', err);
+    res.status(500).json({ msg: 'Error sorting products' });
   }
-}
+};
+
+const sortProductsUtil = (products, sortBy, sortOrder) => {
+  if (!sortBy || !sortOrder) {
+    //if sortBy or sortOrder is not provided
+    //if rank exists in products, sort by rank
+    if(products[0].rank != undefined)
+    {
+      return products.sort((a, b) => b.rank - a.rank);
+    }
+    // Default sorting by productID 
+    else{
+    return products.sort((a, b) => a.productID - b.productID);
+    }
+  }
+
+  return products.sort((a, b) => {
+    const fieldA = a[sortBy];
+    const fieldB = b[sortBy];
+
+    if (sortOrder.toUpperCase() === 'ASC') {
+      return fieldA - fieldB;
+    } else { // defaults to DESC (even if wrong order is given like jhsdjs)
+      return fieldB - fieldA;
+    }
+  });
+};
+
+
+// //without params (sort by productID)
+// //with no query, sort by sortBy and sortOrder (default to productID, asc if missing)
+// //with query, search and sort (default to rank, desc if missing)
+// const searchAndOrSortProducts = async (req, res) => {
+//   try {
+//     let query = req.query.q;
+//     let sortBy = req.query.sortBy;  
+//     let sortOrder = req.query.sortOrder;   
+
+//     // console.log("Query: " + query);
+//     // console.log("Sort by: " + sortBy);
+//     // console.log("Sort order: " + sortOrder);
+
+//     // //if no query, just sort
+//     if (!query) {
+//       if(sortBy == undefined && sortOrder == undefined)
+//       {
+//         sortBy = 'productID';
+//         sortOrder = 'ASC';
+//         let sql = 'SELECT * FROM `Product` ORDER BY ' + sortBy + ' ' + sortOrder;
+//         const [results, fields] = await db.promise().query(sql);
+//         return res.status(200).json(results);
+//       }
+//       else{
+//         console.log("No query, just sorting");
+//         let sql = 'SELECT * FROM `Product` ORDER BY ' + sortBy + ' ' + sortOrder.toUpperCase();
+//         const [results, fields] = await db.promise().query(sql);
+//         return res.status(200).json(results);
+//       }
+//     }
+
+//     // let query;
+//     //check if q is an array, if not, make it an array
+//     if (!Array.isArray(query)) {
+//       query = [query];
+//       console.log("Query converted into array");
+//     }
+//     let results = [];
+//     for (let i = 0; i < query.length; i++) {
+//       let names = await searchNames(query[i]);
+//       let descriptions = await searchDescriptions(query[i]);
+//       let materials = await searchMaterials(query[i]);
+//       let colors = await searchColors(query[i]);
+//       rankedResults = rankSearchResults(query[i], names.concat(descriptions, materials, colors));
+//       results = results.concat(rankedResults);
+//     }
+//     //remove duplicates and report the removal
+//     let uniqueResults = [];
+//     let duplicateCount = 0;
+//     for (let i = 0; i < results.length; i++) {
+//       let isUnique = true;
+//       for (let j = 0; j < uniqueResults.length; j++) {
+//         if (results[i].productID == uniqueResults[j].productID) {
+//           isUnique = false;
+//           duplicateCount++;
+//           // //add the rank of the duplicate to the original
+//           uniqueResults[j].rank += results[i].rank;
+//           break;
+//         }
+//       }
+//       if (isUnique) {
+//         uniqueResults.push(results[i]);
+//       }
+//     }
+
+//     //if sortBy and sortOrder are provided, sort the unique results by sortBy and sortOrder
+//     if (sortBy != undefined && sortOrder != undefined) {
+//       //sort the unique results by sortBy and sortOrder
+//       uniqueResults.sort((a, b) => {
+//         const fieldA = a[sortBy];
+//         const fieldB = b[sortBy];
+    
+//         if (sortOrder.toUpperCase() === 'ASC') {
+//           return fieldA - fieldB;
+//         } else { // DESC
+//           return fieldB - fieldA;
+//         }
+//       });
+//     }
+//     else {
+//       //sort the unique results by rank
+//       uniqueResults.sort((a, b) => b.rank - a.rank);
+//     }
+//     let message = uniqueResults.length + " results found";
+//     res.status(200).json(
+//       {
+//         msg: message,
+//         results: uniqueResults
+//       }
+//     );
+//   } catch(err) {
+//     console.log(err);
+//     res.status(500).json({msg: "Error searching products"});
+//   }
+// }
 
 
 //Section : Sort
@@ -643,8 +687,8 @@ module.exports = {
   updateProduct,
   deleteProduct,
   searchProducts,
-  // sortProductsByID,
-  searchAndOrSortProducts,
+  sortProducts,
+  // searchAndOrSortProducts,
   // sortProductsByStockAscending,
   // sortProductsByStockDescending,
   // sortProductsByNameAscending,

@@ -120,15 +120,15 @@ router.get('/search', (req, res) => {
   return productController.searchProducts(req, res);
 });
 
-///Section : Sort
-// router.get('/product/sort/default', (req, res) => {       //original/default mode
-//   return productController.sortProductsByID(req, res);
-// });
-
-//search and sort
-router.get('/searchSort', (req, res) => {
-  return productController.searchAndOrSortProducts(req, res);
+//Section : Sort
+router.post('/sort', (req, res) => {          //apparently it's a post request coz im not accessing data from db directly
+  return productController.sortProducts(req, res);
 });
+
+// //search and sort
+// router.get('/searchSort', (req, res) => {
+//   return productController.searchAndOrSortProducts(req, res);
+// });
 
 // //sort by stock ascending
 // router.get('/product/sort/stock/asc', (req, res) => {
