@@ -238,7 +238,7 @@ const searchProducts = async (req, res) => {
 
 const sortProducts = (req, res) => {
   try {
-    let products = req.body.products || req.body; // Handle both formats
+    let products = req.body.results || req.body; // Handle both formats
     const { sortBy, sortOrder } = req.query;
 
     if (!products || !Array.isArray(products)) {
@@ -257,6 +257,7 @@ const sortProductsUtil = (products, sortBy, sortOrder) => {
   if (!sortBy || !sortOrder) {
     //if sortBy or sortOrder is not provided
     //if rank exists in products, sort by rank
+    console.log("No sortBy or sortOrder provided, defaulting to productID");
     if(products[0].rank != undefined)
     {
       return products.sort((a, b) => b.rank - a.rank);
@@ -268,13 +269,19 @@ const sortProductsUtil = (products, sortBy, sortOrder) => {
   }
 
   return products.sort((a, b) => {
-    const fieldA = a[sortBy];
-    const fieldB = b[sortBy];
+    let fieldA = a[sortBy];
+    let fieldB = b[sortBy];
 
+    // Convert to float if sorting by unitPrice
+    if (sortBy === 'unitPrice' || sortBy === 'discountPercentage', sortBy === 'overallRating', sortBy === 'timeListed', sortBy === 'popularity', sortBy === 'capacityLitres', sortBy === 'warrantyMonths', sortBy === 'stock') {
+      fieldA = parseFloat(fieldA);
+      fieldB = parseFloat(fieldB);
+    }
+    
     if (sortOrder.toUpperCase() === 'ASC') {
-      return fieldA - fieldB;
-    } else { // defaults to DESC (even if wrong order is given like jhsdjs)
-      return fieldB - fieldA;
+      return fieldA > fieldB ? 1 : -1;
+    } else {
+      return fieldA < fieldB ? 1 : -1;
     }
   });
 };
