@@ -43,19 +43,21 @@ app.use('/address', addressapi);
 app.use('/pdf', pdfapi);
 app.use('/delivery', deliveryapi);
 
-// Schedule the cron job, but only if not in the test environment
-if (process.env.NODE_ENV !== "test") {
-  //cron job for cleaning expired carts every day at midnight (may also gets rid of original carts in sampleData.sql)
-  cron.schedule('0 0 * * *', async () => {
-    try 
-    {
-      await pool.promise().query('DELETE FROM Cart WHERE timeCreated < NOW() - INTERVAL 7 DAY');
-      console.log('Expired carts deleted');
-    } catch (err) {
-      console.error('Error deleting expired carts:', err);
-    }
-  });
-}
+
+// // Schedule the cron job, but only if not in the test environment
+// if (process.env.NODE_ENV !== "test") {
+//   //cron job for cleaning expired carts every day at midnight (may also gets rid of original carts in sampleData.sql)
+//   cron.schedule('0 0 * * *', async () => {
+//     try 
+//     {
+//       await pool.promise().query('DELETE FROM Cart WHERE timeCreated < NOW() - INTERVAL 7 DAY');
+//       console.log('Expired carts deleted');
+//     } catch (err) {
+//       console.error('Error deleting expired carts:', err);
+//     }
+//   });
+// }
+// commented cuz now is not the time to worry about this.
 
 //home page message:
 app.get('/', (req, res) => {

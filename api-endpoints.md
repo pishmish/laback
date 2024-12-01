@@ -40,11 +40,11 @@ user
   PUT /billing/:billingid
   DELETE /billing/:billingid
 address (auth)
-  GET /:addressid
+  GET /id/:addressid
   POST /newaddress
   PUT /:addressid
   DELETE /:addressid
-  GET /:username
+  GET /uname/:username
 order
   GET /
   GET /:id
