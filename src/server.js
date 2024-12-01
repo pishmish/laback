@@ -14,8 +14,8 @@ const storeapi = require('./routes/StoreAPI');
 const userapi = require('./routes/UserAPI');
 const cartapi = require('./routes/CartAPI');
 const addressapi = require('./routes/AddressAPI');
-
-const deliveryapi = require('./routes/DeliveryAPI'); // added
+const pdfapi = require('./routes/PDFAPI');
+const deliveryapi = require('./routes/DeliveryAPI');
 
 //middleware 
 const notFoundMiddleware = require('./middleware/not-found');
@@ -40,7 +40,8 @@ app.use('/store', storeapi);
 app.use('/user', userapi);
 app.use('/cart', cartapi);
 app.use('/address', addressapi);
-
+app.use('/pdf', pdfapi);
+app.use('/delivery', deliveryapi);
 
 // Schedule the cron job, but only if not in the test environment
 if (process.env.NODE_ENV !== "test") {
@@ -55,10 +56,6 @@ if (process.env.NODE_ENV !== "test") {
     }
   });
 }
-
-
-// Use the DeliveryAPI defined 
-app.use('/delivery', deliveryapi);
 
 //home page message:
 app.get('/', (req, res) => {
