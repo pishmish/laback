@@ -268,7 +268,36 @@ const deleteProductFromCart = async (req, res) => {
   }
 };
 
+//encapsulated function for internal use (namely for PDFAPI)
 
+async function getCartData(req) {
+  let cartData;
+
+  // Create a mock response object with the necessary methods
+  const mockRes = {
+    status(code) {
+      // Allow chaining by returning the same mock object
+      this.statusCode = code;
+      return this;
+    },
+    json(data) {
+      cartData = data; // Capture the JSON response data
+    },
+    send(data) {
+      cartData = data; // Capture data if `send` is used
+    }
+  };
+
+  // Call getOrCreateCart with the mock response
+  await getOrCreateCart(req, mockRes);
+
+  // Check if cartData was populated
+  if (!cartData) {
+    throw new Error('No data returned from getOrCreateCart');
+  }
+
+  return cartData;
+}
   // // Merge carts on login using cookies and customerID
   // router.post('/cart/merge', async (req, res) => {
   //   const { customerID, fingerprint } = req.body; // Access fingerprint from body and customerID
@@ -353,12 +382,16 @@ const deleteProductFromCart = async (req, res) => {
   // });
 
   //
+
+
+  
   
   module.exports = {
     getOrCreateCart,
     addProductToCart,
     removeProductFromCart,
     deleteProductFromCart,
+    getCartData
   };
   
 
