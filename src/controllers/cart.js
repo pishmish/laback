@@ -8,7 +8,7 @@ const getOrCreateCart = async (req, res) => {
     // Retrieve fingerprint from cookies
     let { fingerprint } = req.cookies;
     const customerID = req.customerID || null; // Get customerID if the user is logged in, otherwise null
-
+    console.log('customerID:', customerID);
     let cartID;
     let rows;
 
@@ -377,6 +377,7 @@ const mergeCartsOnLogin = async (req, res) => {
     let permCartID;
     if (permCartRows.length === 0) {
       // Create a new permanent cart if none exists
+      console.log('customerID:', customerID);
       const [result] = await pool.promise().query(
         'INSERT INTO Cart (totalPrice, numProducts, customerID, temporary) VALUES (?, ?, ?, ?)',
         [0, 0, customerID, false]
