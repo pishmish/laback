@@ -156,38 +156,135 @@ describe("GET /store/product/:id/reviews/:reviewId", () => {
   // });
 });
 
-describe("GET /store/searchSort", () => {
-  it("should respond to the GET method", async () => {
-    const response = await request.get("/store/searchSort");
-    expect(response.status).toBe(200);
+describe("GET /store/search", () => {
+  it("should give an error (500) when no query is provided", async () => {
+    const response = await request.get("/store/search");
+    expect(response.status).toBe(500);
     expect(response.body).toBeDefined();
   });
 
   //query string (filtered search)
   it("should respond to the GET method with a query string", async () => {
-    const response = await request.get("/store/searchSort?q=handbag&q=red");
+    const response = await request.get("/store/search?q=handbag&q=red");
+    expect(response.status).toBe(200);
+    expect(response.body).toBeDefined();
+  });
+});
+
+describe("POST /store/sort", () => {
+  const products = [
+    {
+      "productID": 1,
+      "stock": 50,
+      "name": "Sahar Voyage",
+      "unitPrice": "68.39",
+      "overallRating": "4.3",
+      "discountPercentage": 10,
+      "description": "A versatile tote for daily adventures.",
+      "timeListed": "2024-11-21T11:49:27.000Z",
+      "brand": "Terre Nomade",
+      "color": "Khaki",
+      "showProduct": 1,
+      "supplierID": 1,
+      "material": "Canvas",
+      "capacityLitres": "15.5",
+      "warrantyMonths": 12,
+      "serialNumber": "SN-TB-S01",
+      "popularity": 85
+    },
+    {
+      "productID": 2,
+      "stock": 40,
+      "name": "Zad Pérégrin",
+      "unitPrice": "69.99",
+      "overallRating": "4.5",
+      "discountPercentage": 5,
+      "description": "Stylish and functional for urban explorers.",
+      "timeListed": "2024-11-21T11:49:27.000Z",
+      "brand": "Étoile du Voyage",
+      "color": "Black",
+      "showProduct": 1,
+      "supplierID": 1,
+      "material": "Leather",
+      "capacityLitres": "13.0",
+      "warrantyMonths": 12,
+      "serialNumber": "SN-TB-S02",
+      "popularity": 92
+    },
+    {
+      "productID": 3,
+      "stock": 30,
+      "name": "Atlas Errant",
+      "unitPrice": "89.99",
+      "overallRating": "4.2",
+      "discountPercentage": 8,
+      "description": "A spacious tote inspired by journeys.",
+      "timeListed": "2024-11-21T11:49:27.000Z",
+      "brand": "Évasion",
+      "color": "Navy",
+      "showProduct": 1,
+      "supplierID": 1,
+      "material": "Recycled Polyester",
+      "capacityLitres": "16.2",
+      "warrantyMonths": 12,
+      "serialNumber": "SN-TB-S03",
+      "popularity": 77
+    }
+  ];
+
+  it("should respond to the POST method with sorting", async () => {
+    const response = await request.post("/store/sort")
+      .send({ products })
+      .query({ sortBy: "unitPrice", sortOrder: "asc" });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toBeDefined();
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          productID: 1,
+        }),
+      ])
+    );
+  });
+
+  it("should respond to the POST method with sorting in descending order", async () => {
+    const response = await request
+      .post("/store/sort")
+      .send({ products })
+      .query({ sortBy: "unitPrice", sortOrder: "desc" });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toBeDefined();
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          productID: 3,
+        }),
+      ])
+    );
+  });
+
+  //wrong/missing sortOrder string (default)
+  it("should respond to the POST method with a wrong query string", async () => {
+    const response = await request
+      .post("/store/sort")
+      .send({ products })
+      .query({ sortBy: "unitPrice", sortOrder: "invalid" });
+
     expect(response.status).toBe(200);
     expect(response.body).toBeDefined();
   });
 
-  //sortBy and sortOrder (sorted search)
-  it("should respond to the GET method with a sortBy and sortOrder", async () => {
-    const response = await request.get("/store/searchSort?sortBy=unitPrice&sortOrder=asc");
+  //wrong sortBy string (default)
+  it("should respond to the POST method with a wrong query string", async () => {
+    const response = await request
+      .post("/store/sort")
+      .send({ products })
+      .query({ sortBy: "invalid", sortOrder: "asc" });
+
     expect(response.status).toBe(200);
     expect(response.body).toBeDefined();
   });
 
-  //query string and sortBy and sortOrder (filtered and sorted search) - 1st way
-  it("should respond to the GET method with a query string, sortBy, and sortOrder", async () => {
-    const response = await request.get("/store/searchSort?q=handbag&q=red&sortBy=unitPrice&sortOrder=asc");
-    expect(response.status).toBe(200);
-    expect(response.body).toBeDefined();
-  });
-
-  //query string and sortBy and sortOrder (filtered and sorted search) - 2nd way
-  it("should respond to the GET method with a query string, sortBy, and sortOrder", async () => {
-    const response = await request.get("/store/searchSort?sortBy=unitPrice&sortOrder=asc&q=handbag&q=red");
-    expect(response.status).toBe(200);
-    expect(response.body).toBeDefined();
-  });
 });
