@@ -121,6 +121,7 @@ router.get('/search', (req, res) => {
 });
 
 //Section : Sort
+///can sort by rank as well (relevance)
 router.post('/sort', (req, res) => {          //apparently it's a post request coz im not accessing data from db directly
   return productController.sortProducts(req, res);
 });

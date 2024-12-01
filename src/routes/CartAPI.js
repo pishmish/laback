@@ -30,9 +30,9 @@ router.delete('/product/:productID', (req, res) => {
     return cartController.deleteProductFromCart(req, res);
 });
 
-// Fetch products in the cart
-router.get('/products', (req, res) => {
-    return cartContainsProductController.getCartProducts(req, res); // Yeni API endpoint
-});
+// // Fetch products in the cart
+// router.get('/products', (req, res) => {
+//     return cartContainsProductController.getCartProducts(req, res); // Yeni API endpoint
+// });
 
 module.exports = router;
