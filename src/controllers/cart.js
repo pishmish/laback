@@ -8,7 +8,7 @@ const getOrCreateCart = async (req, res) => {
     // Retrieve fingerprint from cookies
     let { fingerprint } = req.cookies;
     const customerID = req.customerID || null; // Get customerID if the user is logged in, otherwise null
-
+    console.log('customerID:', customerID);
     let cartID;
     let rows;
 
@@ -377,6 +377,7 @@ const mergeCartsOnLogin = async (req, res) => {
     let permCartID;
     if (permCartRows.length === 0) {
       // Create a new permanent cart if none exists
+      console.log('customerID:', customerID);
       const [result] = await pool.promise().query(
         'INSERT INTO Cart (totalPrice, numProducts, customerID, temporary) VALUES (?, ?, ?, ?)',
         [0, 0, customerID, false]
@@ -414,8 +415,48 @@ const mergeCartsOnLogin = async (req, res) => {
 };
 
 
-//encapsulated function for internal use (namely for PDFAPI)
+const deletePermanentCartOnLogout = async (req, res) => {
+  const { customerID } = req.user || {}; // Get customerID if the user is logged in
 
+  try {
+    if (!customerID) {
+      return res.status(400).json({ msg: 'User not logged in' });
+    }
+
+    // Fetch the permanent cart for the customer
+    const [permCartRows] = await pool.promise().query(
+      'SELECT * FROM Cart WHERE customerID = ? AND temporary = false',
+      [customerID]
+    );
+
+    if (permCartRows.length === 0) {
+      return res.status(404).json({ msg: 'No permanent cart found for the user' });
+    }
+
+    const permCartID = permCartRows[0].cartID;
+
+    // Check if the cart is empty
+    const [cartProducts] = await pool.promise().query(
+      'SELECT * FROM CartContainsProduct WHERE cartID = ?',
+      [permCartID]
+    );
+
+    if (cartProducts.length > 0) {
+      return res.status(400).json({ msg: 'Cart is not empty' });
+    }
+
+    // Delete the permanent cart if it is empty
+    await pool.promise().query('DELETE FROM Cart WHERE cartID = ?', [permCartID]);
+
+    res.status(200).json({ msg: 'Empty permanent cart deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting permanent cart on logout:', err);
+    res.status(500).json({ error: 'Failed to delete permanent cart' });
+  }
+};
+
+
+//encapsulated function for internal use (namely for PDFAPI)
 async function getCartData(req) {
   let cartData;
 
@@ -698,8 +739,6 @@ async function getCartData(req) {
     removeProductFromCart,
     deleteProductFromCart,
     mergeCartsOnLogin,
+    deletePermanentCartOnLogout,
     getCartData
   };
-  
-
-
