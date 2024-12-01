@@ -61,8 +61,9 @@ payment
   POST /new
   GET /status
 delivery
-  GET /estimate
+  GET /estimate/:id
   POST /order
+  GET /order
   GET /order/:id
   PUT /order/status
   DELETE /order/:id
@@ -114,5 +115,7 @@ admin (not required at all)
   GET /orders
   GET /products
   GET /dashboard
+invoice
+  GET /mail?email=valid@email.com
   
   
