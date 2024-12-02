@@ -294,7 +294,7 @@ const removeProductFromCart = async (req, res) => {
 const deleteProductFromCart = async (req, res) => {
   const { fingerprint } = req.cookies; // Retrieve fingerprint from cookies
   const { productID } = req.params; // Get product ID from the request parameter
-  const customerID = req.customerID || null; // Get customerID if the user is logged in, otherwise null
+  const customerID = req.body.customerID || null; // Get customerID if the user is logged in, otherwise null
 
   try {
     let cartID;
