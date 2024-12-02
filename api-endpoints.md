@@ -47,26 +47,25 @@ address (auth)
   DELETE /:addressid
   GET /uname/:username
 order
-  GET /
   GET /:id
-  GET /user/:id/ (gets all orders for a given user)
-  GET /supplier/:id (orders linked to a certain supplier)
+  GET /user (gets all orders for a given user)
+  GET /supplier (orders linked to a certain supplier)
   POST /neworder
-  PUT /:id/status
-  POST /cancelorder/:id
+  PUT /:id (no need to update status)
+  PUT /cancelorder/:id
   DELETE /orderitems/:id
   PUT /orderitems/:id
-  GET /purchaseprice/:id
+  GET /purchaseprice/:orderid/:productid
 payment
   POST /new
   GET /status
 delivery
   GET /estimate/:id
-  POST /order
-  GET /order
-  GET /order/:id
-  PUT /order/status
-  DELETE /order/:id
+  PUT /estimate/:id
+  GET /order/courier/:courierid (orders linked to a certain courier)
+  GET /order/:id (only for courier, returns specific info)
+  PUT /order/:id/status
+  GET /order/:id/status
 (we're only obligated to this point for the demo)
 wishlist
   GET /:id
