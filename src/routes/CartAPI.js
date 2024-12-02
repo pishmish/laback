@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
 });
 
 // Fetch or create a temporary cart using cookies
-router.get('/fetch', (req, res) => {
+router.post('/fetch', (req, res) => {
     return cartController.getOrCreateCart(req, res);
 });
 
@@ -31,18 +31,18 @@ router.delete('/product/:productID', (req, res) => {
 });
 
 //merge cart
-router.post('/merge', (req, res) => {
-    return cartController.mergeCart(req, res);
+router.post('/merge/:customerID', (req, res) => {
+    return cartController.mergeCartsOnLogin(req, res);
 });
 
 //delete permanent cart if it is empty on logout
-router.delete('/permanent', (req, res) => {
+router.put('/permanent/:customerID', (req, res) => {
     return cartController.deletePermanentCartOnLogout(req, res);
 });
 
 // Fetch products in the cart
 router.get('/products', (req, res) => {
-    return cartContainsProductController.getCartProducts(req, res); // Yeni API endpoint
+    return cartContainsProductController.getCartProducts(req, res);
 });
 
 module.exports = router;
