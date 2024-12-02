@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 
 // Section : General Order Routes
 
-router.get('/:id', authenticateToken, (req, res) => {
+router.get('/getorder/:id', authenticateToken, (req, res) => {
     return orderController.getOrder(req, res);
 });
 
@@ -28,10 +28,6 @@ router.get('/supplier', authenticateToken, authenticateRole('productManager'), (
     return orderController.getSupplierOrders(req, res);
 });
 
-router.get('/courier', authenticateToken, (req, res) => {
-    return orderController.getCourierOrders(req, res);
-});
-
 router.get('/purchaseprice/:orderid/:productid', authenticateToken, (req, res) => {
     return orderController.getPurchasePrice(req, res);
 });
@@ -40,7 +36,7 @@ router.post('/neworder', authenticateToken, authenticateRole('customer'), (req, 
     return orderController.createOrder(req, res);
 });
 
-router.put('/:id', authenticateToken, (req, res) => {
+router.put('/updateorder/:id', authenticateToken, (req, res) => {
     return orderController.updateOrder(req, res);
 });
 
