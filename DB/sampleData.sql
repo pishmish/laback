@@ -145,7 +145,7 @@ VALUES
 /*-- Products for Crossbody Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
-(60, 'Mousafir', 55.50, 0, 15, 'Compact and secure for all adventures.', 'Chemin', 1, 'Nylon', 6.0, 6, 'SN-CB-S01', 65, 'Gray'),
+(60, 'Mousafir', 55.50, 0, 15, 'Compact and secure for all adventures.', 'Chemin', 1, 'Nylon', 6.0, 6, 'SN-CB-S01', 65, 'Grey'),
 (45, 'Roam Libre', 49.99, 0, 10, 'Lightweight and stylish for freedom of movement.', 'Étoile Nomade', 1, 'Leather', 5.5, 6, 'SN-CB-S02', 83, 'Brown'),
 (55, 'Boussole', 52.99, 0, 12, 'Perfect for hands-free exploration.', 'Urbaine Voyageur', 1, 'Canvas', 6.8, 6, 'SN-CB-S03', 78, 'Beige');
 
@@ -168,7 +168,7 @@ INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, 
 VALUES
 (35, 'Aventurier', 74.50, 0, 10, 'Comfortable design for all-day use.', 'Nomade', 1, 'Cotton', 10.0, 12, 'SN-SB-S01', 70, 'Beige'),
 (50, 'Odysée', 68.99, 0, 8, 'Perfect for urban explorers.', 'Chemin', 1, 'Leather', 11.0, 12, 'SN-SB-S02', 88, 'Cognac'),
-(30, 'Navigateur', 72.99, 0, 12, 'Stylish and practical for urban escapes.', 'Zad Classique', 1, 'Synthetic', 9.5, 12, 'SN-SB-S03', 75, 'Gray');
+(30, 'Navigateur', 72.99, 0, 12, 'Stylish and practical for urban escapes.', 'Zad Classique', 1, 'Synthetic', 9.5, 12, 'SN-SB-S03', 75, 'Grey');
 
 /*-- Products for Hobo Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
@@ -181,7 +181,7 @@ VALUES
 /*-- Products for Casual Backpacks */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
-(60, 'Sahra Casual', 45.99, 0, 10, 'Perfect for everyday casual use.', 'Chemin Libre', 1, 'Polyester', 18.0, 6, 'SN-CB-B01', 80, 'Gray'),
+(60, 'Sahra Casual', 45.99, 0, 10, 'Perfect for everyday casual use.', 'Chemin Libre', 1, 'Polyester', 18.0, 6, 'SN-CB-B01', 80, 'Grey'),
 (70, 'Errant Urbain', 55.50, 0, 5, 'A casual backpack for urban travelers.', 'Étoile Nomade', 1, 'Canvas', 20.0, 6, 'SN-CB-B02', 95, 'Khaki'),
 (50, 'Voyage Quotidien', 52.99, 0, 8, 'Stylish and spacious for daily adventures.', 'Rêve Nomade', 1, 'Nylon', 22.0, 6, 'SN-CB-B03', 90, 'Navy');
 
@@ -202,7 +202,7 @@ VALUES
 /*-- Products for Travel Backpacks */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
-(60, 'Sahar Global', 110.99, 0, 10, 'Designed for world travelers and wanderers.', 'Odyssée', 1, 'Polyester', 40.0, 24, 'SN-TB-B01', 85, 'Dark Gray'),
+(60, 'Sahar Global', 110.99, 0, 10, 'Designed for world travelers and wanderers.', 'Odyssée', 1, 'Polyester', 40.0, 24, 'SN-TB-B01', 85, 'Dark Grey'),
 (45, 'Ofok Nomade', 119.99, 0, 8, 'Perfect for international journeys.', 'Voyage Infini', 1, 'Canvas', 42.0, 24, 'SN-TB-B02', 90, 'Sand Beige'),
 (35, 'Chemin Liberté', 115.50, 0, 12, 'Versatile for adventures near and far.', 'Rêve Nomade', 1, 'Waterproof Nylon', 41.0, 24, 'SN-TB-B03', 78, 'Steel Blue');
 
@@ -225,7 +225,7 @@ VALUES
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (25, 'Atlas Marocain', 150.99, 0, 15, 'Spacious and durable for long journeys.', 'Terre Aventure', 1, 'Polycarbonate', 100.0, 36, 'SN-CL-L01', 97, 'Navy'),
-(20, 'Odysée Voyage', 160.50, 0, 10, 'Ideal for extended trips.', 'Zad Classique', 1, 'ABS Plastic', 95.0, 36, 'SN-CL-L02', 92, 'Dark Gray'),
+(20, 'Odysée Voyage', 160.50, 0, 10, 'Ideal for extended trips.', 'Zad Classique', 1, 'ABS Plastic', 95.0, 36, 'SN-CL-L02', 92, 'Dark Grey'),
 (15, 'Sabil Durable', 140.99, 0, 12, 'Large capacity with reinforced frame.', 'Étoile Nomade', 1, 'Aluminum', 105.0, 36, 'SN-CL-L03', 89, 'Graphite');
 
 /*-- Products for Duffel Bags */
@@ -255,7 +255,7 @@ VALUES
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (45, 'Bagage Rihla', 89.99, 0, 10, 'Perfect weekender for short getaways.', 'Voyage Maqsoud', 1, 'Canvas', 50.0, 12, 'SN-WB-T01', 88, 'Beige'),
-(40, 'Sahra Escape', 95.50, 0, 8, 'Durable and compact for weekend trips.', 'Libre Safar', 1, 'Polyester', 45.0, 12, 'SN-WB-T02', 85, 'Gray'),
+(40, 'Sahra Escape', 95.50, 0, 8, 'Durable and compact for weekend trips.', 'Libre Safar', 1, 'Polyester', 45.0, 12, 'SN-WB-T02', 85, 'Grey'),
 (35, 'Jisr el Amani', 105.00, 0, 12, 'Spacious yet light for all your travel essentials.', 'Rihla Aventure', 1, 'Nylon', 52.5, 12, 'SN-WB-T03', 90, 'Navy');
 
 /*-- Products for Rolling Bags */
@@ -277,28 +277,28 @@ INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, 
 VALUES
 (70, 'Hada Voyage', 39.99, 0, 5, 'Compact toiletry bag for essential grooming items.', 'Sahara Voyage', 1, 'Nylon', 5.0, 6, 'SN-TB-T01', 78, 'Black'),
 (65, 'Zahra Élégant', 45.50, 0, 8, 'Durable and water-resistant for toiletries on the go.', 'Jadid Rihla', 1, 'Canvas', 6.5, 6, 'SN-TB-T02', 80, 'Beige'),
-(60, 'Zad du Clandestin', 50.00, 0, 10, 'Travel-friendly with multiple compartments.', 'Marhaba Nomade', 1, 'Polyester', 5.5, 6, 'SN-TB-T03', 85, 'Gray');
+(60, 'Zad du Clandestin', 50.00, 0, 10, 'Travel-friendly with multiple compartments.', 'Marhaba Nomade', 1, 'Polyester', 5.5, 6, 'SN-TB-T03', 85, 'Grey');
 
 /*-- Sports Bags*/
 /*-- Products for Gym Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (80, 'Rihla Gym', 49.99, 0, 10, 'Perfect bag for your gym essentials with a spacious compartment.', 'Sport Étoile', 1, 'Polyester', 30.0, 12, 'SN-GB-F01', 95, 'Black'),
-(75, 'Athlète Forme', 55.00, 0, 8, 'Durable and lightweight, designed for your workout gear.', 'Vitesse Actif', 1, 'Nylon', 32.0, 12, 'SN-GB-F02', 90, 'Gray'),
+(75, 'Athlète Forme', 55.00, 0, 8, 'Durable and lightweight, designed for your workout gear.', 'Vitesse Actif', 1, 'Nylon', 32.0, 12, 'SN-GB-F02', 90, 'Grey'),
 (70, 'Gym Elité', 59.99, 0, 12, 'Perfect gym bag with multiple pockets and strong zippers.', 'Élan Sportif', 1, 'Canvas', 28.0, 12, 'SN-GB-F03', 88, 'Navy');
 
 /*-- Products for Sports Duffle Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (90, 'Duffle Champion', 69.99, 0, 12, 'Spacious sports duffle bag with reinforced handles and straps.', 'Force Athlétique', 1, 'Leather', 70.0, 12, 'SN-SDB-F01', 93, 'Brown'),
-(85, 'Athlète Voyageur', 75.00, 0, 10, 'Perfect for all your sports equipment, with a durable design.', 'Vitesse Sport', 1, 'Nylon', 68.0, 12, 'SN-SDB-F02', 90, 'Dark Gray'),
+(85, 'Athlète Voyageur', 75.00, 0, 10, 'Perfect for all your sports equipment, with a durable design.', 'Vitesse Sport', 1, 'Nylon', 68.0, 12, 'SN-SDB-F02', 90, 'Dark Grey'),
 (80, 'Duffle Pro', 80.00, 0, 15, 'Spacious, heavy-duty duffle bag for athletes and adventurers.', 'Élan Athlétique', 1, 'Canvas', 72.0, 12, 'SN-SDB-F03', 92, 'Olive');
 
 /*-- Products for Cooler Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (70, 'Zad Rafraîchissant', 45.00, 0, 10, 'Insulated cooler bag to keep your food and drinks fresh on the go.', 'Chill Étoile', 1, 'Insulated Fabric', 20.0, 6, 'SN-CB-F01', 85, 'Blue'),
-(65, 'Sahra polaire', 49.99, 0, 8, 'Compact and reliable cooler for weekend trips and outdoor activities.', 'Ahlam Voyage', 1, 'PVC', 18.0, 6, 'SN-CB-T02', 87, 'Light Gray'),
+(65, 'Sahra polaire', 49.99, 0, 8, 'Compact and reliable cooler for weekend trips and outdoor activities.', 'Ahlam Voyage', 1, 'PVC', 18.0, 6, 'SN-CB-T02', 87, 'Light Grey'),
 (60, 'Isotherme Voyage', 55.00, 0, 12, 'Perfect for keeping your beverages and snacks cold during adventures.', 'Chaleur Cool', 1, 'Polyester', 22.0, 6, 'SN-CB-F03', 90, 'Green');
 
 
