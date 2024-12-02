@@ -16,6 +16,7 @@ const cartapi = require('./routes/CartAPI');
 const addressapi = require('./routes/AddressAPI');
 const invoiceapi = require('./routes/InvoiceAPI');
 const deliveryapi = require('./routes/DeliveryAPI');
+const orderapi = require('./routes/OrderAPI');
 
 //middleware 
 const notFoundMiddleware = require('./middleware/not-found');
@@ -42,6 +43,7 @@ app.use('/cart', cartapi);
 app.use('/address', addressapi);
 app.use('/invoice', invoiceapi);
 app.use('/delivery', deliveryapi);
+app.use('/order', orderapi);
 
 
 // // Schedule the cron job, but only if not in the test environment
