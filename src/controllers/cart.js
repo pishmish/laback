@@ -208,6 +208,7 @@ const addProductToCart = async (req, res) => {
 const removeProductFromCart = async (req, res) => {
 
   const { productID } = req.params; // Get product ID from the request parameter
+  console.log('productID:', productID);
 
   let { fingerprint } = req.cookies;
   console.log('req body:', req.body);
@@ -294,8 +295,9 @@ const removeProductFromCart = async (req, res) => {
 const deleteProductFromCart = async (req, res) => {
   const { fingerprint } = req.cookies; // Retrieve fingerprint from cookies
   const { productID } = req.params; // Get product ID from the request parameter
-  const customerID = req.customerID || null; // Get customerID if the user is logged in, otherwise null
-
+  console.log('productID:', productID);
+  const customerID =  req.body.customerID || null; // Get customerID if the user is logged in, otherwise null
+  console.log('customerID:', customerID);
   try {
     let cartID;
 
