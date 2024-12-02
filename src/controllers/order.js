@@ -204,8 +204,8 @@ const createOrder = async (req, res) => {
     let deliveryStatus = "Processing";
     let esimtatedArrival = getAWeekFromNow();
 
-    let sql4 = 'INSERT INTO `Order` (orderNumber, totalPrice, deliveryID, deliveryStatus, deliveryAddressID, estimatedArrival, customerID) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    const [results4, fields4] = await db.promise().query(sql4, [orderNumber, totalPrice, deliveryID, deliveryStatus, addressID, esimtatedArrival, customerID]);
+    let sql4 = 'INSERT INTO `Order` (orderNumber, totalPrice, deliveryID, deliveryStatus, deliveryAddressID, estimatedArrival, cartID, customerID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    const [results4, fields4] = await db.promise().query(sql4, [orderNumber, totalPrice, deliveryID, deliveryStatus, addressID, esimtatedArrival, cartID, customerID]);
     console.log("Order table entry created");
 
     //add cart items to orderitems table and update product stocks
