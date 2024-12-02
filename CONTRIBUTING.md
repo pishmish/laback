@@ -39,7 +39,9 @@ NODE_ENV = 'development'
 
 JWT_SECRET = 
 JWT_EXPIRE = 
-JWT_COOKIE = 
+JWT_COOKIE =
+
+MAIL_PASSWORD =     # this is for the mail transporter
 ```
 
 and then fill up the values with your own MySQL credentials.
