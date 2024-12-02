@@ -27,7 +27,8 @@ cart
   POST /product/:productID
   PUT /product/:productID
   DELETE /product/:productID
-  POST /merge
+  POST /merge/:customerID
+  PUT /permanent/:customerID
 user
   POST /register
   POST /login 
