@@ -16,17 +16,17 @@ router.post('/fetch', (req, res) => {
 });
 
 // Add product to cart (creation or insertion) using cookies (while creating a new cart if necessary)
-router.post('/product/:productID', (req, res) => {
+router.post('/product/add/:productID', (req, res) => {
     return cartController.addProductToCart(req, res);
 });
 
 // Update product quantity (decrement or deletion) in cart using cookies
-router.put('/product/:productID', (req, res) => {
+router.post('/product/remove/:productID', (req, res) => {
     return cartController.removeProductFromCart(req, res);
 });
 
 // Delete product from cart using cookies
-router.delete('/product/:productID', (req, res) => {
+router.post('/product/delete/:productID', (req, res) => {
     return cartController.deleteProductFromCart(req, res);
 });
 
