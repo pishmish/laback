@@ -138,7 +138,7 @@ VALUES ('BagMasters', 905551234567, 11);
 /*-- Products for Tote Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
-(50, 'Sahar Voyage', 75.99, 0, 10, 'A versatile tote for daily adventures.', 'Terre Nomade', 1, 'Canvas', 15.5, 12, 'SN-TB-S01', 85, 'Khaki'),
+(0, 'Sahar Voyage', 75.99, 0, 10, 'A versatile tote for daily adventures.', 'Terre Nomade', 1, 'Canvas', 15.5, 12, 'SN-TB-S01', 85, 'Khaki'),
 (40, 'Zad Pérégrin', 69.99, 0, 5, 'Stylish and functional for urban explorers.', 'Étoile du Voyage', 1, 'Leather', 13.0, 12, 'SN-TB-S02', 92, 'Black'),
 (30, 'Atlas Errant', 89.99, 0, 8, 'A spacious tote inspired by journeys.', 'Évasion', 1, 'Recycled Polyester', 16.2, 12, 'SN-TB-S03', 77, 'Navy');
 
@@ -283,7 +283,7 @@ VALUES
 /*-- Products for Gym Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
-(80, 'Rihla Gym', 49.99, 0, 10, 'Perfect bag for your gym essentials with a spacious compartment.', 'Sport Étoile', 1, 'Polyester', 30.0, 12, 'SN-GB-F01', 95, 'Black'),
+(1, 'Rihla Gym', 49.99, 0, 10, 'Perfect bag for your gym essentials with a spacious compartment.', 'Sport Étoile', 1, 'Polyester', 30.0, 12, 'SN-GB-F01', 95, 'Black'),
 (75, 'Athlète Forme', 55.00, 0, 8, 'Durable and lightweight, designed for your workout gear.', 'Vitesse Actif', 1, 'Nylon', 32.0, 12, 'SN-GB-F02', 90, 'Grey'),
 (70, 'Gym Elité', 59.99, 0, 12, 'Perfect gym bag with multiple pockets and strong zippers.', 'Élan Sportif', 1, 'Canvas', 28.0, 12, 'SN-GB-F03', 88, 'Navy');
 
