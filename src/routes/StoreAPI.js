@@ -27,6 +27,10 @@ router.get('/product/:id', (req, res) => {
 //  return productController.getProductBySupplierId(req, res);
 //});
 
+router.get('/supplier/:productId', (req, res) => {
+  return productController.getSupplierInfoByProductId(req, res);
+});
+
 router.get('/product/admin/:username', (req, res) => {
   return productController.getProductForManager(req, res);
 });
