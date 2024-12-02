@@ -17,7 +17,6 @@ const authenticateToken = (req, res, next) => {
         // Attach the decoded token payload to req
         req.username = user.id;
         req.role = user.role;
-        req.customerID = user.customerID;
 
         next();
     });

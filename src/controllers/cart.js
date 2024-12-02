@@ -47,7 +47,7 @@ const getOrCreateCart = async (req, res) => {
           maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expiration (1 week)
         });
         console.log('New fingerprint created:', fingerprint);
-
+ 
         // Create a new temporary cart with the generated fingerprint
         const [result] = await pool.promise().query(
           'INSERT INTO Cart (totalPrice, numProducts, fingerprint, temporary) VALUES (?, ?, ?, ?)',
