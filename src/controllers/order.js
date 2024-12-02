@@ -1,14 +1,44 @@
+const db = require('../config/database');
 
-// const getAllOrders = async (req, res) => {
-//   try {
-//     //TODO: change select * to only the columns we need
-//     // return number of items in order and delivery address.
-//     id = req.params.id;
-//     let sql = 'SELECT * FROM `Order`';
-//     const [results, fields] = await db.promise().query(sql);
-//     res.status(200).json(results);}
-//   catch(err)  {
-//     console.log(err);
-//     res.status(500).json({msg: "Error retrieving order"});
-//   }
-// }
+const getOrder = async (req, res) => {
+}
+
+const getUserOrders = async (req, res) => {
+}
+
+const getSupplierOrders = async (req, res) => {
+}
+
+const getCourierOrders = async (req, res) => {
+}
+
+const getPurchasePrice = async (req, res) => {
+}
+
+const createOrder = async (req, res) => {
+}
+
+const updateOrder = async (req, res) => {
+} 
+
+const cancelOrder = async (req, res) => {
+}
+
+const updateOrderItems = async (req, res) => {
+}
+
+const deleteOrderItems = async (req, res) => {
+}
+
+module.exports = {
+  getOrder,
+  getUserOrders,
+  getSupplierOrders,
+  getCourierOrders,
+  getPurchasePrice,
+  createOrder,
+  updateOrder,
+  cancelOrder,
+  updateOrderItems,
+  deleteOrderItems
+}
