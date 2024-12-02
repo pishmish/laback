@@ -115,6 +115,11 @@ router.delete('/reviews/:reviewId', (req, res) => {
   return reviewsController.deleteReview(req, res);
 });
 
+router.get('/reviews/overallRating/:productID', (req, res) => {
+  //TODO: requires authentication
+  return reviewsController.getOverallRatingById(req, res);
+});
+
 router.get('/reviews/pending/:productManagerUsername', (req, res) => {
   return reviewsController.getPendingReviews(req, res);
 });
