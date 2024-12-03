@@ -181,7 +181,7 @@ VALUES
 /*-- Products for Casual Backpacks */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
-(60, 'Sahra Casual', 45.99, 0, 10, 'Perfect for everyday casual use.', 'Chemin Libre', 1, 'Polyester', 18.0, 6, 'SN-CB-B01', 80, 'Grey'),
+(1, 'Sahra Casual', 45.99, 0, 10, 'Perfect for everyday casual use.', 'Chemin Libre', 1, 'Polyester', 18.0, 6, 'SN-CB-B01', 80, 'Grey'),
 (70, 'Errant Urbain', 55.50, 0, 5, 'A casual backpack for urban travelers.', 'Étoile Nomade', 1, 'Canvas', 20.0, 6, 'SN-CB-B02', 95, 'Khaki'),
 (50, 'Voyage Quotidien', 52.99, 0, 8, 'Stylish and spacious for daily adventures.', 'Rêve Nomade', 1, 'Nylon', 22.0, 6, 'SN-CB-B03', 90, 'Navy');
 
@@ -283,7 +283,7 @@ VALUES
 /*-- Products for Gym Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
-(1, 'Rihla Gym', 49.99, 0, 10, 'Perfect bag for your gym essentials with a spacious compartment.', 'Sport Étoile', 1, 'Polyester', 30.0, 12, 'SN-GB-F01', 95, 'Black'),
+(3, 'Rihla Gym', 49.99, 0, 10, 'Perfect bag for your gym essentials with a spacious compartment.', 'Sport Étoile', 1, 'Polyester', 30.0, 12, 'SN-GB-F01', 95, 'Black'),
 (75, 'Athlète Forme', 55.00, 0, 8, 'Durable and lightweight, designed for your workout gear.', 'Vitesse Actif', 1, 'Nylon', 32.0, 12, 'SN-GB-F02', 90, 'Grey'),
 (70, 'Gym Elité', 59.99, 0, 12, 'Perfect gym bag with multiple pockets and strong zippers.', 'Élan Sportif', 1, 'Canvas', 28.0, 12, 'SN-GB-F03', 88, 'Navy');
 

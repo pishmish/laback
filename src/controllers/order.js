@@ -266,7 +266,9 @@ const createOrder = async (req, res) => {
     console.log("Cart deleted");
 
     console.log("Order created");
-    res.status(200).json({msg: "Order created"});
+    res.status(200).json({
+      msg: "Order created",
+      orderID: orderID});
   } catch (err) {
     console.log(err);
     res.status(500).json({msg: "Error creating order"});
