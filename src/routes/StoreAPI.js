@@ -27,6 +27,10 @@ router.get('/product/:id', (req, res) => {
 //  return productController.getProductBySupplierId(req, res);
 //});
 
+router.get('/supplier/:productId', (req, res) => {
+  return productController.getSupplierInfoByProductId(req, res);
+});
+
 router.get('/product/admin/:username', (req, res) => {
   return productController.getProductForManager(req, res);
 });
@@ -109,6 +113,11 @@ router.put('/reviews/:reviewId', (req, res) => {
 router.delete('/reviews/:reviewId', (req, res) => {
   //TODO: requires authentication
   return reviewsController.deleteReview(req, res);
+});
+
+router.get('/reviews/overallRating/:productID', (req, res) => {
+  //TODO: requires authentication
+  return reviewsController.getOverallRatingById(req, res);
 });
 
 router.get('/reviews/pending/:productManagerUsername', (req, res) => {

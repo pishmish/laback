@@ -33,14 +33,23 @@ const getReviewById = async (req, res) => {
   }
 }
 
+const getOverallRatingById = async (req, res) => {
+  try{
+    let sql = 'SELECT overallRating FROM `Product` WHERE productID = ?';
+    const [results, fields] = await db.promise().query(sql, [req.params.productID]);
+    console.log(results);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error retrieving review"});
+  }
+}
+
 const createReview = async (req, res) => {
   try {
     const { productID, reviewContent, reviewStars, customerID } = req.body;
 
-    // Validate input
-    if (!reviewContent) {
-      return res.status(400).json({ msg: 'Please fill in review content' });
-    }
+    // Validate required inputs
     if (!reviewStars) {
       return res.status(400).json({ msg: 'Please fill in review stars' });
     }
@@ -51,7 +60,29 @@ const createReview = async (req, res) => {
       return res.status(400).json({ msg: 'Please fill in product ID' });
     }
 
-    // Fetch productSupplierID using productID
+    // If no reviewContent, auto-approve without product manager
+    if (!reviewContent) {
+      const nullReviewContent = '(No written review)';
+      const sql = 'INSERT INTO `Review` (reviewContent, reviewStars, customerID, productID, productManagerUsername, approvalStatus) VALUES (?, ?, ?, ?, ?, ?)';
+      await db.promise().query(sql, [nullReviewContent, reviewStars, customerID, productID, null, 1]);
+      // If review is approved, update product's overall rating
+
+      const getApprovedReviewsSql = 'SELECT reviewStars FROM `Review` WHERE productID = ? AND approvalStatus = 1';
+      const [approvedReviews] = await db.promise().query(getApprovedReviewsSql, [productID]);
+
+      if (approvedReviews.length > 0) {
+        // Calculate average rating
+        const totalStars = approvedReviews.reduce((sum, review) => sum + review.reviewStars, 0);
+        const averageRating = (totalStars / approvedReviews.length).toFixed(2);
+
+        // Update product's overall rating
+        const updateProductSql = 'UPDATE `Product` SET overallRating = ? WHERE productID = ?';
+        await db.promise().query(updateProductSql, [averageRating, productID]);
+      }
+      return res.status(200).json({ msg: 'Review created and auto-approved' });
+    }
+
+    // Regular flow for reviews with content
     const productSupplierSql = 'SELECT supplierID FROM `Product` WHERE productID = ?';
     const [productSupplierResults] = await db.promise().query(productSupplierSql, [productID]);
 
@@ -60,9 +91,7 @@ const createReview = async (req, res) => {
     }
 
     const productSupplierID = productSupplierResults[0].supplierID;
-    console.log('Product Supplier ID:', productSupplierID); // Log the product supplier ID
 
-    // Fetch productManagerUsername using supplierID
     const productManagerSql = 'SELECT username FROM `ProductManager` WHERE supplierID = ?';
     const [productManagerResults] = await db.promise().query(productManagerSql, [productSupplierID]);
 
@@ -70,18 +99,15 @@ const createReview = async (req, res) => {
       return res.status(404).json({ msg: 'Product Manager not found for this supplier' });
     }
 
-    // Randomly select one product manager from the list
     const randomIndex = Math.floor(Math.random() * productManagerResults.length);
     const productManagerUsername = productManagerResults[randomIndex].username;
-    console.log('Selected Product Manager Username:', productManagerUsername); // Log the selected product manager username
 
-    // Insert review into the Review table
     const sql = 'INSERT INTO `Review` (reviewContent, reviewStars, customerID, productID, productManagerUsername, approvalStatus) VALUES (?, ?, ?, ?, ?, ?)';
-    const [results, fields] = await db.promise().query(sql, [reviewContent, reviewStars, customerID, productID, productManagerUsername, 0]);
+    await db.promise().query(sql, [reviewContent, reviewStars, customerID, productID, productManagerUsername, 0]);
 
     res.status(200).json({ msg: 'Review created' });
   } catch (err) {
-    console.log('Error creating review:', err); // Log the error
+    console.log('Error creating review:', err);
     res.status(500).json({ msg: 'Error creating review' });
   }
 };
@@ -177,5 +203,6 @@ module.exports = {
   createReview,
   updateReview,
   deleteReview,
-  getPendingReviews
+  getPendingReviews,
+  getOverallRatingById
 };

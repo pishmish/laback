@@ -212,10 +212,9 @@ create table if not exists `Order` (
 	`estimatedArrival` date,
 	`courierID` int,
 	/* Customer,Cart makesAn Order relationship */
-	`cartID` int NOT NULL,
+	`cartID` int, /*this is redundant, left here to not break anything */
 	`customerID` int NOT NULL,
 	PRIMARY KEY (`orderID`),
-	foreign key (`cartID`) references `Cart`(`cartID`) on delete restrict,
 	FOREIGN KEY (`deliveryAddressID`) REFERENCES `Address`(`addressID`) ON DELETE RESTRICT,
 	FOREIGN KEY (`courierID`) REFERENCES `Courier`(`courierID`) ON DELETE RESTRICT,
 	FOREIGN KEY (`customerID`) REFERENCES `Customer`(`customerID`) ON DELETE RESTRICT

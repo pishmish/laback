@@ -27,6 +27,47 @@ const getProductById = async (req, res) => {
   }
 }
 
+const getSupplierInfoByProductId = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+
+    // Step 1: Query the Product table to get the supplierID
+    const productQuery = `
+      SELECT supplierID 
+      FROM Product 
+      WHERE productID = ?`;
+    const [productResults] = await db.promise().query(productQuery, [productId]);
+
+    // Check if the product exists
+    if (productResults.length === 0) {
+      return res.status(404).json({ msg: "Product not found" });
+    }
+
+    const supplierID = productResults[0].supplierID;
+
+    // Step 2: Query the Supplier table to get the supplier details
+    const supplierQuery = `
+      SELECT *
+      FROM Supplier 
+      WHERE supplierID = ?`;
+    const [supplierResults] = await db.promise().query(supplierQuery, [supplierID]);
+
+    console.log(supplierResults);
+
+    // Check if supplier information is available
+    if (supplierResults.length === 0) {
+      return res.status(404).json({ msg: "Supplier not found" });
+    }
+
+    // Send the supplier details as the response
+    res.status(200).json(supplierResults);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Error retrieving supplier information" });
+  }
+};
+
+
 const getProductForManager = async (req, res) => {
   try {
     const username = req.params.username; // Use const instead of global variable
@@ -695,6 +736,7 @@ module.exports = {
   deleteProduct,
   searchProducts,
   sortProducts,
+  getSupplierInfoByProductId,
   // searchAndOrSortProducts,
   // sortProductsByStockAscending,
   // sortProductsByStockDescending,
