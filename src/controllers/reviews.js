@@ -102,8 +102,11 @@ const createReview = async (req, res) => {
     const randomIndex = Math.floor(Math.random() * productManagerResults.length);
     const productManagerUsername = productManagerResults[randomIndex].username;
 
-    const sql = 'INSERT INTO `Review` (reviewContent, reviewStars, customerID, productID, productManagerUsername, approvalStatus) VALUES (?, ?, ?, ?, ?, ?)';
-    await db.promise().query(sql, [reviewContent, reviewStars, customerID, productID, productManagerUsername, 0]);
+    const starReviewSql = 'INSERT INTO `Review` (reviewContent, reviewStars, customerID, productID, productManagerUsername, approvalStatus) VALUES (?, ?, ?, ?, ?, ?)';
+    await db.promise().query(starReviewSql, ['(No written review)', reviewStars, customerID, productID, null, 1]);
+
+    const messageReviewSql = 'INSERT INTO `Review` (reviewContent, reviewStars, customerID, productID, productManagerUsername, approvalStatus) VALUES (?, ?, ?, ?, ?, ?)';
+    await db.promise().query(messageReviewSql, [reviewContent, null, customerID, productID, productManagerUsername, 0]);
 
     res.status(200).json({ msg: 'Review created' });
   } catch (err) {
