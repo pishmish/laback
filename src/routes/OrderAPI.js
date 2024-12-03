@@ -20,6 +20,9 @@ router.get('/getorder/:id', authenticateToken, (req, res) => {
     return orderController.getOrder(req, res);
 });
 
+router.get('/getallorders',authenticateToken, authenticateRole('productManager'),(req, res)=> {
+    return orderController.getAllOrder(req, res);
+})
 router.get('/user', authenticateToken, authenticateRole('customer'), (req, res) => {
     return orderController.getUserOrders(req, res);
 });
