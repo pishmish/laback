@@ -59,7 +59,6 @@ order
   GET /purchaseprice/:orderid/:productid
 payment
   POST /new
-  GET /status
 delivery
   GET /estimate/:id
   PUT /estimate/:id
@@ -116,6 +115,6 @@ admin (not required at all)
   GET /products
   GET /dashboard
 invoice
-  GET /mail?email=valid@email.com
+  GET /mail/:id/:email
   
   
