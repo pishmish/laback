@@ -60,6 +60,25 @@ const createReview = async (req, res) => {
       return res.status(400).json({ msg: 'Please fill in product ID' });
     }
 
+    //check if the user has bought the product he's trying to review
+    let sql3 = 'SELECT * FROM `Order` WHERE customerID = ?';
+    const [results3, fields3] = await db.promise().query(sql3, [customerID]);
+    let orderID = results3[0].orderID;
+
+    let sql4 = 'SELECT * FROM `OrderOrderItemsProduct` WHERE orderID = ?';
+    const [results4, fields4] = await db.promise().query(sql4, [orderID]);
+    let found = false;
+    for (let i = 0; i < results4.length; i++) {
+      if (results4[i].productID == productID) {
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      return res.status(400).json({msg: "You can't review a product you haven't bought"});
+    }
+
     // If no reviewContent, auto-approve without product manager
     if (!reviewContent) {
       const nullReviewContent = '(No written review)';
