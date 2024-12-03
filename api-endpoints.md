@@ -48,11 +48,11 @@ address (auth)
   DELETE /:addressid
   GET /uname/:username
 order
-  GET /:id
+  GET /getorder/:id
   GET /user (gets all orders for a given user)
   GET /supplier (orders linked to a certain supplier)
   POST /neworder
-  PUT /:id (no need to update status)
+  PUT /updateorder/:id (no need to update status)
   PUT /cancelorder/:id
   DELETE /orderitems/:id
   PUT /orderitems/:id
