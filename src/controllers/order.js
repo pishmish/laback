@@ -3,9 +3,33 @@ const db = require('../config/database');
 const getOrder = async (req, res) => {
   try {
     let id = req.params.id;
+
+    //get order details from Order table (without items)
     let sql = 'SELECT * FROM `Order` WHERE orderID = ?';
-    const [results, fields] = await db.promise().query(sql, [id]);
-    res.status(200).json(results[0]);
+    const [results1, fields1] = await db.promise().query(sql, [id]);
+    console.log("Order details retrieved");
+
+    //get order items
+    let sql2 = 'SELECT * FROM `OrderOrderItemsProduct` WHERE orderID = ?';
+    const [results2, fields2] = await db.promise().query(sql2, [id]);
+    console.log("Order items retrieved");
+
+    //put product names in json result in results2
+    for (let i = 0; i < results2.length; i++) {
+      let sql3 = 'SELECT name FROM Product WHERE productID = ?';
+      const [results3, fields3] = await db.promise().query(sql3, [results2[i].productID]);
+      results2[i].productName = results3[0].name;
+    }
+
+    // Concatenate the results
+    if (results1.length > 0) {
+      results1[0].orderItems = results2;
+    }
+
+
+    //return the concatenated results
+    res.status(200).json(results1[0]);
+
   } catch (err) {
     console.log(err);
     res.status(500).json({msg: "Error retrieving order"});
@@ -396,6 +420,36 @@ const deleteOrderItems = async (req, res) => {
   }
 }
 
+// Wrapper function to get order data
+const getOrderDataWrapper = async (req) => {
+  let orderData;
+
+  // Create a mock response object with the necessary methods
+  const mockRes = {
+    status(code) {
+      // Allow chaining by returning the same mock object
+      this.statusCode = code;
+      return this;
+    },
+    json(data) {
+      orderData = data; // Capture the JSON response data
+    },
+    send(data) {
+      orderData = data; // Capture data if `send` is used
+    }
+  };
+
+  // Call getOrder with the mock response
+  await getOrder(req, mockRes);
+
+  // Check if orderData was populated
+  if (!orderData) {
+    throw new Error('No data returned from getOrder');
+  }
+
+  return orderData;
+}
+
 module.exports = {
   getOrder,
   getUserOrders,
@@ -405,5 +459,6 @@ module.exports = {
   updateOrder,
   cancelOrder,
   updateOrderItems,
-  deleteOrderItems
+  deleteOrderItems,
+  getOrderDataWrapper
 }

@@ -115,6 +115,6 @@ admin (not required at all)
   GET /products
   GET /dashboard
 invoice
-  GET /mail?email=valid@email.com
+  GET /mail/:id/:email
   
   
