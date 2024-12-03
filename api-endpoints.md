@@ -58,7 +58,6 @@ order
   GET /purchaseprice/:orderid/:productid
 payment
   POST /new
-  GET /status
 delivery
   GET /estimate/:id
   PUT /estimate/:id
