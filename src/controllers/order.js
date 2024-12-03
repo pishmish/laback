@@ -35,7 +35,17 @@ const getOrder = async (req, res) => {
     res.status(500).json({msg: "Error retrieving order"});
   }
 }
-
+const getAllOrder = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let sql = 'SELECT * FROM `Order` ORDER BY timeOrdered';
+    const [results, fields] = await db.promise().query(sql, [id]);
+    res.status(200).json(results);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({msg: "Error retrieving order"});
+  }
+}
 const getUserOrders = async (req, res) => {
   try {
     let username = req.username;
@@ -461,4 +471,6 @@ module.exports = {
   updateOrderItems,
   deleteOrderItems,
   getOrderDataWrapper
+  deleteOrderItems,
+  getAllOrder
 }
