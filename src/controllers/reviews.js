@@ -86,13 +86,13 @@ const createReview = async (req, res) => {
       await db.promise().query(sql, [nullReviewContent, reviewStars, customerID, productID, null, 1]);
       // If review is approved, update product's overall rating
 
-      const getApprovedReviewsSql = 'SELECT reviewStars FROM `Review` WHERE productID = ? AND approvalStatus = 1';
-      const [approvedReviews] = await db.promise().query(getApprovedReviewsSql, [productID]);
+      const getReviewsSql = 'SELECT reviewStars FROM `Review` WHERE productID = ? ';
+      const [Reviews] = await db.promise().query(getReviewsSql, [productID]);
 
-      if (approvedReviews.length > 0) {
+      if (Reviews.length > 0) {
         // Calculate average rating
-        const totalStars = approvedReviews.reduce((sum, review) => sum + review.reviewStars, 0);
-        const averageRating = (totalStars / approvedReviews.length).toFixed(2);
+        const totalStars = Reviews.reduce((sum, review) => sum + review.reviewStars, 0);
+        const averageRating = (totalStars / Reviews.length).toFixed(2);
 
         // Update product's overall rating
         const updateProductSql = 'UPDATE `Product` SET overallRating = ? WHERE productID = ?';
@@ -122,11 +122,23 @@ const createReview = async (req, res) => {
     const productManagerUsername = productManagerResults[randomIndex].username;
 
     const starReviewSql = 'INSERT INTO `Review` (reviewContent, reviewStars, customerID, productID, productManagerUsername, approvalStatus) VALUES (?, ?, ?, ?, ?, ?)';
-    await db.promise().query(starReviewSql, ['(No written review)', reviewStars, customerID, productID, null, 1]);
+    await db.promise().query(starReviewSql, [reviewContent, reviewStars, customerID, productID, productManagerUsername, 0]);
 
-    const messageReviewSql = 'INSERT INTO `Review` (reviewContent, reviewStars, customerID, productID, productManagerUsername, approvalStatus) VALUES (?, ?, ?, ?, ?, ?)';
-    await db.promise().query(messageReviewSql, [reviewContent, null, customerID, productID, productManagerUsername, 0]);
+    //const messageReviewSql = 'INSERT INTO `Review` (reviewContent, reviewStars, customerID, productID, productManagerUsername, approvalStatus) VALUES (?, ?, ?, ?, ?, ?)';
+    //await db.promise().query(messageReviewSql, [reviewContent, null, customerID, productID, productManagerUsername, 0]);
 
+
+    const getReviewsSql = 'SELECT reviewStars FROM `Review` WHERE productID = ? ';
+    const [Reviews] = await db.promise().query(getReviewsSql, [productID]);
+
+    // Calculate average rating
+    const totalStars = Reviews.reduce((sum, review) => sum + review.reviewStars, 0);
+    const averageRating = (totalStars / Reviews.length).toFixed(2);
+
+    // Update product's overall rating
+    const updateProductSql = 'UPDATE `Product` SET overallRating = ? WHERE productID = ?';
+    await db.promise().query(updateProductSql, [averageRating, productID]);
+    
     res.status(200).json({ msg: 'Review created' });
   } catch (err) {
     console.log('Error creating review:', err);
