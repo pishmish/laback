@@ -204,8 +204,8 @@ const createOrder = async (req, res) => {
     let deliveryStatus = "Processing";
     let esimtatedArrival = getAWeekFromNow();
 
-    let sql4 = 'INSERT INTO `Order` (orderNumber, totalPrice, deliveryID, deliveryStatus, deliveryAddressID, estimatedArrival, cartID, customerID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-    const [results4, fields4] = await db.promise().query(sql4, [orderNumber, totalPrice, deliveryID, deliveryStatus, addressID, esimtatedArrival, cartID, customerID]);
+    let sql4 = 'INSERT INTO `Order` (orderNumber, totalPrice, deliveryID, deliveryStatus, deliveryAddressID, estimatedArrival, customerID) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const [results4, fields4] = await db.promise().query(sql4, [orderNumber, totalPrice, deliveryID, deliveryStatus, addressID, esimtatedArrival, customerID]);
     console.log("Order table entry created");
 
     //add cart items to orderitems table and update product stocks
@@ -240,16 +240,160 @@ const createOrder = async (req, res) => {
 }
 
 const updateOrder = async (req, res) => {
+  try {
+    //To update Order details, not order items.
+    //can update deliveryAddress and courierID
+    let orderID = req.params.id;
+    if(req.body.address) {
+      if (!validateAddress(req.body.address)) {
+        res.status(400).json({msg: "Invalid address"});
+        return;
+      }
+
+      //insert address
+      let addressTitle = "Updated Delivery address for Order " + orderID;
+      let sql0 = 'INSERT INTO Address (country, city, zipCode, streetAddress, addressTitle) VALUES (?, ?, ?, ?, ?)';
+      const [results0, fields0] = await db.promise().query(sql0, [req.body.address.country, req.body.address.city, req.body.address.zipCode, req.body.address.streetAddress, addressTitle]);
+      let addressID = results0.insertId;
+
+      //update order
+      let sql = 'UPDATE `Order` SET deliveryAddressID = ? WHERE orderID = ?';
+      const [results, fields] = await db.promise().query(sql, [addressID, orderID]);
+    }
+
+    if(req.body.courierID) {
+      let sql2 = 'UPDATE `Order` SET courierID = ? WHERE orderID = ?';
+      const [results2, fields2] = await db.promise().query(sql2, [req.body.courierID, orderID]);
+    }
+
+    res.status(200).json({msg: "Order updated"});
+    
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({msg: "Error updating order"});
+  }
 } 
 
 const cancelOrder = async (req, res) => {
+  try {
+    let orderID = req.params.id;
+    
+    //check if order is not delivering or delivered
+    let sql = 'SELECT deliveryStatus FROM `Order` WHERE orderID = ?';
+    let [results, fields] = await db.promise().query(sql, [orderID]);
+    if (results[0].deliveryStatus === "Delivering" || results[0].deliveryStatus === "Delivered") {
+      res.status(400).json({msg: "Cannot cancel order that is delivering or delivered"});
+      return;
+    }
+
+    //mark order as cancelled
+    let sql2 = 'UPDATE `Order` SET deliveryStatus = "Cancelled" WHERE orderID = ?';
+    const [results2, fields2] = await db.promise().query(sql2, [orderID]);
+
+    res.status(200).json({msg: "Order cancelled"});
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({msg: "Error cancelling order"});
+  }
+}
+
+const validateProduct = async (productID,orderID) => {
+  let sql = 'SELECT * FROM OrderOrderItemsProduct WHERE productID = ? AND orderID = ?';
+  const [results, fields] = await db.promise().query(sql, [productID, orderID]);
+  if (results.length === 0) {
+    return false;
+  }
+  return true;
 }
 
 const updateOrderItems = async (req, res) => {
+  try {
+    //To update Order items(only quantity), not order details. Updates totalPrice.
+    let orderID = req.params.id;
+
+    if (!req.body.products || req.body.products.length === 0) {
+      res.status(400).json({msg: "No products to update"});
+      return;
+    }
+
+    for (let i=0; i<req.body.products.length; i++) {
+      let product = req.body.products[i];
+      //validate
+      if (!product.productID || !product.quantity || await validateProduct(product.productID, orderID) === false) {
+        res.status(400).json({msg: "Invalid product"});
+        return;
+      }
+
+      if (product.quantity <= 0) {
+        res.status(400).json({msg: "Invalid quantity"});
+        return;
+      }
+
+      //update
+      let sql = 'UPDATE OrderOrderItemsProduct SET quantity = ? WHERE productID = ? AND orderID = ?';
+      const [results, fields] = await db.promise().query(sql, [product.quantity, product.productID, orderID]);
+    }
+
+    //update total price
+    let sql2 = 'SELECT SUM(quantity * purchasePrice) as totalPrice FROM OrderOrderItemsProduct WHERE orderID = ?';
+    const [results2, fields2] = await db.promise().query(sql2, [orderID]);
+    let totalPrice = results2[0].totalPrice;
+
+    let sql3 = 'UPDATE `Order` SET totalPrice = ? WHERE orderID = ?';
+    const [results3, fields3] = await db.promise().query(sql3, [totalPrice, orderID]);
+
+    res.status(200).json({msg: "Order items updated"});
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({msg: "Error updating order items"});
+  }
 }
 
 const deleteOrderItems = async (req, res) => {
-  
+  try {
+    //To delete Order items. Updates totalPrice.
+    let orderID = req.params.id;
+
+    if (!req.body.products || req.body.products.length === 0) {
+      res.status(400).json({msg: "No products to delete"});
+      return;
+    }
+
+    for (let i=0; i<req.body.products.length; i++) {
+      let product = req.body.products[i];
+      //validate
+      if (!product.productID || await validateProduct(product.productID, orderID) === false) {
+        res.status(400).json({msg: "Invalid product"});
+        return;
+      }
+
+      //delete
+      let sql = 'DELETE FROM OrderOrderItemsProduct WHERE productID = ? AND orderID = ?';
+      const [results, fields] = await db.promise().query(sql, [product.productID, orderID]);
+    }
+
+    //update total price
+    //The order might be empty, but we have a delete-no-order policy, so it stays
+    let sql2 = 'SELECT SUM(quantity * purchasePrice) as totalPrice FROM OrderOrderItemsProduct WHERE orderID = ?';
+    const [results2, fields2] = await db.promise().query(sql2, [orderID]);
+    let totalPrice = results2[0].totalPrice;
+
+    if (!totalPrice) {
+      console.log("Total price is 0, the order is empty");
+      totalPrice = 0;
+    }
+
+    let sql3 = 'UPDATE `Order` SET totalPrice = ? WHERE orderID = ?';
+    const [results3, fields3] = await db.promise().query(sql3, [totalPrice, orderID]);
+
+    res.status(200).json({msg: "Order items deleted"});
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({msg: "Error deleting order items"});
+  }
 }
 
 module.exports = {
