@@ -470,7 +470,7 @@ module.exports = {
   cancelOrder,
   updateOrderItems,
   deleteOrderItems,
-  getOrderDataWrapper
+  getOrderDataWrapper,
   deleteOrderItems,
   getAllOrder
 }
