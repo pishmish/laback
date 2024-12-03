@@ -73,8 +73,8 @@ const mailSender = async (req, res) => {
         return res.status(400).json({ message: 'Invalid or missing email address.' });
         }
 
-        // Fetch data from the cart controller function
-        const orderDataObject = await orderController.getOrderDataWrapper(req); //need to change to order controller function
+        // Fetch data from the order controller function
+        const orderDataObject = await orderController.getOrderDataWrapper(req);
 
         // Generate PDF as a buffer
         const pdfStream = writeInvoice(orderDataObject);
@@ -126,4 +126,20 @@ const mailSender = async (req, res) => {
     } 
 }
 
-module.exports = { writeInvoice, mailSender };
+const invoiceDownloader = async (req, res) => {
+    try {
+        // Fetch data from the order controller function
+        const orderDataObject = await orderController.getOrderDataWrapper(req); 
+        // Set headers once for PDF response
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=invoice.pdf');
+        // Generate and pipe the PDF
+        const stream = writeInvoice(orderDataObject);
+        stream.pipe(res);
+      } catch (error) {
+        console.error('Error generating invoice:', error);
+        res.status(500).json({ message: 'Failed to generate invoice.' });
+      }
+}
+
+module.exports = { writeInvoice, mailSender,invoiceDownloader };
