@@ -66,6 +66,9 @@ delivery
   GET /order/:id (only for courier, returns specific info)
   PUT /order/:id/status
   GET /order/:id/status
+invoice
+  GET /mail/:id/:email
+  GET /download/:id
 (we're only obligated to this point for the demo)
 wishlist
   GET /:id
@@ -114,7 +117,6 @@ admin (not required at all)
   GET /orders
   GET /products
   GET /dashboard
-invoice
-  GET /mail/:id/:email
+
   
   
