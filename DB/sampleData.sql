@@ -137,12 +137,14 @@ VALUES ('BagMasters', 905551234567, 11);
 /*-- HandBags*/
 /*-- Products for Tote Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (0, 'Sahar Voyage', 75.99, 0, 10, 'A versatile tote for daily adventures.', 'Terre Nomade', 1, 'Canvas', 15.5, 12, 'SN-TB-S01', 85, 'Khaki'),
 (40, 'Zad Pérégrin', 69.99, 0, 5, 'Stylish and functional for urban explorers.', 'Étoile du Voyage', 1, 'Leather', 13.0, 12, 'SN-TB-S02', 92, 'Black'),
 (30, 'Atlas Errant', 89.99, 0, 8, 'A spacious tote inspired by journeys.', 'Évasion', 1, 'Recycled Polyester', 16.2, 12, 'SN-TB-S03', 77, 'Navy');
 
 /*-- Products for Crossbody Bags */
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (60, 'Mousafir', 55.50, 0, 15, 'Compact and secure for all adventures.', 'Chemin', 1, 'Nylon', 6.0, 6, 'SN-CB-S01', 65, 'Grey'),
@@ -151,12 +153,14 @@ VALUES
 
 /*-- Products for Clutch Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (25, 'Layla', 65.99, 0, 5, 'An elegant clutch for evening occasions.', 'Vagabonde', 1, 'Suede', 2.0, 12, 'SN-CL-S01', 73, 'Wine Red'),
 (35, 'Zad Éclat', 59.50, 0, 8, 'Elegant design for a touch of adventure.', 'Odyssée', 1, 'Leather', 1.8, 12, 'SN-CL-S02', 88, 'Black'),
 (20, 'Sahara Bijou', 72.50, 0, 10, 'The ideal clutch for a night out.', 'Rêve Voyageur', 1, 'Velvet', 2.2, 12, 'SN-CL-S03', 69, 'Midnight Blue');
 
 /*-- Products for Satchels */
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (40, 'Moussafir Classique', 79.99, 0, 5, 'A reliable companion for long journeys.', 'Terre Nomade', 1, 'Canvas', 14.0, 18, 'SN-ST-S01', 82, 'Olive Green'),
@@ -165,12 +169,14 @@ VALUES
 
 /*-- Products for Shoulder Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (35, 'Aventurier', 74.50, 0, 10, 'Comfortable design for all-day use.', 'Nomade', 1, 'Cotton', 10.0, 12, 'SN-SB-S01', 70, 'Beige'),
 (50, 'Odysée', 68.99, 0, 8, 'Perfect for urban explorers.', 'Chemin', 1, 'Leather', 11.0, 12, 'SN-SB-S02', 88, 'Cognac'),
 (30, 'Navigateur', 72.99, 0, 12, 'Stylish and practical for urban escapes.', 'Zad Classique', 1, 'Synthetic', 9.5, 12, 'SN-SB-S03', 75, 'Grey');
 
 /*-- Products for Hobo Bags */
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (40, 'Rover Hobo', 76.50, 0, 10, 'Soft and flexible, perfect for everyday use.', 'Terre Nomade', 1, 'Canvas', 14.0, 12, 'SN-HB-S01', 73, 'Mustard'),
@@ -180,12 +186,14 @@ VALUES
 /*-- Backpacks*/
 /*-- Products for Casual Backpacks */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (1, 'Sahra Casual', 45.99, 0, 10, 'Perfect for everyday casual use.', 'Chemin Libre', 1, 'Polyester', 18.0, 6, 'SN-CB-B01', 80, 'Grey'),
 (70, 'Errant Urbain', 55.50, 0, 5, 'A casual backpack for urban travelers.', 'Étoile Nomade', 1, 'Canvas', 20.0, 6, 'SN-CB-B02', 95, 'Khaki'),
 (50, 'Voyage Quotidien', 52.99, 0, 8, 'Stylish and spacious for daily adventures.', 'Rêve Nomade', 1, 'Nylon', 22.0, 6, 'SN-CB-B03', 90, 'Navy');
 
 /*-- Products for Laptop Backpacks */
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (45, 'Sahra Tech', 85.99, 0, 12, 'Secure laptop backpack for professionals.', 'Terre Moderne', 1, 'Waterproof Nylon', 25.0, 12, 'SN-LB-B01', 88, 'Black'),
@@ -194,6 +202,7 @@ VALUES
 
 /*-- Products for Hiking Backpacks */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (40, 'Mousafir Trek', 120.00, 0, 15, 'Built for tough trails and rugged adventures.', 'Terre Sauvage', 1, 'Ripstop Nylon', 50.0, 18, 'SN-HK-B01', 90, 'Forest Green'),
 (30, 'Jabal Évasion', 135.50, 0, 12, 'Durable hiking bag for high altitudes.', 'Chemin des Cimes', 1, 'Canvas', 55.0, 18, 'SN-HK-B02', 97, 'Olive Green'),
@@ -201,12 +210,14 @@ VALUES
 
 /*-- Products for Travel Backpacks */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (60, 'Sahar Global', 110.99, 0, 10, 'Designed for world travelers and wanderers.', 'Odyssée', 1, 'Polyester', 40.0, 24, 'SN-TB-B01', 85, 'Dark Grey'),
 (45, 'Ofok Nomade', 119.99, 0, 8, 'Perfect for international journeys.', 'Voyage Infini', 1, 'Canvas', 42.0, 24, 'SN-TB-B02', 90, 'Sand Beige'),
 (35, 'Chemin Liberté', 115.50, 0, 12, 'Versatile for adventures near and far.', 'Rêve Nomade', 1, 'Waterproof Nylon', 41.0, 24, 'SN-TB-B03', 78, 'Steel Blue');
 
 /*-- Products for Mini Backpacks */
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (75, 'Zad Petit', 38.99, 0, 5, 'Compact and stylish for minimalists.', 'Chemin Urbain', 1, 'Polyester', 8.0, 6, 'SN-MB-B01', 85, 'Black'),
@@ -216,12 +227,14 @@ VALUES
 /*-- Luggage*/
 /*-- Products for Carry-On Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (40, 'Zad Volant', 99.99, 0, 10, 'Perfect carry-on for frequent flyers.', 'Voyage Essentiel', 1, 'Polycarbonate', 35.0, 24, 'SN-CO-L01', 92, 'Silver'),
 (35, 'Évasion Léger', 89.50, 0, 12, 'Compact and lightweight for cabin use.', 'Libre Ailes', 1, 'ABS Plastic', 32.0, 24, 'SN-CO-L02', 85, 'Black'),
 (30, 'Sahra Horizon', 95.00, 0, 8, 'Smooth gliding and easy to carry onboard.', 'Terre Infinie', 1, 'Aluminum', 33.5, 24, 'SN-CO-L03', 88, 'Champagne');
 
 /*-- Products for Checked Luggage */
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (25, 'Atlas Marocain', 150.99, 0, 15, 'Spacious and durable for long journeys.', 'Terre Aventure', 1, 'Polycarbonate', 100.0, 36, 'SN-CL-L01', 97, 'Navy'),
@@ -230,6 +243,7 @@ VALUES
 
 /*-- Products for Duffel Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (50, 'Voyageur Classique', 80.99, 0, 10, 'Spacious duffel for easy packing.', 'Chemin Aventure', 1, 'Canvas', 55.0, 12, 'SN-DF-L01', 85, 'Beige'),
 (45, 'Sahara Wanderer', 75.99, 0, 8, 'Perfect for short weekend trips.', 'Libre Horizon', 1, 'Polyester', 50.0, 12, 'SN-DF-L02', 83, 'Olive Green'),
@@ -237,12 +251,14 @@ VALUES
 
 /*-- Products for Garment Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (30, 'Valise Élégance', 120.99, 0, 15, 'Keeps formal wear wrinkle-free on the go.', 'Élégance Voyage', 1, 'Polyester', 15.0, 24, 'SN-GB-L01', 90, 'Navy'),
 (25, 'Sahra Chic', 115.50, 0, 10, 'Stylish garment bag for business trips.', 'Zad Couture', 1, 'Canvas', 18.0, 24, 'SN-GB-L02', 85, 'Charcoal'),
 (20, 'Départ Prestige', 130.00, 0, 12, 'Ideal for suits and dresses.', 'Chemin Luxe', 1, 'Leather', 20.0, 24, 'SN-GB-L03', 92, 'Dark Brown');
 
 /*-- Products for Luggage Sets */
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (15, 'Voyage Éternel Set', 220.99, 0, 20, 'Three-piece luggage set for all travel needs.', 'Voyage Aventureux', 1, 'Polycarbonate', 160.0, 36, 'SN-LS-L01', 98, 'Silver'),
@@ -253,12 +269,14 @@ VALUES
 /*-- Travel Bags*/
 /*-- Products for Weekender Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (45, 'Bagage Rihla', 89.99, 0, 10, 'Perfect weekender for short getaways.', 'Voyage Maqsoud', 1, 'Canvas', 50.0, 12, 'SN-WB-T01', 88, 'Beige'),
 (40, 'Sahra Escape', 95.50, 0, 8, 'Durable and compact for weekend trips.', 'Libre Safar', 1, 'Polyester', 45.0, 12, 'SN-WB-T02', 85, 'Grey'),
 (35, 'Jisr el Amani', 105.00, 0, 12, 'Spacious yet light for all your travel essentials.', 'Rihla Aventure', 1, 'Nylon', 52.5, 12, 'SN-WB-T03', 90, 'Navy');
 
 /*-- Products for Rolling Bags */
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (50, 'Zad à Roulettes', 110.00, 0, 15, 'Smooth-rolling for ease and convenience.', 'Tariq Nomade', 1, 'Polycarbonate', 75.0, 24, 'SN-RB-T01', 92, 'Silver'),
@@ -267,12 +285,14 @@ VALUES
 
 /*-- Products for Messenger Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (60, 'Zad Banane', 69.99, 0, 10, 'Sleek messenger bag for city travels.', 'Ahlam Ville', 1, 'Leather', 15.0, 12, 'SN-MB-T01', 87, 'Brown'),
 (55, 'Rihla Vive', 75.00, 0, 12, 'Perfect for carrying essentials and quick access.', 'Rihla Al-Bilad', 1, 'Canvas', 13.5, 12, 'SN-MB-T02', 85, 'Khaki'),
 (50, 'Hayat Voyageur', 80.99, 0, 8, 'Compact yet spacious for daily travel.', 'Liberté Nomade', 1, 'Polyester', 14.0, 12, 'SN-MB-T03', 90, 'Charcoal');
 
 /*-- Products for Toiletry Bags */
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (70, 'Hada Voyage', 39.99, 0, 5, 'Compact toiletry bag for essential grooming items.', 'Sahara Voyage', 1, 'Nylon', 5.0, 6, 'SN-TB-T01', 78, 'Black'),
@@ -282,6 +302,7 @@ VALUES
 /*-- Sports Bags*/
 /*-- Products for Gym Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (3, 'Rihla Gym', 49.99, 0, 10, 'Perfect bag for your gym essentials with a spacious compartment.', 'Sport Étoile', 1, 'Polyester', 30.0, 12, 'SN-GB-F01', 95, 'Black'),
 (75, 'Athlète Forme', 55.00, 0, 8, 'Durable and lightweight, designed for your workout gear.', 'Vitesse Actif', 1, 'Nylon', 32.0, 12, 'SN-GB-F02', 90, 'Grey'),
@@ -289,12 +310,14 @@ VALUES
 
 /*-- Products for Sports Duffle Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (90, 'Duffle Champion', 69.99, 0, 12, 'Spacious sports duffle bag with reinforced handles and straps.', 'Force Athlétique', 1, 'Leather', 70.0, 12, 'SN-SDB-F01', 93, 'Brown'),
 (85, 'Athlète Voyageur', 75.00, 0, 10, 'Perfect for all your sports equipment, with a durable design.', 'Vitesse Sport', 1, 'Nylon', 68.0, 12, 'SN-SDB-F02', 90, 'Dark Grey'),
 (80, 'Duffle Pro', 80.00, 0, 15, 'Spacious, heavy-duty duffle bag for athletes and adventurers.', 'Élan Athlétique', 1, 'Canvas', 72.0, 12, 'SN-SDB-F03', 92, 'Olive');
 
 /*-- Products for Cooler Bags */
+INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
 (70, 'Zad Rafraîchissant', 45.00, 0, 10, 'Insulated cooler bag to keep your food and drinks fresh on the go.', 'Chill Étoile', 1, 'Insulated Fabric', 20.0, 6, 'SN-CB-F01', 85, 'Blue'),
