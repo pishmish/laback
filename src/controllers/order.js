@@ -185,13 +185,14 @@ const validateAddress = (address) => {
 
 const getAWeekFromNow = () => {
   let today = new Date();
-  let nextWeek = new Date(today.getDate() + 7);
+  let nextWeek = new Date(today);
+  nextWeek.setDate(today.getDate() + 7);
 
   //Format in yyyy-mm-dd
-  let day = nextWeek.getDate();
-  let month = nextWeek.getMonth() + 1;
+  let day = String(nextWeek.getDate()).padStart(2, '0');
+  let month = String(nextWeek.getMonth() + 1).padStart(2, '0'); 
   let year = nextWeek.getFullYear();
-  let formattedDate = year + '-' + month + '-' + day;
+  let formattedDate = `${year}-${month}-${day}`;
 
   return formattedDate;
 }
@@ -210,8 +211,8 @@ const createOrder = async (req, res) => {
     req.body.address.title = "Delivery Address";
 
     //insert address
-    let sql0 = 'INSERT INTO Address (country, city, zipCode, streetAddress, addressTitle) VALUES (?, ?, ?, ?, ?)';
-    const [results0, fields0] = await db.promise().query(sql0, [req.body.address.country, req.body.address.city, req.body.address.zipCode, req.body.address.streetAddress, req.body.address.title]);
+    let sql0 = 'INSERT INTO Address (country, city, province, zipCode, streetAddress, addressTitle) VALUES (?, ?, ?, ?, ?, ?)';
+    const [results0, fields0] = await db.promise().query(sql0, [req.body.address.country, req.body.address.city, req.body.address.province, req.body.address.zipCode, req.body.address.streetAddress, req.body.address.title]);
     let addressID = results0.insertId;
 
     //get username then customer ID from the authentication cookie
