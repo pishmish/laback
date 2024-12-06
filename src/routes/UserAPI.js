@@ -7,7 +7,6 @@ const { authenticateToken, authenticateRole } = require('../middleware/auth-hand
 //import controllers
 const userController = require('../controllers/user');
 const billingController = require('../controllers/billing');
-const addressController = require('../controllers/address');
 
 //Routes
 

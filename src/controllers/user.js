@@ -1,9 +1,7 @@
 require('dotenv').config();
 const db = require('../config/database');
 const bcrypt = require('bcrypt');
-const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
 
 const registerUser = async (req, res) => {
   try{

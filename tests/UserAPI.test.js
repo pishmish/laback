@@ -1,7 +1,5 @@
 const supertest = require('supertest');
 const app = require('../src/server'); // Adjust the path as needed
-// const db = require('../src/config/database'); // Adjust the path as needed
-// const e = require('express');
 let server;
 let request;
 
@@ -12,7 +10,6 @@ beforeAll((done) => {
 
 afterAll((done) => {
   server.close(done); // Close the server after all tests
-//   db.end(done); // Close the database connection
 });
 
 describe("GET /user", () => {
