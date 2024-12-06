@@ -52,8 +52,6 @@ const getSupplierInfoByProductId = async (req, res) => {
       WHERE supplierID = ?`;
     const [supplierResults] = await db.promise().query(supplierQuery, [supplierID]);
 
-    console.log(supplierResults);
-
     // Check if supplier information is available
     if (supplierResults.length === 0) {
       return res.status(404).json({ msg: "Supplier not found" });

@@ -37,7 +37,6 @@ const getOverallRatingById = async (req, res) => {
   try{
     let sql = 'SELECT overallRating FROM `Product` WHERE productID = ?';
     const [results, fields] = await db.promise().query(sql, [req.params.productID]);
-    console.log(results);
     res.status(200).json(results);
   } catch(err) {
     console.log(err);
