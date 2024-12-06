@@ -1,7 +1,6 @@
 const supertest = require('supertest');
 const app = require('../src/server'); // Adjust the path as needed
 const db = require('../src/config/database'); // Adjust the path as needed
-// const e = require('express');
 let server;
 let request;
 

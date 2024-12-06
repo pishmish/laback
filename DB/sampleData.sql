@@ -1,52 +1,3 @@
-/*--Category Table
--- IF WE NEED SHORTER DESCRIPTIONS, WE CAN USE THE FOLLOWING INSTEAD:
--- /*-- Main Categories*/
--- INSERT INTO `Category` (name, description) VALUES
--- ('Handbags', 'A range of stylish handbags for various occasions'),
--- ('Backpacks', 'Various types of backpacks for casual, travel, and specific needs'),
--- ('Luggage', 'A selection of luggage options for different travel needs'),
--- ('Travel Bags', 'Versatile travel bags for every journey'),
--- ('Sports Bags', 'Specialized sports bags for fitness, yoga, and other activities');
-
--- /*-- Sub Categories for Handbags*/
--- INSERT INTO `Category` (name, description) VALUES
--- ('Tote Bags', 'Large, open-top bags with parallel handles'),
--- ('Crossbody Bags', 'Bags with a long strap worn across the body'),
--- ('Clutch Bags', 'Compact bags, typically without handles'),
--- ('Satchels', 'Structured bags with a long strap and top handle'),
--- ('Shoulder Bags', 'Bags designed to be worn over the shoulder'),
--- ('Hobo Bags', 'Large, soft bags with a slouchy look');
-
--- /*-- Sub Categories for Backpacks*/
--- INSERT INTO `Category` (name, description) VALUES
--- ('Casual Backpacks', 'Backpacks for everyday use'),
--- ('Laptop Backpacks', 'Backpacks designed to carry laptops'),
--- ('Hiking Backpacks', 'Backpacks with extra support for hiking and outdoor use'),
--- ('Travel Backpacks', 'Backpacks suitable for travel with ample storage'),
--- ('Mini Backpacks', 'Compact backpacks for essentials');
-
--- /*-- Sub Categories for Luggage*/
--- INSERT INTO `Category` (name, description) VALUES
--- ('Carry-On Bags', 'Luggage suitable for carry-on requirements'),
--- ('Checked Luggage', 'Larger luggage for checked baggage needs'),
--- ('Duffel Bags', 'Flexible bags ideal for short trips'),
--- ('Garment Bags', 'Bags designed to keep garments wrinkle-free'),
--- ('Luggage Sets', 'Coordinated sets of luggage for extended travel');
-
--- /*-- Sub Categories for Travel Bags*/
--- INSERT INTO `Category` (name, description) VALUES
--- ('Weekender Bags', 'Compact bags for weekend trips'),
--- ('Rolling Bags', 'Travel bags with wheels for easy movement'),
--- ('Messenger Bags', 'Bags with a long strap, worn across the body'),
--- ('Toiletry Bags', 'Small bags to organize toiletries');
-
--- /*-- Sub Categories for Sports Bags*/
--- INSERT INTO `Category` (name, description) VALUES
--- ('Gym Bags', 'Bags designed for carrying gym essentials'),
--- ('Sports Duffle Bags', 'Durable duffle bags for sports gear'),
--- ('Cooler Bags', 'Insulated bags to keep food and drinks cool');*/
-
-
 /* Choose database */
 
 USE `zadados`;
@@ -695,15 +646,7 @@ INSERT INTO `Cart` (`totalPrice`, `numProducts`, `fingerprint`, `temporary`, `cu
 
 /*CartContainsProduct Table*/
 INSERT INTO `CartContainsProduct` (`cartID`, `productID`, `quantity`) VALUES
-/*(1, 5, 1),
-(1, 12, 1),
-(1, 23, 1),     when user orders, these values disappear and transferred to OrderOrderItemsProduct table
-(2, 34, 1),
-(2, 45, 1),
-(2, 51, 1),
-(2, 7, 1),
-(2, 61, 1),*/
-(3, 7, 1);
+(3, 7, 1);      /*when user orders, these values disappear and transferred to OrderOrderItemsProduct table*/
 
 
 

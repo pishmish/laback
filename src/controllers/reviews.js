@@ -134,10 +134,6 @@ const createReview = async (req, res) => {
     const starReviewSql = 'INSERT INTO `Review` (reviewContent, reviewStars, customerID, productID, productManagerUsername, approvalStatus) VALUES (?, ?, ?, ?, ?, ?)';
     await db.promise().query(starReviewSql, [reviewContent, reviewStars, customerID, productID, productManagerUsername, 0]);
 
-    //const messageReviewSql = 'INSERT INTO `Review` (reviewContent, reviewStars, customerID, productID, productManagerUsername, approvalStatus) VALUES (?, ?, ?, ?, ?, ?)';
-    //await db.promise().query(messageReviewSql, [reviewContent, null, customerID, productID, productManagerUsername, 0]);
-
-
     const getReviewsSql = 'SELECT reviewStars FROM `Review` WHERE productID = ? ';
     const [Reviews] = await db.promise().query(getReviewsSql, [productID]);
 

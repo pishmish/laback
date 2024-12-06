@@ -1,5 +1,4 @@
 const pool = require('../config/database');
-const { jwtDecode } = require('jwt-decode'); // Import jwt-decode library
 
 // Fetch or create a temporary/permanent cart and get its products using cookies/customerID
 const getOrCreateCart = async (req, res) => {
