@@ -71,12 +71,13 @@ invoice
   GET /download/:id
 (we're only obligated to this point for the demo)
 wishlist
-  GET /:id
-  GET /:itemid (get wishlists with specific item)
-  POST /:id/:itemid
-  PUT /:id/:itemid
-  GET /:userid (get wishlist for given user)
-  DELETE /:id
+  POST /customer/:customerID
+  POST /customer/:customerID/product/:productID
+  DELETE /customer/:customerID/product/:productID
+  DELETE /customer/:customerID
+  GET /product/:productID (get wishlists with specific item)
+  GET /:id (get wishlist with wishlistID)
+  POST /sendMail
 analytics
   GET /sales
   GET /sales/:productid
