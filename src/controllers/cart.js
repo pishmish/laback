@@ -72,6 +72,10 @@ const getOrCreateCart = async (req, res) => {
             [0, 0, fingerprint, true]
           );
           cartID = result.insertId;
+          [rows] = await pool.promise().query(
+            'SELECT * FROM Cart WHERE fingerprint = ? AND temporary = true AND timeCreated > NOW() - INTERVAL 7 DAY',
+            [fingerprint]
+          );
           console.log('New temporary cart created with ID:', cartID);
         } else {
           cartID = rows[0].cartID;
