@@ -226,20 +226,40 @@ const sendSaleEmail = async (req, res) => {
             }
 
             // Fetch the wishlists containing the product
-            const [wishlists] = await pool.promise().query('SELECT * FROM WishlistItems WHERE productID = ?', [productID]);
+            const [wishlistItems] = await pool.promise().query('SELECT wishlistID FROM WishlistItems WHERE productID = ?', [productID]);
 
-            if (wishlists.length === 0) {
+            if (wishlistItems.length === 0) {
                 console.log(`No wishlists found containing the product ID: ${productID}`);
                 continue;
             }
 
             // Aggregate products for each customer
-            for (const wishlist of wishlists) {
-                const customerID = wishlist.customerID;
+            for (const wishlistItem of wishlistItems) {
+                const wishlistID = wishlistItem.wishlistID;
 
-                // Fetch the customer's email
-                const [customer] = await pool.promise().query('SELECT email FROM Customer WHERE customerID = ?', [customerID]);
-                const customerEmail = customer[0].email;
+                // Fetch the customer's ID using the wishlistID
+                const [wishlists] = await pool.promise().query('SELECT customerID FROM Wishlist WHERE wishlistID = ?', [wishlistID]);
+                if (wishlists.length === 0) {
+                    console.log(`No wishlist found with ID: ${wishlistID}`);
+                    continue;
+                }
+                const customerID = wishlists[0].customerID;
+
+                // Fetch the customer's username
+                const [customer] = await pool.promise().query('SELECT username FROM Customer WHERE customerID = ?', [customerID]);
+                if (customer.length === 0) {
+                    console.log(`No customer found with ID: ${customerID}`);
+                    continue;
+                }
+                const username = customer[0].username;
+
+                // Fetch the user's email using the username
+                const [user] = await pool.promise().query('SELECT email FROM User WHERE username = ?', [username]);
+                if (user.length === 0) {
+                    console.log(`No user found with username: ${username}`);
+                    continue;
+                }
+                const customerEmail = user[0].email;
 
                 if (!customerProductsMap.has(customerEmail)) {
                     customerProductsMap.set(customerEmail, []);
@@ -260,12 +280,18 @@ const sendSaleEmail = async (req, res) => {
                 emailContent += `- ${product.productName} (ID: ${product.productID}) is now discounted by ${product.discountPercentage}%\n`;
             });
 
-            await sendEmail(customerEmail, 'Products Discounted', emailContent);
+            try {
+                await sendEmail(customerEmail, 'Products Discounted', emailContent);
+            } catch (err) {
+                console.error(`Error sending email to ${customerEmail}:`, err.message);
+                console.error('Error details:', err);
+            }
         }
 
         res.status(200).send('Discount emails sent');
     } catch (err) {
-        console.error('Error sending discount emails:', err);
+        console.error('Error sending discount emails:', err.message);
+        console.error('Error details:', err);
         res.status(500).send('Error sending discount emails');
     }
 };
@@ -281,13 +307,14 @@ const sendEmail = async (to, subject, text) => {
     try {
         // Validate the email address
         if (!to || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) {
-            return res.status(400).json({ message: 'Invalid or missing email address.' });
+            throw new Error('Invalid or missing email address.');
         }
         
         await transporter.sendMail(mailOptions);
         console.log('Email sent successfully');
     } catch (error) {
-        console.error('Error sending email:', error);
+        console.error('Error sending email:', error.message);
+        console.error('Error details:', error);
         throw error;
     }
 };
