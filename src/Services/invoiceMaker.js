@@ -3,7 +3,6 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 
 const mailService = require('./mailTransporter')
-const cartController = require('../controllers/cart');
 const orderController = require('../controllers/order');
 
 

@@ -1,5 +1,8 @@
 const pool = require('../config/database');
+const db = require('../config/database');
 const { transporter } = require('../Services/mailTransporter');
+const fs = require('fs');
+const path = require('path');
 
 const getOrCreateWishlist = async (req, res) => {
     try {
@@ -219,10 +222,10 @@ const sendSaleEmail = async (req, res) => {
         const customerProductsMap = new Map();
 
         for (const product of products) {
-            const { productID, productName, discountPercentage } = product;
+            const { productID, productName, discountPercentage, stock, unitPrice, brand, material, description, overallRating } = product;
 
-            if (!productID || !productName || discountPercentage === undefined) {
-                return res.status(400).send('Product ID, name, and discount percentage are required for each product');
+            if (!productID || !productName || discountPercentage === undefined || stock === undefined || unitPrice === undefined || !brand || !material || !description || overallRating === undefined) {
+                return res.status(400).send('Product ID, name, discount percentage, stock, price, brand, material, description, and overall rating are required for each product');
             }
 
             // Fetch the wishlists containing the product
@@ -231,6 +234,15 @@ const sendSaleEmail = async (req, res) => {
             if (wishlistItems.length === 0) {
                 console.log(`No wishlists found containing the product ID: ${productID}`);
                 continue;
+            }
+
+            // Fetch the product image path
+            const imagePath = await getProductImagePath(productID);
+
+            // Read the image file
+            let imageBuffer = null;
+            if (imagePath) {
+                imageBuffer = fs.readFileSync(imagePath);
             }
 
             // Aggregate products for each customer
@@ -268,20 +280,76 @@ const sendSaleEmail = async (req, res) => {
                 customerProductsMap.get(customerEmail).push({
                     productName,
                     productID,
-                    discountPercentage
+                    discountPercentage,
+                    stock,
+                    unitPrice,
+                    brand,
+                    material,
+                    description,
+                    overallRating,
+                    imageBuffer
                 });
             }
         }
 
         // Send an email to each customer with their discounted products
         for (const [customerEmail, products] of customerProductsMap.entries()) {
-            let emailContent = 'The following products from your wishlist are now discounted:\n\n';
-            products.forEach(product => {
-                emailContent += `- ${product.productName} (ID: ${product.productID}) is now discounted by ${product.discountPercentage}%\n`;
+            let emailContent = `
+                <html>
+                <body style="font-family: Arial, sans-serif; line-height: 1.6; background-color: #dedede; padding: 15px; border-radius: 8px; border: 1px solid #666;">
+            `;
+
+            const attachments = [];
+
+            products.forEach((product, index) => {
+                const cid = `product${index}@yourstore.com`;
+                const discountedPrice = (product.unitPrice * (1 - product.discountPercentage / 100)).toFixed(2);
+                const stars = '★'.repeat(product.overallRating) + '☆'.repeat(5 - product.overallRating);
+                emailContent += `
+                    <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; background-color: #dedede; padding: 15px; border-radius: 8px; border: 1px solid #f1f1f1;">
+                        <tr>
+                            <!-- Product Image -->
+                            <td style="width: 120px; text-align: center;">
+                                <img src="cid:${cid}" alt="${product.productName}" style="width: 100px; border-radius: 4px;">
+                            </td>
+                            <!-- Product Details -->
+                            <td style="padding: 0 15px;">
+                                <p style="margin: 0; font-size: 13px; font-weight: bold; color: #666;">${product.brand}</p>
+                                <p style="margin: 0; font-size: 14px; font-style: italic; font-weight: bold; color: #333;">${product.productName}</p>
+                                <p style="margin: 5px 0; color: #666;">Discount: ${product.discountPercentage}%</p>
+                                <p style="margin: 5px 0; color: #666;">Stock: ${product.stock}</p>
+                                <p style="margin: 5px 0; color: #666;">Material: ${product.material}</p>
+                                <p style="margin: 5px 0; color: #666;">Price: <s style="color: red;">$${product.unitPrice}</s> <strong style="color: green;">$${discountedPrice}</strong></p>
+                            </td>
+                            <!-- Product Description and Rating -->
+                            <td style="padding: 0 15px; vertical-align: center; text-align: center;">
+                                <p style="margin: 5px 0; color: black; font-size: 16px;">${stars}</p>
+                                <p style="margin: 5px 0; color: #555; font-style: italic; font-weight: bold; font-size: 18px;">"${product.description}"</p>
+                            </td>
+                            <!-- Follow Seller Button -->
+                            <td style="text-align: right; vertical-align: top;">
+                                <a href="http://localhost:3000/product/${product.productID}" style="text-decoration: none; background-color: #333; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 12px; margin-top: 10px;">Purchase Now</a>
+                            </td>
+                        </tr>
+                    </table>
+                `;
+
+                if (product.imageBuffer) {
+                    attachments.push({
+                        filename: `${product.productName}.png`,
+                        content: product.imageBuffer,
+                        cid: cid
+                    });
+                }
             });
 
+            emailContent += `
+                </body>
+                </html>
+            `;
+
             try {
-                await sendEmail(customerEmail, 'Products Discounted', emailContent);
+                await sendEmail(customerEmail, 'Products Discounted', 'The following products from your wishlist are now on sale.', emailContent, attachments);
             } catch (err) {
                 console.error(`Error sending email to ${customerEmail}:`, err.message);
                 console.error('Error details:', err);
@@ -296,12 +364,31 @@ const sendSaleEmail = async (req, res) => {
     }
 };
 
-const sendEmail = async (to, subject, text) => {
+const getProductImagePath = async (productID) => {
+    try {
+        const sql = 'SELECT picturePath FROM `Pictures` WHERE productID = ?';
+        const [results, fields] = await db.promise().query(sql, [productID]);
+
+        if (results.length > 0) {
+            return path.join(__dirname, '..', results[0].picturePath); // Adjust the path as necessary
+        } else {
+            console.log("Image not found");
+            return null;
+        }
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+};
+
+const sendEmail = async (to, subject, text, html, attachments) => {
     const mailOptions = {
         from: 'zadados308@gmail.com',
         to,
         subject,
-        text,
+        text, // Plain text version of the email
+        html, // HTML version of the email
+        attachments // Attachments
     };
 
     try {
@@ -318,142 +405,6 @@ const sendEmail = async (to, subject, text) => {
         throw error;
     }
 };
-
-// let htmlContent = `
-//     <h1 style="color: #333;">The following products from your wishlist are now discounted:</h1>
-//     <ul style="list-style-type: none; padding: 0;">
-// `;
-// products.forEach(product => {
-//     htmlContent += `
-//         <li style="margin-bottom: 10px;">
-//             <strong>${product.productName}</strong> (ID: ${product.productID}) is now discounted by <strong>${product.discountPercentage}%</strong>
-//         </li>
-//     `;
-// });
-// htmlContent += '</ul>';
-
-// const sendSaleEmail = async (req, res) => {
-//     try {
-//         const products = req.body;
-
-//         if (!products || !Array.isArray(products) || products.length === 0) {
-//             return res.status(400).send('Product details are required');
-//         }
-
-//         // Create a map to store customer emails and their discounted products
-//         const customerProductsMap = new Map();
-
-//         for (const product of products) {
-//             const { productID, productName, discountPercentage } = product;
-
-//             if (!productID || !productName || discountPercentage === undefined) {
-//                 return res.status(400).send('Product ID, name, and discount percentage are required for each product');
-//             }
-
-//             // Fetch the wishlists containing the product
-//             const [wishlists] = await pool.promise().query('SELECT * FROM WishlistItems WHERE productID = ?', [productID]);
-
-//             if (wishlists.length === 0) {
-//                 console.log(`No wishlists found containing the product ID: ${productID}`);
-//                 continue;
-//             }
-
-//             // Aggregate products for each customer
-//             for (const wishlist of wishlists) {
-//                 const customerID = wishlist.customerID;
-
-//                 // Fetch the customer's email
-//                 const [customer] = await pool.promise().query('SELECT email FROM Customer WHERE customerID = ?', [customerID]);
-//                 const customerEmail = customer[0].email;
-
-//                 if (!customerProductsMap.has(customerEmail)) {
-//                     customerProductsMap.set(customerEmail, []);
-//                 }
-
-//                 customerProductsMap.get(customerEmail).push({
-//                     productName,
-//                     productID,
-//                     discountPercentage
-//                 });
-//             }
-//         }
-
-//         // Send an email to each customer with their discounted products
-//         for (const [customerEmail, products] of customerProductsMap.entries()) {
-//             let emailContent = 'The following products from your wishlist are now discounted:\n\n';
-//             let htmlContent = '<h1>The following products from your wishlist are now discounted:</h1><ul>';
-//             products.forEach(product => {
-//                 emailContent += `- ${product.productName} (ID: ${product.productID}) is now discounted by ${product.discountPercentage}%\n`;
-//                 htmlContent += `<li>${product.productName} (ID: ${product.productID}) is now discounted by ${product.discountPercentage}%</li>`;
-//             });
-//             htmlContent += '</ul>';
-
-//             await sendEmail(customerEmail, 'Products Discounted', emailContent, htmlContent);
-//         }
-
-//         res.status(200).send('Discount emails sent');
-//     } catch (err) {
-//         console.error('Error sending discount emails:', err);
-//         res.status(500).send('Error sending discount emails');
-//     }
-// };
-
-// const sendEmail = async (to, subject, text, html) => {
-//     const mailOptions = {
-//         from: 'zadados308@gmail.com',
-//         to,
-//         subject,
-//         text,
-//         html, // Add the HTML content here
-//     };
-
-//     try {
-//         // Validate the email address
-//         if (!to || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) {
-//             throw new Error('Invalid or missing email address.');
-//         }
-        
-//         await transporter.sendMail(mailOptions);
-//         console.log('Email sent successfully');
-//     } catch (error) {
-//         console.error('Error sending email:', error);
-//         throw error;
-//     }
-// };
-
-// const sendSaleEmail = async (req, res) => {
-//     try {
-//         const { productID } = req.params;
-
-//         if (!productID) {
-//             return res.status(400).send('Product ID is required');
-//         }
-
-//         // Fetch the wishlists containing the product
-//         const [wishlists] = await pool.promise().query('SELECT * FROM WishlistItems WHERE productID = ?', [productID]);
-
-//         if (wishlists.length === 0) {
-//             return res.status(404).send('No wishlists found containing the product');
-//         }
-
-//         // Send an email to each customer with the wishlist containing the product
-//         wishlists.forEach(async (wishlist) => {
-//             const customerID = wishlist.customerID;
-
-//             // Fetch the customer's email
-//             const [customer] = await pool.promise().query('SELECT email FROM Customer WHERE customerID = ?', [customerID]);
-//             const customerEmail = customer[0].email;
-
-//             // Send the email
-//             await mailSender(customerEmail, 'Product on Sale', `The product with ID ${productID} is now on sale!`);
-//         });
-
-//         res.status(200).send('Sale emails sent');
-//     } catch (err) {
-//         console.error('Error sending sale emails:', err);
-//         res.status(500).send('Error sending sale emails');
-//     }
-// }
 
 module.exports = {
     getOrCreateWishlist,

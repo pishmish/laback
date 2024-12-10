@@ -39,6 +39,7 @@ router.get('/:id', (req, res) => {
     return wishlistController.getWishlistByID(req, res);
 });
 
+//Assuming that at call time, discount is alr applied to a product
 //send a mail to customer with wishlists containing that product which goes on sale (using mailSender in invoiceMaker)
 router.post('/sendMail', (req, res) => {
     return wishlistController.sendSaleEmail(req, res);
