@@ -80,13 +80,35 @@ wishlist
   POST /sendMail
 analytics
   GET /sales
-  GET /sales/:productid
-  GET /sales/byregion (optional)
-  GET /sales/:categoryid
+  GET /sales/monthly
+  GET /sales/quarterly
+  GET /sales/yearly
+  GET /sales/comparison
+  GET /sales/product/:productid
+  GET /sales/product/:productid/monthly
+  GET /sales/product/:productid/quarterly
+  GET /sales/product/:productid/yearly
+  GET /sales/product/:productid/comparison
+  GET /sales/category/:categoryid
+  GET /sales/category/:categoryid/monthly
+  GET /sales/category/:categoryid/quarterly
+  GET /sales/category/:categoryid/yearly
+  GET /sales/category/:categoryid/comparison
+  GET /salesByProvince
+  GET /salesByCity
+  GET /salesByCountry
   -----------
-  GET /product/lowstock
-  GET /product/bestsellers
-  GET /product/mostviewed
+  GET /discountEffectiveness
+  -----------
+  GET /product/lowStock
+  GET /product/bestSellers
+  GET /product/mostViewed
+  -----------
+  GET /user/topBuyers
+  GET /user/churnRate
+  -----------
+  GET /inventory
+  GET /inventory/reorder
 returns
   GET /
   GET /:id
