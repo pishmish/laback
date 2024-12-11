@@ -1,3 +1,4 @@
+//As we all know express sends a function called next into the middleware, which then needs to be called with or without error to make it move the request handling to the next middleware. It still works, but in case of an async function, you don't need to do that. If you want to pass an error, just throw a normal exception:
 require('express-async-errors');
 //async errors
 //^^ above code was written by musab earlier. I've left it in. -Areeb
@@ -19,6 +20,7 @@ const deliveryapi = require('./routes/DeliveryAPI');
 const orderapi = require('./routes/OrderAPI');
 const paymentapi = require('./routes/PaymentAPI');
 const wishlistapi = require('./routes/WishlistAPI');
+const analyticsapi = require('./routes/AnalyticsAPI');
 
 //middleware 
 const notFoundMiddleware = require('./middleware/not-found');
@@ -48,6 +50,7 @@ app.use('/delivery', deliveryapi);
 app.use('/order', orderapi);
 app.use('/payment', paymentapi);
 app.use('/wishlist', wishlistapi);
+app.use('/analytics', analyticsapi);
 
 
 // Schedule the cron job, but only if not in the test environment
