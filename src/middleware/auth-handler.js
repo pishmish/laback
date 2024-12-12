@@ -23,9 +23,9 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Middleware to check user role
-const authenticateRole = (requiredRole) => {
+const authenticateRole = (requiredRoles) => {
     return (req, res, next) => {
-        if (req.role !== requiredRole) {
+        if (!requiredRoles.includes(req.role)) {
             return res.status(403).json({ message: 'Access denied. Insufficient permissions.' });
         }
         next();
