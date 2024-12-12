@@ -33,12 +33,12 @@ router.delete('/customer/:customerID', authenticateToken, authenticateRole('cust
 });
 
 //fetch wishlists which contain a specific productID
-router.get('/product/:productID', authenticateToken, (req, res) => {
+router.get('/product/:productID', authenticateToken, authenticateRole(['salesManager', 'productManager']), (req, res) => {
     return wishlistController.getWishlistsContainingProduct(req, res);
 });
 
 //get wishlist by wishlistID (asssuming it alr exists) (MIGHT BE USELESS FROM FRONTEND POV)
-router.get('/:id', authenticateToken, (req, res) => {
+router.get('/:id', authenticateToken, authenticateRole(['salesManager', 'productManager']), (req, res) => {
     return wishlistController.getWishlistByID(req, res);
 });
 
