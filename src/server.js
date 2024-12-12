@@ -21,6 +21,7 @@ const orderapi = require('./routes/OrderAPI');
 const paymentapi = require('./routes/PaymentAPI');
 const wishlistapi = require('./routes/WishlistAPI');
 const analyticsapi = require('./routes/AnalyticsAPI');
+const returnapi = require('./routes/ReturnsAPI');
 
 //middleware 
 const notFoundMiddleware = require('./middleware/not-found');
@@ -51,6 +52,7 @@ app.use('/order', orderapi);
 app.use('/payment', paymentapi);
 app.use('/wishlist', wishlistapi);
 app.use('/analytics', analyticsapi);
+app.use('/returns', returnapi);
 
 
 // Schedule the cron job, but only if not in the test environment
