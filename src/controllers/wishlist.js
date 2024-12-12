@@ -148,10 +148,10 @@ const getWishlistsContainingProduct = async (req, res) => {
     try {
         const { productID } = req.params;
 
-        //check if role is customer, deny access
-        if (req.role === 'customer') {
-            return res.status(403).send('Access Denied');
-        }
+        // //check if role is customer, deny access
+        // if (req.role === 'customer') {
+        //     return res.status(403).send('Access Denied');
+        // }
 
         if (!productID) {
             return res.status(400).send('Product ID is required');
@@ -188,10 +188,10 @@ const getWishlistByID = async (req, res) => {
     try {
         const { id } = req.params;
 
-        //check if role is customer, deny access
-        if (req.role === 'customer') {
-            return res.status(403).send('Access Denied');
-        }
+        // //check if role is customer, deny access
+        // if (req.role === 'customer') {
+        //     return res.status(403).send('Access Denied');
+        // }
 
         if (!id) {
             return res.status(400).send('Wishlist ID is required');
