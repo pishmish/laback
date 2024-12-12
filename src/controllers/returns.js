@@ -254,6 +254,33 @@ const deleteRequest = async (req, res) => {
   }
 }
 
+const authorizePayment = async (req, res) => {
+  try{
+    //check that the product is received
+    let sql2 = 'SELECT returnStatus FROM Returns WHERE requestID = ?';
+    let [results2, fields2] = await db.promise().query(sql2, [req.params.id]);
+
+    if(results2[0].returnStatus !== 'productReceived') {
+      return res.status(400).json({
+        msg: 'Product has not been received'
+      });
+    }
+
+    let sql = 'UPDATE SalesManagerApprovesRefundReturn SET approvalStatus = ? WHERE requestID = ?';
+    const [results, fields] = await db.promise().query(sql, ['authorized', req.params.id]);
+
+    return res.status(200).json({
+      msg: 'Payment authorized'
+    });
+
+  } catch(err) {
+    console.error(err);
+    return res.status(500).json({
+      msg: 'Failed to authorize payment'
+    });
+  }
+}
+
 module.exports = {
   getAllReturns,
   getRequest,
@@ -261,5 +288,6 @@ module.exports = {
   newRequest,
   updateRequest,
   updateRequestStatus,
-  deleteRequest
+  deleteRequest,
+  authorizePayment
 }

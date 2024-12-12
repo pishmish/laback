@@ -43,4 +43,8 @@ router.delete('/request/:id', authenticateToken, authenticateRole('customer'), (
     return returnsController.deleteRequest(req, res);
 });
 
+router.post('/request/:id/authorizepayment', authenticateToken, authenticateRole('salesManager'), (req, res) => {
+    return returnsController.authorizePayment(req, res);
+});
+
 module.exports = router;

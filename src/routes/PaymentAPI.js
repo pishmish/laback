@@ -20,4 +20,8 @@ router.post('/process', authenticateToken, authenticateRole('customer'), (req, r
     return paymentController.processPayment(req, res);
 });
 
+router.post('/refund/:id', authenticateToken, authenticateRole('salesManager'), (req, res) => {
+    return paymentController.refundPayment(req, res);
+});
+
 module.exports = router;
