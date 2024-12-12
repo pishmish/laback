@@ -3,12 +3,13 @@ const db = require('../config/database');
 const getAllSales = async (req, res) => {
     try {
         const [salesData] = await db.promise().query(`
-            SELECT DATE(o.timeOrdered) as date, SUM(ooip.purchasePrice*ooip.quantity) as totalRevenue, SUM(ooip.quantity) as unitsSold
+            SELECT DATE_FORMAT(o.timeOrdered, '%Y-%m-%d') as date, 
+                   SUM(ooip.purchasePrice * ooip.quantity) as totalRevenue, 
+                   SUM(ooip.quantity) as unitsSold
             FROM \`Order\` o
             JOIN OrderOrderItemsProduct ooip ON o.orderID = ooip.orderID
-            GROUP BY DATE(o.timeOrdered)
+            GROUP BY DATE_FORMAT(o.timeOrdered, '%Y-%m-%d')
         `);
-        
         res.status(200).json(salesData);
     } catch (err) {
         console.error('Error fetching all sales:', err);
@@ -125,11 +126,13 @@ const getProductSales = async (req, res) => {
     try {
         const productID = req.params.productid;
         const [productSalesData] = await db.promise().query(`
-            SELECT DATE(o.timeOrdered) as date, SUM(ooip.quantity) as unitsSold, SUM(ooip.purchasePrice*ooip.quantity) as revenue
+            SELECT DATE_FORMAT(o.timeOrdered, '%Y-%m-%d') as date, 
+                   SUM(ooip.quantity) as unitsSold, 
+                   SUM(ooip.purchasePrice * ooip.quantity) as revenue
             FROM \`Order\` o
             JOIN OrderOrderItemsProduct ooip ON o.orderID = ooip.orderID
             WHERE ooip.productID = ?
-            GROUP BY DATE(o.timeOrdered)
+            GROUP BY DATE_FORMAT(o.timeOrdered, '%Y-%m-%d')
         `, [productID]);
 
         // if (productSalesData.length === 0) {
@@ -263,14 +266,17 @@ const getCategorySales = async (req, res) => {
     try {
         const categoryID = req.params.categoryid;
         const [categorySalesData] = await db.promise().query(`
-            SELECT DATE(o.timeOrdered) as date, SUM(ooip.purchasePrice) as totalRevenue, c.name as categoryName
+            SELECT DATE_FORMAT(o.timeOrdered, '%Y-%m-%d') as date, 
+                   SUM(ooip.purchasePrice * ooip.quantity) as totalRevenue, 
+                   SUM(ooip.quantity) as unitsSold,
+                   c.name as categoryName
             FROM \`Order\` o
             JOIN OrderOrderItemsProduct ooip ON o.orderID = ooip.orderID
             JOIN Product p ON ooip.productID = p.productID
             JOIN CategoryCategorizesProduct ccp ON p.productID = ccp.productID
             JOIN Category c ON ccp.categoryID = c.categoryID
             WHERE c.categoryID = ?
-            GROUP BY DATE(o.timeOrdered), c.name
+            GROUP BY DATE_FORMAT(o.timeOrdered, '%Y-%m-%d'), c.name
         `, [categoryID]);
         res.status(200).json(categorySalesData);
     } catch (err) {

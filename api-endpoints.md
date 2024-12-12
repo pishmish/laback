@@ -1,4 +1,4 @@
- store
+store
   GET /product/
   GET /prodcut/:id
   POST /product/ (admin)
