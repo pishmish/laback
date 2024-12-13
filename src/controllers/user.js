@@ -166,7 +166,7 @@ const loginUser = async (req, res) => {
 
     // Set cookie with the token
     res.cookie('authToken', token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: parseInt(process.env.JWT_COOKIE),
