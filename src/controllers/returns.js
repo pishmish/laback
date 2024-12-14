@@ -281,6 +281,62 @@ const authorizePayment = async (req, res) => {
   }
 }
 
+const getCost = async (req, res ) => {
+  try{ 
+    //check that the request ID is valid
+    let sql = 'SELECT * FROM Returns WHERE requestID = ?';
+    const [results, fields] = await db.promise().query(sql, [req.params.id]);
+
+    if(results.length === 0) {
+      return res.status(400).json({
+        msg: 'RequestID not found'
+      });
+    }
+    
+    //get the purchase price from order items
+    let sql2 = "SELECT purchasePrice from OrderOrderItemsProduct WHERE orderID = ? AND productID = ?";
+    const [results2, fields2] = await db.promise().query(sql2, [results[0].orderID, results[0].productID]);
+
+    //calculate the cost
+    let cost = results2[0].purchasePrice * results[0].quantity;
+
+    return res.status(200).json({
+      cost: cost
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      msg: 'Failed to get cost'
+    });
+  }
+}
+
+const getCustomerRequests = async (req, res) => {
+  try{
+    //check that the username is valid
+    let sql1 = 'SELECT customerID FROM Customer WHERE username = ?';
+    let [results1, fields1] = await db.promise().query(sql1, [req.params.username]);
+
+    if(results1.length === 0) {
+      return res.status(400).json({
+        msg: 'Username not found'
+      });
+    }
+
+    let sql = 'SELECT * FROM Returns WHERE customerID = ?';
+    const [results, fields] = await db.promise().query(sql, [results1[0].customerID]);
+    return res.status(200).json({
+      requests: results
+    });
+  } catch(err) {
+    console.error(err);
+    return res.status(500).json({
+      msg: 'Failed to get customer requests'
+    });
+  }
+}
+
 module.exports = {
   getAllReturns,
   getRequest,
@@ -289,5 +345,7 @@ module.exports = {
   updateRequest,
   updateRequestStatus,
   deleteRequest,
-  authorizePayment
+  authorizePayment,
+  getCost,
+  getCustomerRequests
 }
