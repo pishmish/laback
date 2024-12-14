@@ -110,16 +110,6 @@ analytics
   -----------
   GET /inventory
   GET /inventory/reorder
-returns
-  GET /
-  GET /:id
-  GET /:id/status
-  POST /
-  PUT /:id
-  PUT /:id/status
-  GET /product/lowstock
-  GET /product/bestsellers
-  GET /product/mostviewed
 returns & refunds
   GET /all
   GET /request/:id
@@ -128,6 +118,8 @@ returns & refunds
   PUT /request/:id
   PUT /request/:id/status
   DELETE /:id
+  GET /request/:id/cost
+  GET /request/customer/:username
 productManager
   GET /product/stock
   GET /dashboard

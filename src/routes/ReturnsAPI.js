@@ -47,4 +47,12 @@ router.post('/request/:id/authorizepayment', authenticateToken, authenticateRole
     return returnsController.authorizePayment(req, res);
 });
 
+router.get('/request/:id/cost', authenticateToken, (req, res) => {
+    return returnsController.getCost(req, res);
+});
+
+router.get('/request/customer/:username', authenticateToken, (req, res) => {
+    return returnsController.getCustomerRequests(req, res);
+});
+
 module.exports = router;
