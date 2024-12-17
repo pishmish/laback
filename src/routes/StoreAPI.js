@@ -6,6 +6,9 @@ const productController = require('../controllers/product');
 const categoryController = require('../controllers/category');
 const reviewsController = require('../controllers/reviews');
 
+//import middleware
+const {authenticateToken, authenticateRole} = require('../middleware/auth-handler');
+
 // Routes:
 
 //sample sanity route
@@ -35,18 +38,15 @@ router.get('/product/:id/image', (req, res) => {
   return productController.getProductImage(req, res);
 });
 
-router.post('/product', (req, res) => {
-  //TODO: requires authentication
+router.post('/product', authenticateToken, authenticateRole('productManager'), (req, res) => {
   return productController.createProduct(req, res);
 });
 
-router.put('/product/:id', (req, res) => {
-  //TODO: requires authentication
+router.put('/product/:id', authenticateToken, authenticateRole(['salesManager', 'productManager']), (req, res) => {
   return productController.updateProduct(req, res);
 });
 
-router.delete('/product/:id', (req, res) => {
-  //TODO: requires authentication
+router.delete('/product/:id', authenticateToken, authenticateRole(['salesManager', 'productManager']), (req, res) => {
   return productController.deleteProduct(req, res);
 });
 
@@ -59,18 +59,15 @@ router.get('/category/:name', (req, res) => {
   return categoryController.getCategoryByName(req, res);
 });
 
-router.post('/category', (req, res) => {
-  //TODO: requires authentication
+router.post('/category', authenticateToken, authenticateRole('productManager'), (req, res) => {
   return categoryController.createCategory(req, res);
 });
 
-router.put('/category/:id', (req, res) => {
-  //TODO: requires authentication
+router.put('/category/:id', authenticateToken, authenticateRole('productManager'), (req, res) => {
   return categoryController.updateCategory(req, res);
 });
 
-router.delete('/category/:id', (req, res) => {
-  //TODO: requires authentication
+router.delete('/category/:id', authenticateToken, authenticateRole('productManager'), (req, res) => {
   return categoryController.deleteCategory(req, res);
 });
 
@@ -91,28 +88,23 @@ router.get('/product/:id/reviews/:reviewId', (req, res) => {
   return reviewsController.getReviewById(req, res);
 });
 
-router.post('/product/:id/reviews', (req, res) => {
-  //TODO: requires authentication
+router.post('/product/:id/reviews', authenticateToken, (req, res) => {
   return reviewsController.createReview(req, res);
 });
 
-router.put('/product/:id/reviews/:reviewId', (req, res) => {
-  //TODO: requires authentication
+router.put('/product/:id/reviews/:reviewId', authenticateToken, (req, res) => {
   return reviewsController.updateReview(req, res);
 });
 
-router.put('/reviews/:reviewId', (req, res) => {
-  //TODO: requires authentication
+router.put('/reviews/:reviewId', authenticateToken, (req, res) => {
   return reviewsController.updateReview(req, res);
 });
 
-router.delete('/reviews/:reviewId', (req, res) => {
-  //TODO: requires authentication
+router.delete('/reviews/:reviewId', authenticateToken, (req, res) => {
   return reviewsController.deleteReview(req, res);
 });
 
 router.get('/reviews/overallRating/:productID', (req, res) => {
-  //TODO: requires authentication
   return reviewsController.getOverallRatingById(req, res);
 });
 

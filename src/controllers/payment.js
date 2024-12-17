@@ -1,3 +1,4 @@
+const db = require('../config/database');
 
 const processPayment = async (req, res) => {
   try {
@@ -43,7 +44,41 @@ const processPayment = async (req, res) => {
   }
 }
 
+const refundPayment = async (req, res) => {
+  try{
+    //handle updating the returns status to complete and refund to complete
+    //check that payment is authorized
+    let sql = 'SELECT approvalStatus FROM SalesManagerApprovesRefundReturn WHERE requestID = ?';
+    let [results, fields] = await db.promise().query(sql, [req.params.id]);
+
+    if(results[0].approvalStatus !== 'authorized') {
+      return res.status(400).json({
+        msg: 'Payment has not been authorized, or something idk'
+      });
+    }
+
+    //update the returns and refund tables to show that the payment has been processed
+    let sql2 = 'UPDATE SalesManagerApprovesRefundReturn SET approvalStatus = "completed" WHERE requestID = ?';
+    const [results2, fields2] = await db.promise().query(sql2, [req.params.id]);
+
+    let sql3 = 'UPDATE Returns SET returnStatus = "completed" WHERE requestID = ?';
+    const [results3, fields3] = await db.promise().query(sql3, [req.params.id]);
+
+    //do the payment to narnia cuz we're not handling real payments
+    return res.status(200).json({
+      msg: 'Payment refunded'
+    });
+
+  } catch(err) {
+    console.error(err);
+    return res.status(500).json({
+      msg: 'Failed to refund payment'
+    });
+  }
+}
+
 module.exports = {
-  processPayment
+  processPayment,
+  refundPayment
 }
 
