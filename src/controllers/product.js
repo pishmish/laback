@@ -1,5 +1,7 @@
 const db = require('../config/database');
 const path = require('path');
+const multer = require('multer');
+const fs = require('fs');
 
 const getAllProducts = async (req, res) => {
 
@@ -119,15 +121,68 @@ const getProductImage = async (req, res) => {
   }
 };
 
-const createProduct = async (req, res) => {
-  try {
-    let sql = 'INSERT INTO `Product` (stock ,name, unitPrice, overallRating, discountPercentage, description, brand, color, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    const [results, fields] = await db.promise().query(sql, [req.body.stock, req.body.name, req.body.unitPrice, req.body.overallRating, req.body.discountPercentage, req.body.description, req.body.brand, req.body.color, req.body.supplierID, req.body.material, req.body.capacityLitres, req.body.warrantyMonths, req.body.serialNumber, req.body.popularity]);
-    res.status(200).json({msg: "Product created"});
-  } catch(err) {
-    console.log(err);
-    res.status(500).json({msg: "Error creating product"});
+// Set up storage engine
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = path.join(__dirname, '..', 'src', 'assets', 'images');
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    // The filename will be set later in the createProduct function
+    cb(null, file.originalname);
   }
+});
+
+// Initialize upload
+const upload = multer({ storage: storage });
+
+const createProduct = async (req, res) => {
+  upload.single('image')(req, res, async (err) => {
+    if (err) {
+      return res.status(500).json({ msg: "Error uploading image" });
+    }
+
+    try {
+      //create product record in Product table
+      let sql = 'INSERT INTO `Product` (stock ,name, unitPrice, overallRating, discountPercentage, description, brand, color, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      const [results, fields] = await db.promise().query(sql, [req.body.stock, req.body.name, req.body.unitPrice, req.body.overallRating, req.body.discountPercentage, req.body.description, req.body.brand, req.body.color, req.body.supplierID, req.body.material, req.body.capacityLitres, req.body.warrantyMonths, req.body.serialNumber, req.body.popularity]);
+      if (results.affectedRows === 0) {
+        return res.status(404).json({ message: 'Product not created' });
+      }
+
+      //get the productID of the newly created product
+      const newProductID = results.insertId;
+
+      // Rename the uploaded image file to <productID>.png
+      const newFilename = `${newProductID}.png`;
+      const newFilePath = path.join(__dirname, '..', 'src', 'assets', 'images', newFilename);
+      fs.renameSync(req.file.path, newFilePath);
+      
+      // Save the image path in the database
+      const imagePath = path.join('assets', 'images', newFilename);
+      let sql2 = 'INSERT INTO `Pictures` (productID, picturePath) VALUES (?, ?)';
+      await db.promise().query(sql2, [newProductID, imagePath]);      
+
+      //get the categoryID of the category chosen
+      let sql3 = 'SELECT categoryID FROM `Category` WHERE name = ?';
+      const [results2, fields2] = await db.promise().query(sql3, [req.body.categoryName]);
+      if (results2.length === 0) {
+        return res.status(404).json({ message: 'Category not found' });
+      }
+      const relevantCategoryID = results2[0].categoryID;
+
+      //create category association in CategoryCategorizesProduct table
+      let sql4 = 'INSERT INTO `CategoryCategorizesProduct` (categoryID, productID) VALUES (?, ?)';
+      const [results3, fields3] = await db.promise().query(sql4, [relevantCategoryID, newProductID]);
+      res.status(201).json({msg: "Category association created"});
+    } catch(err) {
+      console.log(err);
+      res.status(500).json({msg: "Error creating product"});
+    }
+  });
 }
 
 const updateProduct = async (req, res) => {
