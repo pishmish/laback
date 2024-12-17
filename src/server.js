@@ -1,4 +1,5 @@
-//As we all know express sends a function called next into the middleware, which then needs to be called with or without error to make it move the request handling to the next middleware. It still works, but in case of an async function, you don't need to do that. If you want to pass an error, just throw a normal exception:
+//As we all know express sends a function called next into the middleware, which then needs to be called with or without error to make it move the request handling to the next middleware. 
+// It still works, but in case of an async function, you don't need to do that. If you want to pass an error, just throw a normal exception:
 require('express-async-errors');
 //async errors
 //^^ above code was written by musab earlier. I've left it in. -Areeb
@@ -9,6 +10,8 @@ const cookieParser = require('cookie-parser');
 const cron = require('node-cron');
 const cors = require('cors'); // Import cors
 const path = require('path'); // Import path
+const helmet = require('helmet');
+const morgan = require('morgan');
 
 // Import routes from
 const storeapi = require('./routes/StoreAPI');
@@ -39,6 +42,12 @@ app.use(cors({
 
 // Serve static files from the "src/assets" directory
 app.use('/assets', express.static(path.join(__dirname, 'src/assets')));
+
+// Use Helmet to set various HTTP headers for security
+app.use(helmet());
+
+// Use 'combined' for detailed logs or 'tiny' for minimal logs
+app.use(morgan('combined'));
 
 // Use the storeapi defined in route.js
 app.use('/store', storeapi);
