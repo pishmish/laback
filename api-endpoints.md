@@ -59,6 +59,7 @@ order
   GET /purchaseprice/:orderid/:productid
 payment
   POST /new
+  POST /refund
 delivery
   GET /estimate/:id
   PUT /estimate/:id
@@ -109,14 +110,16 @@ analytics
   -----------
   GET /inventory
   GET /inventory/reorder
-returns
-  GET /
-  GET /:id
-  GET /:id/status
-  POST /
-  PUT /:id
-  PUT /:id/status
+returns & refunds
+  GET /all
+  GET /request/:id
+  GET /request/:id/status
+  POST /newrequest
+  PUT /request/:id
+  PUT /request/:id/status
   DELETE /:id
+  GET /request/:id/cost
+  GET /request/customer/:username
 productManager
   GET /product/stock
   GET /dashboard
