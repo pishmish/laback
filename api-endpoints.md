@@ -3,6 +3,7 @@ store
   GET /prodcut/:id
   POST /product/ (admin)
   PUT /product/:id (admin)
+  PUT /product/price/:id (admin : salesManager)
   DELETE /product/:id (admin)
   ----------
   GET /category
