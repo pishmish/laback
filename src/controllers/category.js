@@ -1,8 +1,9 @@
 const db = require('../config/database');
 
 const getAllCategories = async (req, res) => {
+  // get all categories except the main categories (first 4: Handbags, Backpacks, Luggage, Travel Bags)
   try{
-    let sql = 'SELECT * FROM `Category`';
+    let sql = 'SELECT * FROM `Category` WHERE `name` NOT IN ("Handbags", "Backpacks", "Luggage", "Travel Bags", "Sports Bags")';
     const [results, fields] = await db.promise().query(sql);
     res.status(200).json(results);
   } catch(err) {
