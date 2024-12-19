@@ -26,7 +26,11 @@ const getOrCreateWishlist = async (req, res) => {
         }
 
         // Fetch the wishlist items
-        const [wishlistItems] = await pool.promise().query('SELECT productID, addedTime FROM WishlistItems WHERE wishlistID = ?', [wishlistID]);
+        const [wishlistItems] = await pool.promise().query(
+        `SELECT p.productID, p.name, p.unitPrice, p.stock, wi.addedTime
+        FROM WishlistItems wi
+        JOIN Product p ON wi.productID = p.productID
+        WHERE wi.wishlistID = ?`, [wishlistID]);
 
         // Combine the wishlist and its items
         const response = {
@@ -420,263 +424,40 @@ const sendEmail = async (to, subject, text, html, attachments) => {
     }
 };
 
-// const sendSaleEmail = async (req, res) => {
-//     try {
-//         const products = req.body;
+const isProductInWishlist = async (req, res) => {
+    try {
+        const { customerID, productID } = req.params;
 
-//         if (!products || !Array.isArray(products) || products.length === 0) {
-//             return res.status(400).send('Product details are required');
-//         }
+        if (!customerID) {
+            return res.status(400).send('Customer ID is required');
+        }
 
-//         // Create a map to store customer emails and their discounted products
-//         const customerProductsMap = new Map();
+        if (!productID) {
+            return res.status(400).send('Product ID is required');
+        }
 
-//         for (const product of products) {
-//             const { productID, productName, discountPercentage } = product;
+        // Get the wishlist for the customer
+        const [wishlist] = await pool.promise().query('SELECT * FROM Wishlist WHERE customerID = ?', [customerID]);
 
-//             if (!productID || !productName || discountPercentage === undefined) {
-//                 return res.status(400).send('Product ID, name, and discount percentage are required for each product');
-//             }
+        if (wishlist.length === 0) {
+            return res.status(200).json({ exists: false });
+        }
 
-//             // Fetch the wishlists containing the product
-//             const [wishlistItems] = await pool.promise().query('SELECT wishlistID FROM WishlistItems WHERE productID = ?', [productID]);
+        const wishlistID = wishlist[0].wishlistID;
 
-//             if (wishlistItems.length === 0) {
-//                 console.log(`No wishlists found containing the product ID: ${productID}`);
-//                 continue;
-//             }
+        // Check if product exists in wishlist
+        const [existingProduct] = await pool.promise().query(
+            'SELECT * FROM WishlistItems WHERE wishlistID = ? AND productID = ?',
+            [wishlistID, productID]
+        );
 
-//             // Aggregate products for each customer
-//             for (const wishlistItem of wishlistItems) {
-//                 const wishlistID = wishlistItem.wishlistID;
+        return res.status(200).json({ exists: existingProduct.length > 0 });
 
-//                 // Fetch the customer's ID using the wishlistID
-//                 const [wishlists] = await pool.promise().query('SELECT customerID FROM Wishlist WHERE wishlistID = ?', [wishlistID]);
-//                 if (wishlists.length === 0) {
-//                     console.log(`No wishlist found with ID: ${wishlistID}`);
-//                     continue;
-//                 }
-//                 const customerID = wishlists[0].customerID;
-
-//                 // Fetch the customer's username
-//                 const [customer] = await pool.promise().query('SELECT username FROM Customer WHERE customerID = ?', [customerID]);
-//                 if (customer.length === 0) {
-//                     console.log(`No customer found with ID: ${customerID}`);
-//                     continue;
-//                 }
-//                 const username = customer[0].username;
-
-//                 // Fetch the user's email using the username
-//                 const [user] = await pool.promise().query('SELECT email FROM User WHERE username = ?', [username]);
-//                 if (user.length === 0) {
-//                     console.log(`No user found with username: ${username}`);
-//                     continue;
-//                 }
-//                 const customerEmail = user[0].email;
-
-//                 if (!customerProductsMap.has(customerEmail)) {
-//                     customerProductsMap.set(customerEmail, []);
-//                 }
-
-//                 customerProductsMap.get(customerEmail).push({
-//                     productName,
-//                     productID,
-//                     discountPercentage
-//                 });
-//             }
-//         }
-
-//         // Send an email to each customer with their discounted products
-//         for (const [customerEmail, products] of customerProductsMap.entries()) {
-//             let emailContent = 'The following products from your wishlist are now discounted:\n\n';
-//             let htmlContent = `
-//                 <h1 style="color: #CCCCCC;">The following products from your wishlist are now discounted:</h1>
-//                 <ul style="list-style-type: none; padding: 0;">
-//             `;
-//             products.forEach(product => {
-//                 emailContent += `- ${product.productName} (ID: ${product.productID}) is now discounted by ${product.discountPercentage}%\n`;
-//                 htmlContent += `
-//                     <li style="margin-bottom: 10px;">
-//                         <strong>${product.productName}</strong> (ID: ${product.productID}) is now discounted by <strong>${product.discountPercentage}%</strong>
-//                     </li>
-//                 `;
-//             });
-//             htmlContent += '</ul>';
-
-//             try {
-//                 await sendEmail(customerEmail, 'Products Discounted', emailContent);
-//             } catch (err) {
-//                 console.error(`Error sending email to ${customerEmail}:`, err.message);
-//                 console.error('Error details:', err);
-//             }
-//         }
-
-//         res.status(200).send('Discount emails sent');
-//     } catch (err) {
-//         console.error('Error sending discount emails:', err.message);
-//         console.error('Error details:', err);
-//         res.status(500).send('Error sending discount emails');
-//     }
-// };
-
-// const sendEmail = async (to, subject, text) => {
-//     const mailOptions = {
-//         from: 'zadados308@gmail.com',
-//         to,
-//         subject,
-//         text,
-//     };
-
-//     try {
-//         // Validate the email address
-//         if (!to || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) {
-//             throw new Error('Invalid or missing email address.');
-//         }
-        
-//         await transporter.sendMail(mailOptions);
-//         console.log('Email sent successfully');
-//     } catch (error) {
-//         console.error('Error sending email:', error.message);
-//         console.error('Error details:', error);
-//         throw error;
-//     }
-// };
-
-// let htmlContent = `
-//     <h1 style="color: #333;">The following products from your wishlist are now discounted:</h1>
-//     <ul style="list-style-type: none; padding: 0;">
-// `;
-// products.forEach(product => {
-//     htmlContent += `
-//         <li style="margin-bottom: 10px;">
-//             <strong>${product.productName}</strong> (ID: ${product.productID}) is now discounted by <strong>${product.discountPercentage}%</strong>
-//         </li>
-//     `;
-// });
-// htmlContent += '</ul>';
-
-// const sendSaleEmail = async (req, res) => {
-//     try {
-//         const products = req.body;
-
-//         if (!products || !Array.isArray(products) || products.length === 0) {
-//             return res.status(400).send('Product details are required');
-//         }
-
-//         // Create a map to store customer emails and their discounted products
-//         const customerProductsMap = new Map();
-
-//         for (const product of products) {
-//             const { productID, productName, discountPercentage } = product;
-
-//             if (!productID || !productName || discountPercentage === undefined) {
-//                 return res.status(400).send('Product ID, name, and discount percentage are required for each product');
-//             }
-
-//             // Fetch the wishlists containing the product
-//             const [wishlists] = await pool.promise().query('SELECT * FROM WishlistItems WHERE productID = ?', [productID]);
-
-//             if (wishlists.length === 0) {
-//                 console.log(`No wishlists found containing the product ID: ${productID}`);
-//                 continue;
-//             }
-
-//             // Aggregate products for each customer
-//             for (const wishlist of wishlists) {
-//                 const customerID = wishlist.customerID;
-
-//                 // Fetch the customer's email
-//                 const [customer] = await pool.promise().query('SELECT email FROM Customer WHERE customerID = ?', [customerID]);
-//                 const customerEmail = customer[0].email;
-
-//                 if (!customerProductsMap.has(customerEmail)) {
-//                     customerProductsMap.set(customerEmail, []);
-//                 }
-
-//                 customerProductsMap.get(customerEmail).push({
-//                     productName,
-//                     productID,
-//                     discountPercentage
-//                 });
-//             }
-//         }
-
-//         // Send an email to each customer with their discounted products
-//         for (const [customerEmail, products] of customerProductsMap.entries()) {
-//             let emailContent = 'The following products from your wishlist are now discounted:\n\n';
-//             let htmlContent = '<h1>The following products from your wishlist are now discounted:</h1><ul>';
-//             products.forEach(product => {
-//                 emailContent += `- ${product.productName} (ID: ${product.productID}) is now discounted by ${product.discountPercentage}%\n`;
-//                 htmlContent += `<li>${product.productName} (ID: ${product.productID}) is now discounted by ${product.discountPercentage}%</li>`;
-//             });
-//             htmlContent += '</ul>';
-
-//             await sendEmail(customerEmail, 'Products Discounted', emailContent, htmlContent);
-//         }
-
-//         res.status(200).send('Discount emails sent');
-//     } catch (err) {
-//         console.error('Error sending discount emails:', err);
-//         res.status(500).send('Error sending discount emails');
-//     }
-// };
-
-// const sendEmail = async (to, subject, text, html) => {
-//     const mailOptions = {
-//         from: 'zadados308@gmail.com',
-//         to,
-//         subject,
-//         text,
-//         html, // Add the HTML content here
-//     };
-
-//     try {
-//         // Validate the email address
-//         if (!to || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) {
-//             throw new Error('Invalid or missing email address.');
-//         }
-        
-//         await transporter.sendMail(mailOptions);
-//         console.log('Email sent successfully');
-//     } catch (error) {
-//         console.error('Error sending email:', error);
-//         throw error;
-//     }
-// };
-
-// const sendSaleEmail = async (req, res) => {
-//     try {
-//         const { productID } = req.params;
-
-//         if (!productID) {
-//             return res.status(400).send('Product ID is required');
-//         }
-
-//         // Fetch the wishlists containing the product
-//         const [wishlists] = await pool.promise().query('SELECT * FROM WishlistItems WHERE productID = ?', [productID]);
-
-//         if (wishlists.length === 0) {
-//             return res.status(404).send('No wishlists found containing the product');
-//         }
-
-//         // Send an email to each customer with the wishlist containing the product
-//         wishlists.forEach(async (wishlist) => {
-//             const customerID = wishlist.customerID;
-
-//             // Fetch the customer's email
-//             const [customer] = await pool.promise().query('SELECT email FROM Customer WHERE customerID = ?', [customerID]);
-//             const customerEmail = customer[0].email;
-
-//             // Send the email
-//             await mailSender(customerEmail, 'Product on Sale', `The product with ID ${productID} is now on sale!`);
-//         });
-
-//         res.status(200).send('Sale emails sent');
-//     } catch (err) {
-//         console.error('Error sending sale emails:', err);
-//         res.status(500).send('Error sending sale emails');
-//     }
-// }
+    } catch (err) {
+        console.error('Error checking product in wishlist:', err);
+        res.status(500).send('Error checking product in wishlist');
+    }
+};
 
 module.exports = {
     getOrCreateWishlist,
@@ -685,5 +466,6 @@ module.exports = {
     deleteWishlist,
     getWishlistsContainingProduct,
     getWishlistByID,
-    sendSaleEmail
+    sendSaleEmail,
+    isProductInWishlist
 };
