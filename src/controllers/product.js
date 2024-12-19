@@ -197,6 +197,17 @@ const updateProduct = async (req, res) => {
   }
 }
 
+const updateProductPrice = async (req, res) => {
+  try {
+    let sql = 'UPDATE `Product` SET unitPrice = ? WHERE productID = ?';
+    const [results, fields] = await db.promise().query(sql, [req.body.newPrice, req.params.id]);
+    res.status(200).json({msg: "Product price updated"});
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error updating product price"});
+  }
+}
+
 const deleteProduct = async (req, res) => {
   try {
     let sql = 'DELETE FROM `Product` WHERE productID = ?';
@@ -386,6 +397,7 @@ module.exports = {
   getProductForManager,
   createProduct,
   updateProduct,
+  updateProductPrice,
   deleteProduct,
   searchProducts,
   sortProducts,
