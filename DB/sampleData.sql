@@ -10,42 +10,42 @@ INSERT INTO Category (name, description) VALUES
 ('Sports Bags', 'Specialized bags for sports and fitness enthusiasts, made to store all your essential gear with ease and organization.');
 
 /*-- Subcategories for Handbags*/
-INSERT INTO Category (name, description) VALUES
-('Tote Bags', 'Spacious, open-top bags perfect for work, shopping, or everyday use, with plenty of room for your essentials and more.'),
-('Crossbody Bags', 'Hands-free, stylish bags that combine comfort and security with a long strap, perfect for a day out or travel.'),
-('Clutch Bags', 'Elegant, compact bags for evening events and formal occasions, with just enough space for your must-haves.'),
-('Satchels', 'Classic structured bags with a top handle and adjustable strap, perfect for both professional and casual settings.'),
-('Shoulder Bags', 'Stylish and comfortable bags with single or double shoulder straps, ideal for everyday use.'),
-('Hobo Bags', 'Soft, slouchy bags that offer a relaxed look and feel, with ample space for daily essentials.');
+INSERT INTO Category (name, description, subCategoryNum) VALUES
+('Tote Bags', 'Spacious, open-top bags perfect for work, shopping, or everyday use, with plenty of room for your essentials and more.', 1),
+('Crossbody Bags', 'Hands-free, stylish bags that combine comfort and security with a long strap, perfect for a day out or travel.', 1),
+('Clutch Bags', 'Elegant, compact bags for evening events and formal occasions, with just enough space for your must-haves.', 1),
+('Satchels', 'Classic structured bags with a top handle and adjustable strap, perfect for both professional and casual settings.', 1),
+('Shoulder Bags', 'Stylish and comfortable bags with single or double shoulder straps, ideal for everyday use.', 1),
+('Hobo Bags', 'Soft, slouchy bags that offer a relaxed look and feel, with ample space for daily essentials.', 1);
 
 /*-- Subcategories for Backpacks*/
-INSERT INTO Category (name, description) VALUES
-('Casual Backpacks', 'Lightweight backpacks perfect for everyday needs, offering comfort and style for urban living or casual outings.'),
-('Laptop Backpacks', 'Backpacks with padded compartments for laptops, designed to keep your devices and essentials safe and organized.'),
-('Hiking Backpacks', 'Sturdy backpacks with added support and compartments for outdoor adventures, including water bottle holders and gear loops.'),
-('Travel Backpacks', 'Spacious backpacks with multiple compartments, designed for travelers who need organization and comfort on the go.'),
-('Mini Backpacks', 'Compact, fashionable backpacks for carrying essentials with style, ideal for casual outings or weekend events.');
+INSERT INTO Category (name, description, subCategoryNum) VALUES
+('Casual Backpacks', 'Lightweight backpacks perfect for everyday needs, offering comfort and style for urban living or casual outings.', 2),
+('Laptop Backpacks', 'Backpacks with padded compartments for laptops, designed to keep your devices and essentials safe and organized.', 2),
+('Hiking Backpacks', 'Sturdy backpacks with added support and compartments for outdoor adventures, including water bottle holders and gear loops.', 2),
+('Travel Backpacks', 'Spacious backpacks with multiple compartments, designed for travelers who need organization and comfort on the go.', 2),
+('Mini Backpacks', 'Compact, fashionable backpacks for carrying essentials with style, ideal for casual outings or weekend events.', 2);
 
 /*-- Subcategories for Luggage*/
-INSERT INTO Category (name, description) VALUES
-('Carry-On Bags', 'Compact bags designed to fit airline carry-on requirements, with organized compartments for easy access to essentials.'),
-('Checked Luggage', 'Durable, spacious luggage for checked-in travel, offering ample room for all your needs on longer trips.'),
-('Duffel Bags', 'Flexible and lightweight bags, perfect for short trips or as a secondary travel bag for additional storage.'),
-('Garment Bags', 'Protective bags designed to keep clothes wrinkle-free, ideal for business trips and special events.'),
-('Luggage Sets', 'Matching sets of luggage that offer versatile storage options, perfect for organized travelers needing multiple bags.');
+INSERT INTO Category (name, description, subCategoryNum) VALUES
+('Carry-On Bags', 'Compact bags designed to fit airline carry-on requirements, with organized compartments for easy access to essentials.', 3),
+('Checked Luggage', 'Durable, spacious luggage for checked-in travel, offering ample room for all your needs on longer trips.', 3),
+('Duffel Bags', 'Flexible and lightweight bags, perfect for short trips or as a secondary travel bag for additional storage.', 3),
+('Garment Bags', 'Protective bags designed to keep clothes wrinkle-free, ideal for business trips and special events.', 3),
+('Luggage Sets', 'Matching sets of luggage that offer versatile storage options, perfect for organized travelers needing multiple bags.', 3);
 
 /*-- Subcategories for Travel Bags*/
-INSERT INTO Category (name, description) VALUES
-('Weekender Bags', 'Stylish, compact bags ideal for weekend trips or overnight stays, with enough space for the essentials.'),
-('Rolling Bags', 'Travel bags equipped with wheels for easy movement, making them perfect for longer trips with heavier loads.'),
-('Messenger Bags', 'Crossbody bags with an adjustable strap, ideal for daily commuting or as a carry-on for travel.'),
-('Toiletry Bags', 'Compact and organized bags to hold toiletries and grooming essentials, perfect for both travel and gym use.');
+INSERT INTO Category (name, description, subCategoryNum) VALUES
+('Weekender Bags', 'Stylish, compact bags ideal for weekend trips or overnight stays, with enough space for the essentials.', 4),
+('Rolling Bags', 'Travel bags equipped with wheels for easy movement, making them perfect for longer trips with heavier loads.', 4),
+('Messenger Bags', 'Crossbody bags with an adjustable strap, ideal for daily commuting or as a carry-on for travel.', 4),
+('Toiletry Bags', 'Compact and organized bags to hold toiletries and grooming essentials, perfect for both travel and gym use.', 4);
 
 /*-- Subcategories for Sports Bags*/
-INSERT INTO Category (name, description) VALUES
-('Gym Bags', 'Spacious and durable bags with compartments for gym clothes, shoes, and essentials, perfect for fitness enthusiasts.'),
-('Sports Duffle Bags', 'Durable and roomy duffle bags designed to carry all your sports gear with ease and organization.'),
-('Cooler Bags', 'Insulated bags perfect for keeping food and drinks cool, ideal for picnics, gym snacks, or outdoor events.');
+INSERT INTO Category (name, description, subCategoryNum) VALUES
+('Gym Bags', 'Spacious and durable bags with compartments for gym clothes, shoes, and essentials, perfect for fitness enthusiasts.', 5),
+('Sports Duffle Bags', 'Durable and roomy duffle bags designed to carry all your sports gear with ease and organization.', 5),
+('Cooler Bags', 'Insulated bags perfect for keeping food and drinks cool, ideal for picnics, gym snacks, or outdoor events.', 5);
 
 
 

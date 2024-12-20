@@ -6,7 +6,8 @@ store
   PUT /product/price/:id (admin : salesManager)
   DELETE /product/:id (admin)
   ----------
-  GET /category
+  GET /category/main
+  GET /category/sub
   GET /category/:name
   POST /category/ (admin)
   PUT /category/:id
