@@ -1,9 +1,9 @@
 const db = require('../config/database');
 
-const getAllCategories = async (req, res) => {
+const getAllSubCategories = async (req, res) => {
   // get all categories except the main categories (first 4: Handbags, Backpacks, Luggage, Travel Bags)
   try{
-    let sql = 'SELECT * FROM `Category` WHERE `name` NOT IN ("Handbags", "Backpacks", "Luggage", "Travel Bags", "Sports Bags")';
+    let sql = 'SELECT * FROM `Category` WHERE subCategoryNum != 0';
     const [results, fields] = await db.promise().query(sql);
     res.status(200).json(results);
   } catch(err) {
@@ -11,6 +11,19 @@ const getAllCategories = async (req, res) => {
     res.status(500).json({msg: "Error retrieving categories"});
   }
 }
+
+const getAllMainCategories = async (req, res) => {
+  //gets the main categories only (i.e Handbags, Backpacks, Luggage, Travel Bags, Sports Bags)
+  try{
+    let sql = 'SELECT * FROM `Category` WHERE subCategoryNum = 0';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error retrieving categories"});
+  }
+}
+
 
 const getCategoryByName = async (req, res) => {
   try{
@@ -86,7 +99,8 @@ const getCategoryProducts = async (req, res) => {
 }
 
 module.exports = {
-  getAllCategories,
+  getAllSubCategories,
+  getAllMainCategories,
   getCategoryByName,
   createCategory,
   updateCategory,

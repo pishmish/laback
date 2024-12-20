@@ -55,9 +55,16 @@ create table if not exists `Pictures` (
 );
 
 create table if not exists `Category` (
+	/* Main categories have subCategoryNum = 0 */
+	/* Subcategories under Handbags have subCategoryNum = 1 */
+	/* Subcategories under Bagpacks have subCategoryNum = 2 */
+	/* Subcategories under Luggage have subCategoryNum = 3 */
+	/* Subcategories under Travel Bags have subCategoryNum = 4 */
+	/* Subcategories under Sports Bags have subCategoryNum = 5 */
 	`categoryID` int not null auto_increment unique,
 	`name` varchar(64) not null,
 	`description` text,
+	`subCategoryNum` int not null default 0,
 	`timeCreated` timestamp not null default current_timestamp,
 	primary key (`categoryID`)
 );

@@ -55,8 +55,13 @@ router.delete('/product/:id', authenticateToken, authenticateRole(['salesManager
 });
 
 // Section: Categories
-router.get('/category', (req, res) => {
-  return categoryController.getAllCategories(req, res);
+
+router.get('/category/main', (req, res) => { //gets all main categories
+  return categoryController.getAllMainCategories(req, res);
+});
+
+router.get('/category/sub', (req, res) => { //gets all sub categories
+  return categoryController.getAllSubCategories(req, res);
 });
 
 router.get('/category/:name', (req, res) => {
