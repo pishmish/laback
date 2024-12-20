@@ -186,17 +186,35 @@ const createProduct = async (req, res) => {
         let sql2 = 'INSERT INTO `Pictures` (productID, picturePath) VALUES (?, ?)';
         await db.promise().query(sql2, [newProductID, imagePath]);
 
-        //get the categoryID of the category chosen
-        let sql3 = 'SELECT categoryID FROM `Category` WHERE name = ?';
+        //get the categoryID of the subcategory chosen
+        let sql3 = 'SELECT * FROM `Category` WHERE name = ?';
         const [results2, fields2] = await db.promise().query(sql3, [req.body.categoryName]);
         if (results2.length === 0) {
           return res.status(404).json({ message: 'Category not found' });
         }
-        const relevantCategoryID = results2[0].categoryID;
+        const subCategoryID = results2[0].categoryID;
 
-        //create category association in CategoryCategorizesProduct table
-        let sql4 = 'INSERT INTO `CategoryCategorizesProduct` (categoryID, productID) VALUES (?, ?)';
-        const [results3, fields3] = await db.promise().query(sql4, [relevantCategoryID, newProductID]);
+        const subCategoryNum = results2[0].subCategoryNumber;
+        const mainCategoryName = getMainCategoryName(subCategoryNum);
+
+        //get the categoryID of the main category
+        let sql4 = 'SELECT * FROM `Category` WHERE name = ?';
+        const [results3, fields3] = await db.promise().query(sql4, [mainCategoryName]);
+        if (results3.length === 0) {
+          return res.status(404).json({ message: 'Main category not found' });
+        }
+        const mainCategoryID = results3[0].categoryID;
+
+        //create main category association in CategoryCategorizesProduct table
+        let sql5 = 'INSERT INTO `CategoryCategorizesProduct` (categoryID, productID) VALUES (?, ?)';
+        const [results4, fields4] = await db.promise().query(sql5, [mainCategoryID, newProductID]);
+        if (results4.affectedRows === 0) {
+          return res.status(404).json({ message: 'Main category association not created' });
+        }
+        
+        //create subcategory association in CategoryCategorizesProduct table
+        let sql6 = 'INSERT INTO `CategoryCategorizesProduct` (categoryID, productID) VALUES (?, ?)';
+        const [results5, fields5] = await db.promise().query(sql6, [subCategoryID, newProductID]);
         res.status(201).json({msg: "Category association created"});
       } catch(err) {
         console.log(err);
@@ -430,6 +448,22 @@ const sortProductsUtil = (products, sortBy, sortOrder) => {
     }
   });
 };
+
+//helper function
+
+function getMainCategoryName(categoryNumber) {
+  const categories = {
+      1: "Handbags",
+      2: "Backpacks",
+      3: "Luggage",
+      4: "Travel Bags",
+      5: "Sports Bags"
+      // Add more categories as needed
+  };
+
+  return categories[categoryNumber] || "Unknown Category";
+}
+
 
 module.exports = {
   getAllProducts,
