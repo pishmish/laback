@@ -57,7 +57,7 @@ create table if not exists `Pictures` (
 create table if not exists `Category` (
 	/* Main categories have subCategoryNum = 0 */
 	/* Subcategories under Handbags have subCategoryNum = 1 */
-	/* Subcategories under Bagpacks have subCategoryNum = 2 */
+	/* Subcategories under Backpacks have subCategoryNum = 2 */
 	/* Subcategories under Luggage have subCategoryNum = 3 */
 	/* Subcategories under Travel Bags have subCategoryNum = 4 */
 	/* Subcategories under Sports Bags have subCategoryNum = 5 */
