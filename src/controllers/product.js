@@ -193,9 +193,12 @@ const createProduct = async (req, res) => {
           return res.status(404).json({ message: 'Category not found' });
         }
         const subCategoryID = results2[0].categoryID;
+        console.log(results2);
 
-        const subCategoryNum = results2[0].subCategoryNumber;
+        const subCategoryNum = results2[0].subCategoryNum;
+        console.log("Subcategory number: " + subCategoryNum);
         const mainCategoryName = getMainCategoryName(subCategoryNum);
+        console.log("Main category name: " + mainCategoryName);
 
         //get the categoryID of the main category
         let sql4 = 'SELECT * FROM `Category` WHERE name = ?';
