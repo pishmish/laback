@@ -20,6 +20,10 @@ router.get('/getorder/:id', authenticateToken, (req, res) => {
     return orderController.getOrder(req, res);
 });
 
+router.get('/getorder/date', authenticateToken, (req, res) => {
+    return orderController.getOrdersByDateRange(req, res);
+});
+
 router.get('/getallorders',authenticateToken, authenticateRole('productManager'),(req, res)=> {
     return orderController.getAllOrder(req, res);
 })
