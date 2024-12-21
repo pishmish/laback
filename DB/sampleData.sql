@@ -637,7 +637,7 @@ INSERT INTO `CourierDeliversToDeliveryRegion` (`courierID`, `regionID`, `deliver
 
 /*Cart Table*/
 INSERT INTO `Cart` (`totalPrice`, `numProducts`, `fingerprint`, `temporary`, `customerID`) VALUES
-(234.97, 3, 'abc123', FALSE, 1),
+(234.97, 3, 'abc123', FALSE, 1),    /*these values should be unrelated to order tables values*/
 (450.97, 5, 'def456', FALSE, 2),
 (49.99, 1, 'ghi789', TRUE, null);  /*when user logs in true cart is merged into false*/
 
