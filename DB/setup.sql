@@ -55,10 +55,18 @@ create table if not exists `Pictures` (
 );
 
 create table if not exists `Category` (
+	/* Main categories have parentCategoryID = 0 */
+	/* Subcategories under Handbags have parentCategoryID = 1 */
+	/* Subcategories under Backpacks have parentCategoryID = 2 */
+	/* Subcategories under Luggage have parentCategoryID = 3 */
+	/* Subcategories under Travel Bags have parentCategoryID = 4 */
+	/* Subcategories under Sports Bags have parentCategoryID = 5 */
 	`categoryID` int not null auto_increment unique,
 	`name` varchar(64) not null,
 	`description` text,
+	`parentCategoryID` int not null default 0,
 	`timeCreated` timestamp not null default current_timestamp,
+	`image` varchar(255),
 	primary key (`categoryID`)
 );
 

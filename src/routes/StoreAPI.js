@@ -6,6 +6,7 @@ const productController = require('../controllers/product');
 const categoryController = require('../controllers/category');
 const reviewsController = require('../controllers/reviews');
 
+
 //import middleware
 const {authenticateToken, authenticateRole} = require('../middleware/auth-handler');
 
@@ -46,13 +47,22 @@ router.put('/product/:id', authenticateToken, authenticateRole(['salesManager', 
   return productController.updateProduct(req, res);
 });
 
+router.put('/product/price/:id', authenticateToken, authenticateRole('salesManager'), (req, res) => {
+  return productController.updateProductPrice(req, res);
+});
+
 router.delete('/product/:id', authenticateToken, authenticateRole(['salesManager', 'productManager']), (req, res) => {
   return productController.deleteProduct(req, res);
 });
 
 // Section: Categories
-router.get('/category', (req, res) => {
-  return categoryController.getAllCategories(req, res);
+
+router.get('/category/main', (req, res) => { //gets all main categories
+  return categoryController.getAllMainCategories(req, res);
+});
+
+router.get('/category/sub', (req, res) => { //gets all sub categories
+  return categoryController.getAllSubCategories(req, res);
 });
 
 router.get('/category/:name', (req, res) => {
@@ -62,6 +72,9 @@ router.get('/category/:name', (req, res) => {
 router.post('/category', authenticateToken, authenticateRole('productManager'), (req, res) => {
   return categoryController.createCategory(req, res);
 });
+
+router.post('/', categoryController.createCategory);
+
 
 router.put('/category/:id', authenticateToken, authenticateRole('productManager'), (req, res) => {
   return categoryController.updateCategory(req, res);

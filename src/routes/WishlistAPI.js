@@ -48,4 +48,9 @@ router.post('/sendMail', (req, res) => {
     return wishlistController.sendSaleEmail(req, res);
 });
 
+//check if product exists in customer's wishlist
+router.get('/check/:customerID/:productID', authenticateToken, authenticateRole('customer'), (req, res) => {
+    return wishlistController.isProductInWishlist(req, res);
+});
+
 module.exports = router;
