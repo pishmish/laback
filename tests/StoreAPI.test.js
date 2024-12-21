@@ -62,17 +62,73 @@ describe("GET /store/product/:id", () => {
   });
 });
 
-describe("GET /store/category", () => {
-  it("should respond to the GET method", async () => {
-    const response = await request.get("/store/category");
+describe("GET /store/supplier/:productID", () => {
+  it("should return a specific supplier if an ID is provided", async () => {
+    const productID = 1; // Adjust this ID to match your database
+    const response = await request.get(`/store/supplier/${productID}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({
+              supplierID: expect.any(Number),
+            }),
+        ])
+    );
+  });
+
+  it("should return 404 status code for a non-existent product", async () => {
+    const productID = 9999; // Adjust this ID to a non-existent supplier
+    const response = await request.get(`/store/supplier/${productID}`);
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({"msg": "Product not found"});
+  });
+});
+
+describe("GET /store/product/admin/:username", () => {
+  it("should return the productManager for a product", async () => {
+    const username = "bobsmith"; // Adjust this username to match your database
+    const response = await request.get(`/store/product/admin/${username}`);
     expect(response.status).toBe(200);
     expect(response.body).toBeDefined();
   });
 
-  // it("should return a 404 status for an invalid route", async () => {
-  //   const response = await request.get("/store/category/invalid-route");
-  //   expect(response.status).toBe(404);
-  // });
+  it("should return 404 status code for a non-existent username", async () => {
+    const username = "invalid"; // Adjust this username to a non-existent username
+    const response = await request.get(`/store/product/admin/${username}`);
+    expect(response.status).toBe(404);
+  });
+});
+
+describe("GET /store/product/:id/image", () => {
+  it("should respond to the GET method with images for a specific product", async () => {
+    const productID = 1; // Replace with a valid product ID
+    const response = await request.get(`/store/product/${productID}/image`);
+    expect(response.status).toBe(200);
+    expect(response.body).toBeDefined();
+  });
+
+  it("should return a 404 status code for a non-existent product", async () => {
+    const productID = 9999; // Replace with a non-existent product ID
+    const response = await request.get(`/store/product/${productID}/image`);
+    expect(response.status).toBe(404);
+  });
+});
+
+
+describe("GET /store/category/main", () => {
+  it("should respond to the GET method", async () => {
+    const response = await request.get("/store/category/main");
+    expect(response.status).toBe(200);
+    expect(response.body).toBeDefined();
+  });
+});
+
+describe("GET /store/category/sub", () => {
+  it("should respond to the GET method", async () => {
+    const response = await request.get("/store/category/sub");
+    expect(response.status).toBe(200);
+    expect(response.body).toBeDefined();
+  });
 });
 
 describe("GET /store/category/:name", () => {
@@ -129,6 +185,22 @@ describe("GET /store/product/:id/reviews", () => {
   });
 });
 
+describe("GET /store/product/:id/reviews/approved", () => {
+  it("should respond to the GET method with approved reviews for a specific product", async () => {
+    const productID = 1; // Replace with a valid product ID
+    const response = await request.get(`/store/product/${productID}/reviews/approved`);
+    expect(response.status).toBe(200);
+    expect(response.body).toBeDefined();
+  });
+
+  it("should return a blank array for a non-existent product", async () => {
+    const productID = 9999; // Replace with a non-existent product ID
+    const response = await request.get(`/store/product/${productID}/reviews/approved`);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
+});
+
 describe("GET /store/product/:id/reviews/:reviewId", () => {
   it("should respond to the GET method with a specific review for a product", async () => {
     const productID = 1; // Replace with a valid product ID
@@ -154,6 +226,39 @@ describe("GET /store/product/:id/reviews/:reviewId", () => {
   //   expect(response.body).toEqual([]);
   // });
 });
+
+describe("GET /store/reviews/overallRating/:productID", () => {
+  it("should respond to the GET method with the overall rating for a product", async () => {
+    const productID = 1; // Replace with a valid product ID
+    const response = await request.get(`/store/reviews/overallRating/${productID}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toBeDefined();
+  });
+
+  it("should return a blank array for a non-existent product", async () => {
+    const productID = 9999; // Replace with a non-existent product ID
+    const response = await request.get(`/store/reviews/overallRating/${productID}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
+});
+
+describe("GET /store/reviews/pending/:productManagerUsername", () => {
+  it("should respond to the GET method with pending reviews for a product manager", async () => {
+    const productManagerUsername = "bobsmith";
+    const response = await request.get(`/store/reviews/pending/${productManagerUsername}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toBeDefined();
+  });
+
+  it("should return a blank array for a non-existent product manager", async () => {
+    const productManagerUsername = "invalid";
+    const response = await request.get(`/store/reviews/pending/${productManagerUsername}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
+});
+
 
 describe("GET /store/search", () => {
   // it("should give an error (500) when no query is provided", async () => {
