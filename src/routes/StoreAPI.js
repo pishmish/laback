@@ -6,6 +6,7 @@ const productController = require('../controllers/product');
 const categoryController = require('../controllers/category');
 const reviewsController = require('../controllers/reviews');
 
+
 //import middleware
 const {authenticateToken, authenticateRole} = require('../middleware/auth-handler');
 
@@ -71,6 +72,9 @@ router.get('/category/:name', (req, res) => {
 router.post('/category', authenticateToken, authenticateRole('productManager'), (req, res) => {
   return categoryController.createCategory(req, res);
 });
+
+router.post('/', categoryController.createCategory);
+
 
 router.put('/category/:id', authenticateToken, authenticateRole('productManager'), (req, res) => {
   return categoryController.updateCategory(req, res);
