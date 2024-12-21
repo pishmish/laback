@@ -305,7 +305,7 @@ const sendSaleEmail = async (req, res) => {
                 }
 
                 customerProductsMap.get(customerEmail).push({
-                    productName: product.productName,
+                    name: product.name,
                     productID: product.productID,
                     discountPercentage: product.discountPercentage,
                     stock: product.stock,
@@ -339,12 +339,12 @@ const sendSaleEmail = async (req, res) => {
                         <tr>
                             <!-- Product Image -->
                             <td style="width: 120px; text-align: center;">
-                                <img src="cid:${cid}" alt="${product.productName}" style="width: 100px; border-radius: 4px;">
+                                <img src="cid:${cid}" alt="${product.name}" style="width: 100px; border-radius: 4px;">
                             </td>
                             <!-- Product Details -->
                             <td style="padding: 0 15px;">
                                 <p style="margin: 2px 0; font-size: 13px; font-weight: bold; color: #666;">${product.brand}</p>
-                                <p style="margin: 0 10px; font-size: 14px; font-style: italic; font-weight: bold; color: #333;">${product.productName}</p>
+                                <p style="margin: 0 10px; font-size: 14px; font-style: italic; font-weight: bold; color: #333;">${product.name}</p>
                                 <p style="margin: 5px 0; color: #666;">Discount: ${product.discountPercentage}%</p>
                                 <p style="margin: 5px 0; color: #666;">Stock: ${product.stock}</p>
                                 <p style="margin: 5px 0; color: #666;">Material: ${product.material}</p>
@@ -365,7 +365,7 @@ const sendSaleEmail = async (req, res) => {
 
                 if (product.imageBuffer) {
                     attachments.push({
-                        filename: `${product.productName}.png`,
+                        filename: `${product.name}.png`,
                         content: product.imageBuffer,
                         cid: cid
                     });
