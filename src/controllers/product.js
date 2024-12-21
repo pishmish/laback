@@ -195,9 +195,9 @@ const createProduct = async (req, res) => {
         const subCategoryID = results2[0].categoryID;
         console.log(results2);
 
-        const subCategoryNum = results2[0].subCategoryNum;
-        console.log("Subcategory number: " + subCategoryNum);
-        const mainCategoryName = getMainCategoryName(subCategoryNum);
+        const parentCategoryID = results2[0].parentCategoryID;
+        console.log("Subcategory number: " + parentCategoryID);
+        const mainCategoryName = getMainCategoryName(parentCategoryID);
         console.log("Main category name: " + mainCategoryName);
 
         //get the categoryID of the main category
