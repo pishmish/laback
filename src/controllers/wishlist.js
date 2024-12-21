@@ -233,9 +233,6 @@ const sendSaleEmail = async (req, res) => {
         const customerProductsMap = new Map();
 
         for (const productID of productIDs) {
-            // console.log("pridoct", p);
-            // const productID = p.productID;
-            console.log("productID", productID);
             // Fetch product details from the database
             const [productDetails] = await pool.promise().query(`
                 SELECT productID, p.name, p.discountPercentage, p.stock, p.unitPrice, p.brand, p.material, p.description, p.overallRating
