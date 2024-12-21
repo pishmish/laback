@@ -1,8 +1,25 @@
 const db = require('../config/database');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
-const getAllCategories = async (req, res) => {
+// Configure storage
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, path.join(__dirname, '../assets/images'));
+  },
+  filename: function(req, file, cb) {
+    const formattedName = req.body.name.toLowerCase().replace(/\s+/g, '-');
+    cb(null, formattedName + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage });
+
+const getAllSubCategories = async (req, res) => {
+  // get all categories except the main categories (first 4: Handbags, Backpacks, Luggage, Travel Bags)
   try{
-    let sql = 'SELECT * FROM `Category`';
+    let sql = 'SELECT * FROM `Category` WHERE parentCategoryID != 0';
     const [results, fields] = await db.promise().query(sql);
     res.status(200).json(results);
   } catch(err) {
@@ -10,6 +27,19 @@ const getAllCategories = async (req, res) => {
     res.status(500).json({msg: "Error retrieving categories"});
   }
 }
+
+const getAllMainCategories = async (req, res) => {
+  //gets the main categories only (i.e Handbags, Backpacks, Luggage, Travel Bags, Sports Bags)
+  try{
+    let sql = 'SELECT * FROM `Category` WHERE parentCategoryID = 0';
+    const [results, fields] = await db.promise().query(sql);
+    res.status(200).json(results);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error retrieving categories"});
+  }
+}
+
 
 const getCategoryByName = async (req, res) => {
   try{
@@ -24,12 +54,26 @@ const getCategoryByName = async (req, res) => {
 
 const createCategory = async (req, res) => {
   try {
-    let sql = 'INSERT INTO `Category` (name, description) VALUES (?, ?)';
-    const [results, fields] = await db.promise().query(sql, [req.body.name, req.body.description]);
-    res.status(200).json({msg: "Category created"});
+    upload.single('image')(req, res, async function(err) {
+      if (err) {
+        return res.status(500).json({ msg: "Error uploading file" });
+      }
+      
+      let sql = 'INSERT INTO `Category` (name, description, parentCategoryID, image) VALUES (?, ?, ?, ?)';
+      const imageName = req.file ? req.file.filename : null;
+      
+      await db.promise().query(sql, [
+        req.body.name,
+        req.body.description,
+        req.body.parentCategoryID,
+        imageName
+      ]);
+      
+      res.status(200).json({ msg: "Category created" });
+    });
   } catch(err) {
     console.log(err);
-    res.status(500).json({msg: "Error creating category"});
+    res.status(500).json({ msg: "Error creating category" });
   }
 }
 
@@ -46,9 +90,25 @@ const updateCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
   try {
+    // Get category info first to find image name
+    const [category] = await db.promise().query(
+      'SELECT * FROM `Category` WHERE categoryID = ?',
+      [req.params.id]
+    );
+
+    if (category.length > 0 && category[0].image) {
+      // Delete image file if it exists
+      const imagePath = path.join(__dirname, '../assets/images', category[0].image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+
+    // Delete category from database
     let sql = 'DELETE FROM `Category` WHERE categoryID = ?';
-    const [results, fields] = await db.promise().query(sql, [req.params.id]);
-    res.status(200).json({msg: "Category deleted"});
+    await db.promise().query(sql, [req.params.id]);
+    
+    res.status(200).json({msg: "Category and image deleted"});
   } catch(err) {
     console.log(err);
     res.status(500).json({msg: "Error deleting category"});
@@ -85,7 +145,8 @@ const getCategoryProducts = async (req, res) => {
 }
 
 module.exports = {
-  getAllCategories,
+  getAllSubCategories,
+  getAllMainCategories,
   getCategoryByName,
   createCategory,
   updateCategory,

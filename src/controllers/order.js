@@ -35,6 +35,25 @@ const getOrder = async (req, res) => {
     res.status(500).json({msg: "Error retrieving order"});
   }
 }
+
+const getOrdersByDateRange = async (req, res) => {
+  //dates have to be in format yyyy-mm-dd
+  try {
+    // Query to get orderID for all orders within the given date range
+    const sql = 'SELECT orderID FROM `Order` WHERE timeOrdered BETWEEN ? AND ?';
+    const [results, fields] = await db.promise().query(sql, [req.body.startDate, req.body.endDate]);
+
+    if (results.length === 0) {
+      return res.status(404).json({ msg: "No orders found in the given date range" });
+    }
+
+    res.status(200).json(results);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Error retrieving orders" });
+  }
+};
+
 const getAllOrder = async (req, res) => {
   try {
     let id = req.params.id;
@@ -465,6 +484,7 @@ const getOrderDataWrapper = async (req) => {
 
 module.exports = {
   getOrder,
+  getOrdersByDateRange,
   getUserOrders,
   getSupplierOrders,
   getPurchasePrice,

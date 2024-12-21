@@ -2,6 +2,7 @@ const db = require('../config/database');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
 
 const getAllProducts = async (req, res) => {
 
@@ -124,14 +125,14 @@ const getProductImage = async (req, res) => {
 // Set up storage engine
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, '..', 'src', 'assets', 'images');
+    const uploadPath = path.join(__dirname, '..', 'assets', 'images');
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
-    // The filename will be set later in the createProduct function
+    // Use a temporary filename; will rename after saving the product
     cb(null, file.originalname);
   }
 });
@@ -140,49 +141,93 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const createProduct = async (req, res) => {
-  upload.single('image')(req, res, async (err) => {
-    if (err) {
-      return res.status(500).json({ msg: "Error uploading image" });
-    }
-
-    try {
-      //create product record in Product table
-      let sql = 'INSERT INTO `Product` (stock ,name, unitPrice, overallRating, discountPercentage, description, brand, color, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-      const [results, fields] = await db.promise().query(sql, [req.body.stock, req.body.name, req.body.unitPrice, req.body.overallRating, req.body.discountPercentage, req.body.description, req.body.brand, req.body.color, req.body.supplierID, req.body.material, req.body.capacityLitres, req.body.warrantyMonths, req.body.serialNumber, req.body.popularity]);
-      if (results.affectedRows === 0) {
-        return res.status(404).json({ message: 'Product not created' });
+  // Extract customer ID from JWT token
+  const token = req.cookies.authToken;
+  if (!token) {
+    console.log('No auth token found');
+    return res.status(401).json({ message: 'No token provided' });
+  }
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const username = decodedToken.id;
+    upload.single('image')(req, res, async (err) => {
+      if (err) {
+        return res.status(500).json({ msg: "Error uploading image" });
       }
 
-      //get the productID of the newly created product
-      const newProductID = results.insertId;
+      try {
+        let sql0 = 'SELECT supplierID FROM `ProductManager` WHERE username = ?';
+        const [results0, fields0] = await db.promise().query(sql0, [username]);
+        if (results0.length === 0) {
+          return res.status(404).json({ message: 'Manager not found' });
+        }
+        
+        const supplierID = results0[0].supplierID;
 
-      // Rename the uploaded image file to <productID>.png
-      const newFilename = `${newProductID}.png`;
-      const newFilePath = path.join(__dirname, '..', 'src', 'assets', 'images', newFilename);
-      fs.renameSync(req.file.path, newFilePath);
-      
-      // Save the image path in the database
-      const imagePath = path.join('assets', 'images', newFilename);
-      let sql2 = 'INSERT INTO `Pictures` (productID, picturePath) VALUES (?, ?)';
-      await db.promise().query(sql2, [newProductID, imagePath]);      
+        //create product record in Product table
+        let sql1 = 'INSERT INTO `Product` (stock ,name, unitPrice, overallRating, discountPercentage, description, brand, color, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        const [results, fields] = await db.promise().query(sql1, [req.body.stock, req.body.name, req.body.unitPrice, 0.0, 0, req.body.description, req.body.brand, req.body.color, supplierID, req.body.material, req.body.capacityLitres, req.body.warrantyMonths, req.body.serialNumber, 0]);
+        if (results.affectedRows === 0) {
+          return res.status(404).json({ message: 'Product not created' });
+        }
 
-      //get the categoryID of the category chosen
-      let sql3 = 'SELECT categoryID FROM `Category` WHERE name = ?';
-      const [results2, fields2] = await db.promise().query(sql3, [req.body.categoryName]);
-      if (results2.length === 0) {
-        return res.status(404).json({ message: 'Category not found' });
+        //get the productID of the newly created product
+        const newProductID = results.insertId;
+
+
+        // Rename the uploaded image file to <productID>.png
+        const newFilename = `${newProductID}.png`;
+        const oldFilePath = req.file.path;
+        const newFilePath = path.join(__dirname, '..', 'assets', 'images', newFilename);
+        fs.renameSync(oldFilePath, newFilePath);
+        
+        // Save the image path in the database
+        const imagePath = path.join('assets', 'images', newFilename);
+        let sql2 = 'INSERT INTO `Pictures` (productID, picturePath) VALUES (?, ?)';
+        await db.promise().query(sql2, [newProductID, imagePath]);
+
+        //get the categoryID of the subcategory chosen
+        let sql3 = 'SELECT * FROM `Category` WHERE name = ?';
+        const [results2, fields2] = await db.promise().query(sql3, [req.body.categoryName]);
+        if (results2.length === 0) {
+          return res.status(404).json({ message: 'Category not found' });
+        }
+        const subCategoryID = results2[0].categoryID;
+        console.log(results2);
+
+        const parentCategoryID = results2[0].parentCategoryID;
+        console.log("Subcategory number: " + parentCategoryID);
+        const mainCategoryName = getMainCategoryName(parentCategoryID);
+        console.log("Main category name: " + mainCategoryName);
+
+        //get the categoryID of the main category
+        let sql4 = 'SELECT * FROM `Category` WHERE name = ?';
+        const [results3, fields3] = await db.promise().query(sql4, [mainCategoryName]);
+        if (results3.length === 0) {
+          return res.status(404).json({ message: 'Main category not found' });
+        }
+        const mainCategoryID = results3[0].categoryID;
+
+        //create main category association in CategoryCategorizesProduct table
+        let sql5 = 'INSERT INTO `CategoryCategorizesProduct` (categoryID, productID) VALUES (?, ?)';
+        const [results4, fields4] = await db.promise().query(sql5, [mainCategoryID, newProductID]);
+        if (results4.affectedRows === 0) {
+          return res.status(404).json({ message: 'Main category association not created' });
+        }
+        
+        //create subcategory association in CategoryCategorizesProduct table
+        let sql6 = 'INSERT INTO `CategoryCategorizesProduct` (categoryID, productID) VALUES (?, ?)';
+        const [results5, fields5] = await db.promise().query(sql6, [subCategoryID, newProductID]);
+        res.status(201).json({msg: "Category association created"});
+      } catch(err) {
+        console.log(err);
+        res.status(500).json({msg: "Error creating product"});
       }
-      const relevantCategoryID = results2[0].categoryID;
-
-      //create category association in CategoryCategorizesProduct table
-      let sql4 = 'INSERT INTO `CategoryCategorizesProduct` (categoryID, productID) VALUES (?, ?)';
-      const [results3, fields3] = await db.promise().query(sql4, [relevantCategoryID, newProductID]);
-      res.status(201).json({msg: "Category association created"});
-    } catch(err) {
-      console.log(err);
-      res.status(500).json({msg: "Error creating product"});
-    }
-  });
+    });
+  } catch (err) {
+    console.log('Invalid token');
+    return res.status(403).json({ message: 'Invalid token' });
+  }
 }
 
 const updateProduct = async (req, res) => {
@@ -197,16 +242,43 @@ const updateProduct = async (req, res) => {
   }
 }
 
-const deleteProduct = async (req, res) => {
+const updateProductPrice = async (req, res) => {
   try {
-    let sql = 'DELETE FROM `Product` WHERE productID = ?';
-    const [results, fields] = await db.promise().query(sql, [req.params.id]);
-    res.status(200).json({msg: "Product deleted"});
+    let sql = 'UPDATE `Product` SET unitPrice = ? WHERE productID = ?';
+    const [results, fields] = await db.promise().query(sql, [req.body.newPrice, req.params.id]);
+    res.status(200).json({msg: "Product price updated"});
   } catch(err) {
     console.log(err);
-    res.status(500).json({msg: "Error deleting product"});
+    res.status(500).json({msg: "Error updating product price"});
   }
 }
+
+const deleteProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+
+    // Get image paths from Pictures table
+    const sqlGetImages = 'SELECT picturePath FROM `Pictures` WHERE productID = ?';
+    const [imageResults] = await db.promise().query(sqlGetImages, [productId]);
+
+    // Delete image files from filesystem
+    imageResults.forEach((row) => {
+      const imagePath = path.join(__dirname, '..', row.picturePath);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    });
+
+    // Delete product
+    const sqlDeleteProduct = 'DELETE FROM `Product` WHERE productID = ?';
+    await db.promise().query(sqlDeleteProduct, [productId]);
+
+    res.status(200).json({ msg: "Product and images deleted" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: "Error deleting product" });
+  }
+};
 
 const searchNames = async (query) => {
   try {
@@ -380,12 +452,29 @@ const sortProductsUtil = (products, sortBy, sortOrder) => {
   });
 };
 
+//helper function
+
+function getMainCategoryName(categoryNumber) {
+  const categories = {
+      1: "Handbags",
+      2: "Backpacks",
+      3: "Luggage",
+      4: "Travel Bags",
+      5: "Sports Bags"
+      // Add more categories as needed
+  };
+
+  return categories[categoryNumber] || "Unknown Category";
+}
+
+
 module.exports = {
   getAllProducts,
   getProductById,
   getProductForManager,
   createProduct,
   updateProduct,
+  updateProductPrice,
   deleteProduct,
   searchProducts,
   sortProducts,

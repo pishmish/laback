@@ -3,9 +3,11 @@ store
   GET /prodcut/:id
   POST /product/ (admin)
   PUT /product/:id (admin)
+  PUT /product/price/:id (admin : salesManager)
   DELETE /product/:id (admin)
   ----------
-  GET /category
+  GET /category/main
+  GET /category/sub
   GET /category/:name
   POST /category/ (admin)
   PUT /category/:id
@@ -49,6 +51,7 @@ address (auth)
   GET /uname/:username
 order
   GET /getorder/:id
+  GET /getorder/date (get orderIDs within a date range )
   GET /user (gets all orders for a given user)
   GET /supplier (orders linked to a certain supplier)
   POST /neworder
@@ -133,6 +136,9 @@ productManager
   GET /order/pending
   PUT /order/:id/updatestatus
 salesManager
+  PUT /discount/:id (productID duh)
+
+  * the below are theoretical endpoints made before
   GET /product/price
   GET /dashboard
   PUT /product/:id/price
