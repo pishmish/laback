@@ -5,6 +5,7 @@ store
   PUT /product/:id (admin)
   PUT /product/price/:id (admin : salesManager)
   DELETE /product/:id (admin)
+  PUT /product/popularity/:id (automatic, for click based popularity system)
   ----------
   GET /category/main
   GET /category/sub
