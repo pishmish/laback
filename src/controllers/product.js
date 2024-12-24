@@ -280,6 +280,19 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// increase product popularity by 1
+const updateProductPopularity = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const sql = 'UPDATE `Product` SET popularity = popularity + 1 WHERE productID = ?';
+    await db.promise().query(sql, [productId]);
+    res.status(200).json({ msg:`Product ${productId} popularity updated` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Error updating product popularity" });
+  }
+};
+
 const searchNames = async (query) => {
   try {
     let sql = 'SELECT * FROM `Product` WHERE name LIKE ?';
@@ -476,6 +489,7 @@ module.exports = {
   updateProduct,
   updateProductPrice,
   deleteProduct,
+  updateProductPopularity,
   searchProducts,
   sortProducts,
   getSupplierInfoByProductId,

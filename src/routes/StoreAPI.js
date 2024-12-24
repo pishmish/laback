@@ -55,6 +55,11 @@ router.delete('/product/:id', authenticateToken, authenticateRole(['salesManager
   return productController.deleteProduct(req, res);
 });
 
+//endpoint to update product popularity (increment by 1)
+router.put('/product/popularity/:id', (req, res) => {
+  return productController.updateProductPopularity(req, res);
+});
+
 // Section: Categories
 
 router.get('/category/main', (req, res) => { //gets all main categories
