@@ -31,7 +31,7 @@ router.get('/user', authenticateToken, authenticateRole('customer'), (req, res) 
     return orderController.getUserOrders(req, res);
 });
 
-router.get('/supplier', authenticateToken, authenticateRole('productManager'), (req, res) => {
+router.get('/supplier/:username', authenticateToken, authenticateRole(['salesManager', 'productManager']), (req, res) => {
     return orderController.getSupplierOrders(req, res);
 });
 

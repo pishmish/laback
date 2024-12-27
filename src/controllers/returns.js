@@ -169,11 +169,6 @@ const updateRequest = async (req, res) => {
 
 const updateRequestStatus = async (req, res) => {
   try{
-    // RETURNS: received, accepted, awaiting product, product received, complete
-    // REFUND list updates are handled by payment processor, also setting return to complete is handled by payment processor
-    // The phases are: pending, authorized, completed
-    //check that the status is provided
-    //my intuition says this will be refactored later
     if(!req.body.status) {
       return res.status(400).json({
         msg: 'Please provide a status to update the request'
@@ -192,13 +187,22 @@ const updateRequestStatus = async (req, res) => {
       });
     }
 
+    // If status is productReceived, update product stock
+    if (req.body.status === "productReceived") {
+      // Get return details
+      let sqlReturn = 'SELECT productID, quantity FROM Returns WHERE requestID = ?';
+      const [returnDetails] = await db.promise().query(sqlReturn, [req.params.id]);
+      
+      // Update product stock
+      if (returnDetails.length > 0) {
+        let updateStockSQL = 'UPDATE Product SET stock = stock + ? WHERE productID = ?';
+        await db.promise().query(updateStockSQL, [returnDetails[0].quantity, returnDetails[0].productID]);
+      }
+    }
+
     let sql = 'UPDATE Returns SET returnStatus = ? WHERE requestID = ?';
     const [results, fields] = await db.promise().query(sql, [req.body.status, req.params.id]);
-    
 
-    //update the status
-    let sql2 = 'UPDATE Returns SET returnStatus = ? WHERE requestID = ?';
-    const [results2, fields2] = await db.promise().query(sql, [req.body.status, req.params.id]);
     return res.status(200).json({
       msg: 'Request status updated successfully'
     });

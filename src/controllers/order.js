@@ -162,12 +162,19 @@ const getSupplierOrders = async (req, res) => {
   try {
     let username = req.username;
 
-    //find the supplier ID based on the productManager's username
-    let sql = 'SELECT supplierID FROM ProductManager WHERE username = ?';
-    const [results1, fields1] = await db.promise().query(sql, [username]);
+    // Check both ProductManager and SalesManager tables
+    let sql = `
+      SELECT supplierID 
+      FROM (
+        SELECT supplierID FROM ProductManager WHERE username = ?
+        UNION
+        SELECT supplierID FROM SalesManager WHERE username = ?
+      ) as combined`;
+
+    const [results1, fields1] = await db.promise().query(sql, [username, username]);
 
     if (results1.length === 0) {
-      res.status(404).json({msg: "Product Manager not found"});
+      res.status(404).json({msg: "Manager not found"});
       return;
     }
 
@@ -346,7 +353,17 @@ const cancelOrder = async (req, res) => {
     let sql2 = 'UPDATE `Order` SET deliveryStatus = "Cancelled" WHERE orderID = ?';
     const [results2, fields2] = await db.promise().query(sql2, [orderID]);
 
-    res.status(200).json({msg: "Order cancelled"});
+    // Get all products and quantities from OrderOrderItemsProduct
+    let sql3 = 'SELECT productID, quantity FROM OrderOrderItemsProduct WHERE orderID = ?';
+    const [orderItems, fields3] = await db.promise().query(sql3, [orderID]);
+
+    // Update stock for each product
+    for (const item of orderItems) {
+      let updateStockSQL = 'UPDATE Product SET stock = stock + ? WHERE productID = ?';
+      await db.promise().query(updateStockSQL, [item.quantity, item.productID]);
+    }
+
+    res.status(200).json({msg: "Order cancelled and stock updated"});
 
   } catch (err) {
     console.log(err);
@@ -409,7 +426,6 @@ const updateOrderItems = async (req, res) => {
 
 const deleteOrderItems = async (req, res) => {
   try {
-    //To delete Order items. Updates totalPrice.
     let orderID = req.params.id;
 
     if (!req.body.products || req.body.products.length === 0) {
@@ -424,6 +440,14 @@ const deleteOrderItems = async (req, res) => {
         res.status(400).json({msg: "Invalid product"});
         return;
       }
+
+      // Get quantity of item being deleted
+      let sqlGetQuantity = 'SELECT quantity FROM OrderOrderItemsProduct WHERE productID = ? AND orderID = ?';
+      const [quantityResults] = await db.promise().query(sqlGetQuantity, [product.productID, orderID]);
+      
+      // Update stock in Product table
+      let updateStockSQL = 'UPDATE Product SET stock = stock + ? WHERE productID = ?';
+      await db.promise().query(updateStockSQL, [quantityResults[0].quantity, product.productID]);
 
       //delete
       let sql = 'DELETE FROM OrderOrderItemsProduct WHERE productID = ? AND orderID = ?';
@@ -444,7 +468,7 @@ const deleteOrderItems = async (req, res) => {
     let sql3 = 'UPDATE `Order` SET totalPrice = ? WHERE orderID = ?';
     const [results3, fields3] = await db.promise().query(sql3, [totalPrice, orderID]);
 
-    res.status(200).json({msg: "Order items deleted"});
+    res.status(200).json({msg: "Order items deleted and stock updated"});
 
   } catch (err) {
     console.log(err);
