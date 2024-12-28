@@ -237,10 +237,15 @@ Contributions from team members are welcome! Please follow these steps:
 ## Contact
 For questions or feedback, feel free to contact the team:
 areeb.kamal@sabanciuniv.edu
+
 cemgorkem@sabanciuniv.edu
+
 guanghui.ma@sabanciuniv.edu
+
 haris.mehboob@sabanciuniv.edu
+
 musab.khan@sabanciuniv.edu
+
 nuh.sharafi@sabanciuniv.edu
 
 
