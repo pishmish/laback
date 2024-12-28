@@ -111,6 +111,18 @@ const newRequest = async (req, res) => {
       });
     }
 
+    //check that the customer hasn't already requested a return for the product, and the return status is not complete
+    let sql10 = 'SELECT returnStatus FROM Returns WHERE productID = ? AND orderID = ? AND customerID = ?';
+    let [results10, fields10] = await db.promise().query(sql10, [req.body.productID, req.body.orderID, results2[0].customerID]);
+
+    if(results10.length > 0) {
+      if(results10[0].returnStatus !== 'complete') {
+        return res.status(400).json({
+          msg: 'Return request already exists, and is being processed'
+        });
+      }
+    }
+
     //create the request (status is received)
     let sql5 = 'INSERT INTO Returns (productID, quantity, orderID, reason, returnStatus, customerID) VALUES (?, ?, ?, ?, ?, ?)';
     let [results5, fields5] = await db.promise().query(sql5, [req.body.productID, req.body.quantity, req.body.orderID, req.body.reason, 'received', results2[0].customerID]);
