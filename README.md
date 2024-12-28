@@ -6,7 +6,7 @@ Welcome to the backend repository for Zad à Dos, an e-commerce website designed
 
 ## Project Overview
 
-he backend of Zad à Dos provides essential functionalities for managing users, products, orders, and more. It enables seamless integration with the front-end, ensuring a smooth experience for end-users. This guide details how to set up, run, and contribute to the project.
+The backend of Zad à Dos provides essential functionalities for managing users, products, orders, and more. It enables seamless integration with the front-end, ensuring a smooth experience for end-users. This guide details how to set up, run, and contribute to the project.
 
 ---
 
