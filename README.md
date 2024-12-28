@@ -234,10 +234,13 @@ Contributions from team members are welcome! Please follow these steps:
 
 ---
 
-## Licensing
-This project is developed for academic purposes and is not licensed for commercial use.
-
----
-
 ## Contact
-For questions or feedback, feel free to contact the team.
+For questions or feedback, feel free to contact the team:
+areeb.kamal@sabanciuniv.edu
+cemgorkem@sabanciuniv.edu
+guanghui.ma@sabanciuniv.edu
+haris.mehboob@sabanciuniv.edu
+musab.khan@sabanciuniv.edu
+nuh.sharafi@sabanciuniv.edu
+
+
