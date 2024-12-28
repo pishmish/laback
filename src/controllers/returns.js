@@ -116,7 +116,7 @@ const newRequest = async (req, res) => {
     let [results10, fields10] = await db.promise().query(sql10, [req.body.productID, req.body.orderID, results2[0].customerID]);
 
     if(results10.length > 0) {
-      if(results10[0].returnStatus !== 'complete') {
+      if(results10[0].returnStatus !== 'complete' && results10[0].returnStatus !== 'rejected') {
         return res.status(400).json({
           msg: 'Return request already exists, and is being processed'
         });
@@ -193,7 +193,7 @@ const updateRequestStatus = async (req, res) => {
       });
     }
 
-    if (req.body.status !== "accepted" && req.body.status !== "awaitingProduct" && req.body.status !== "productReceived"){
+    if (req.body.status !== "rejected" && req.body.status !== "accepted" && req.body.status !== "awaitingProduct" && req.body.status !== "productReceived"){
       return res.status(400).json({
         msg: "invalid status"
       });
@@ -249,7 +249,7 @@ const deleteRequest = async (req, res) => {
     let sql = 'SELECT returnStatus FROM Returns WHERE requestID = ?';
     const [results, fields] = await db.promise().query(sql, [req.params.id]);
 
-    if(results[0].returnStatus === 'productReceived' || results[0].returnStatus === 'complete') {
+    if(results[0].returnStatus === 'productReceived' || results[0].returnStatus === 'complete' || results[0].returnStatus === 'rejected') {
       return res.status(400).json({
         msg: 'Request cannot be deleted'
       });
