@@ -125,103 +125,113 @@ Fill in the appropriate values based on your local setup and environment.
 
 ## API Endpoints
 
-### Store
-- **Product Management**
-  - `GET /product/` - Fetch all products.
-  - `GET /product/:id` - Fetch a product by ID.
-  - `POST /product/` - Add a new product (admin).
-  - `PUT /product/:id` - Update product details (admin).
-  - `PUT /product/price/:id` - Update product price (admin, sales manager).
-  - `DELETE /product/:id` - Delete a product (admin).
-
-- **Category Management**
-  - `GET /category/main` - Fetch main categories.
-  - `GET /category/sub` - Fetch subcategories.
-  - `GET /category/:name` - Fetch category details by name.
-  - `POST /category/` - Add a new category (admin).
-  - `PUT /category/:id` - Update category details.
-  - `DELETE /category/:id` - Delete a category.
-  - `GET /category/:name/products` - Fetch products in a specific category.
-
-- **Review Management**
-  - `GET /product/:id/reviews` - Fetch reviews for a product.
-  - `GET /product/:id/reviews/:reviewid` - Fetch a specific review by ID.
-  - `POST /product/:id/reviews` - Add a review to a product.
-  - `PUT /product/:id/reviews/:reviewid` - Update a review by ID.
-  - `DELETE /reviews/:reviewid` - Delete a review by ID.
-
-- **Search and Sorting**
-  - `GET /search?q=` - Search for products.
-  - `POST /sort?sortBy=&sortOrder=` - Sort products based on criteria.
-
-### Cart
-- `GET /fetch` - Fetch cart details.
-- `POST /product/:productID` - Add a product to the cart.
-- `PUT /product/:productID` - Update cart item details.
-- `DELETE /product/:productID` - Remove a product from the cart.
-- `POST /merge/:customerID` - Merge carts.
-- `PUT /permanent/:customerID` - Save cart changes permanently.
-
-### User
-- `POST /register` - Register a new user.
-- `POST /login` - User login.
-- `GET /profile` - Fetch user profile (customers only).
-- `PUT /profile` - Update user profile.
-- `DELETE /removeuser` - Remove a user account.
-
-- **Billing Management**
-  - `GET /billing/` - Fetch all billing profiles for a customer.
-  - `GET /billing/:billingid` - Fetch billing profile by ID.
-  - `POST /billing` - Add a new billing profile.
-  - `PUT /billing/:billingid` - Update billing profile by ID.
-  - `DELETE /billing/:billingid` - Delete a billing profile by ID.
-
-### Address (Auth)
+### Address API
+- `GET /` - Welcome route for Address API.
 - `GET /id/:addressid` - Fetch address by ID.
+- `GET /uname/:username` - Fetch addresses of customers for delivery (restricted to product managers).
+- `GET /personal` - Fetch personal addresses of the logged-in customer.
 - `POST /newaddress` - Add a new address.
 - `PUT /:addressid` - Update address details.
 - `DELETE /:addressid` - Delete an address.
-- `GET /uname/:username` - Fetch addresses for a user.
 
-### Order
-- `GET /getorder/:id` - Fetch an order by ID.
-- `GET /getorder/date` - Fetch order IDs within a date range.
-- `GET /user` - Fetch all orders for a user.
-- `GET /supplier` - Fetch orders linked to a supplier.
+### Analytics API
+- `GET /` - Welcome route for Analytics API.
+- `GET /sales` - Fetch daily sales data for all products (restricted to sales managers).
+- `GET /sales/monthly` - Fetch monthly sales data for all products.
+- `GET /sales/quarterly` - Fetch quarterly sales data for all products.
+- `GET /sales/yearly` - Fetch yearly sales data for all products.
+- `GET /sales/comparison` - Compare sales between two periods.
+- `GET /sales/product/:productid` - Fetch daily sales data for a specific product.
+- `GET /sales/product/:productid/monthly` - Fetch monthly sales data for a specific product.
+- `GET /sales/product/:productid/quarterly` - Fetch quarterly sales data for a specific product.
+- `GET /sales/product/:productid/yearly` - Fetch yearly sales data for a specific product.
+- `GET /sales/product/:productid/comparison` - Compare sales of a product between two periods.
+- `GET /sales/category/:categoryid` - Fetch daily sales data for a category.
+
+### Cart API
+- `GET /` - Welcome route for Cart API.
+- `POST /fetch` - Fetch or create a temporary cart.
+- `POST /product/add/:productID` - Add a product to the cart.
+- `POST /product/remove/:productID` - Remove a product from the cart.
+- `POST /product/delete/:productID` - Delete a product from the cart.
+- `POST /merge/:customerID` - Merge carts upon login.
+- `PUT /permanent/:customerID` - Delete an empty permanent cart upon logout.
+- `GET /products` - Fetch products in the cart.
+
+### Delivery API
+- `GET /` - Welcome route for Delivery API.
+- `GET /schedule/:orderid` - Fetch delivery schedule for an order.
+- `POST /schedule` - Schedule a new delivery.
+
+### Images API
+- `GET /` - Welcome route for Images API.
+- `POST /upload` - Upload a new product image.
+- `DELETE /:imageid` - Delete an image by ID.
+
+### Invoice API
+- `GET /` - Welcome route for Invoice API.
+- `GET /:orderid` - Fetch invoice for an order.
+- `POST /generate` - Generate a new invoice.
+
+### Order API
+- `GET /` - Welcome route for Order API.
+- `GET /getorder/:id` - Fetch order by ID.
+- `GET /getorder/date` - Fetch orders within a date range.
+- `GET /getallorders` - Fetch all orders (restricted to product managers).
+- `GET /user` - Fetch orders of the logged-in user.
+- `GET /supplier/:username` - Fetch supplier orders (restricted to sales and product managers).
+- `GET /purchaseprice/:orderid/:productid` - Fetch the purchase price of a product in an order.
 - `POST /neworder` - Place a new order.
-- `PUT /updateorder/:id` - Update an order (excluding status).
-- `PUT /cancelorder/:id` - Cancel an order.
-- `DELETE /orderitems/:id` - Delete order items.
+- `PUT /updateorder/:id` - Update order details.
+- `PUT /cancelorder/:id` - Cancel an order (restricted to customers).
 - `PUT /orderitems/:id` - Update order items.
-- `GET /purchaseprice/:orderid/:productid` - Fetch purchase price of a product in an order.
+- `DELETE /orderitems/:id` - Delete order items.
 
-### Payment
-- `POST /new` - Initiate a payment.
-- `POST /refund` - Process a refund.
+### Payment API
+- `GET /` - Welcome route for Payment API.
+- `POST /process` - Process a payment (restricted to customers).
+- `POST /refund/:id` - Process a refund (restricted to sales managers).
 
-### Delivery
-- `GET /estimate/:id` - Fetch delivery estimate.
-- `PUT /estimate/:id` - Update delivery estimate.
-- `GET /order/courier/:courierid` - Fetch orders linked to a courier.
-- `GET /order/:id` - Fetch order details for a courier.
-- `PUT /order/:id/status` - Update order status.
-- `GET /order/:id/status` - Fetch order status.
+### Returns API
+- `GET /` - Welcome route for Returns API.
+- `GET /all` - Fetch all return requests (restricted to sales managers).
+- `GET /request/:id` - Fetch a return request by ID.
+- `GET /request/:id/status` - Fetch the status of a return request.
+- `POST /newrequest` - Create a new return request (restricted to customers).
+- `PUT /request/:id` - Update a return request.
+- `PUT /request/:id/status` - Update the status of a return request (restricted to sales and product managers).
+- `DELETE /request/:id` - Delete a return request (restricted to customers).
+- `POST /request/:id/authorizepayment` - Authorize payment for a return (restricted to sales managers).
+- `GET /request/:id/cost` - Fetch the cost of a return request.
+- `GET /request/customer/:username` - Fetch return requests for a customer.
 
-### Wishlist
-- `POST /customer/:customerID` - Create a wishlist for a customer.
-- `POST /customer/:customerID/product/:productID` - Add a product to a wishlist.
-- `DELETE /customer/:customerID/product/:productID` - Remove a product from a wishlist.
+### Sales Manager API
+- `GET /` - Welcome route for Sales Manager API.
+- `GET /reports` - Fetch sales reports.
+- `POST /report/generate` - Generate a custom sales report.
+
+### Store API
+- `GET /` - Welcome route for Store API.
+- `GET /all` - Fetch all stores.
+- `GET /:storeid` - Fetch details of a specific store.
+
+### User API
+- `GET /` - Welcome route for User API.
+- `POST /login` - Login a user.
+- `POST /register` - Register a new user.
+- `GET /:userid` - Fetch user details.
+- `PUT /:userid` - Update user details.
+
+### Wishlist API
+- `GET /` - Welcome route for Wishlist API.
+- `POST /customer/:customerID` - Create or fetch a wishlist for a customer.
+- `POST /customer/:customerID/product/:productID` - Add a product to the wishlist.
+- `DELETE /customer/:customerID/product/:productID` - Remove a product from the wishlist.
 - `DELETE /customer/:customerID` - Delete a customer's wishlist.
 - `GET /product/:productID` - Fetch wishlists containing a specific product.
 - `GET /:id` - Fetch a wishlist by ID.
-- `POST /sendMail` - Send wishlist via email.
-
-### Analytics
-- Sales reports:
-  - `GET /sales`, `GET /sales/monthly`, `GET /sales/quarterly`, `GET /sales/yearly`, `GET /sales/comparison`
-  - `GET /sales/product/:productid`, `GET /sales/category/:categoryid`
-- Inventory and user analysis:
-  - `GET /product/lowStock`, `GET /product/bestSellers`, `GET /user/topBuyers`
+- `POST /sendMail` - Send a wishlist email for products on sale.
+- `GET /check/:customerID/:productID` - Check if a product exists in a customer's wishlist.
 
 ---
 
