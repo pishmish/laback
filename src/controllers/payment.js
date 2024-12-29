@@ -46,6 +46,7 @@ const processPayment = async (req, res) => {
 
 const refundPayment = async (req, res) => {
   try{
+
     //handle updating the returns status to complete and refund to complete
     //check that payment is authorized
     let sql = 'SELECT approvalStatus FROM SalesManagerApprovesRefundReturn WHERE requestID = ?';

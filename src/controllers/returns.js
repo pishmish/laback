@@ -39,6 +39,19 @@ const getRequestStatus = async (req, res) => {
   }
 }
 
+const getRefundStatus = async (req, res) => {
+  try{
+    let sql = 'SELECT approvalStatus FROM SalesManagerApprovesRefundReturn WHERE requestID = ?';
+    const [results, fields] = await db.promise().query(sql, [req.params.id]);
+    return res.status(200).json(results);
+  } catch(err) {
+    console.error(err);
+    return res.status(500).json({
+      msg: 'Failed to get request status'
+    });
+  }
+}
+
 const newRequest = async (req, res) => {
   try{
     //check that productID, quantity, orderID and reason are provided
@@ -125,7 +138,7 @@ const newRequest = async (req, res) => {
 
     //create the request (status is received)
     let sql5 = 'INSERT INTO Returns (productID, quantity, orderID, reason, returnStatus, customerID) VALUES (?, ?, ?, ?, ?, ?)';
-    let [results5, fields5] = await db.promise().query(sql5, [req.body.productID, req.body.quantity, req.body.orderID, req.body.reason, 'received', results2[0].customerID]);
+    let [results5, fields5] = await db.promise().query(sql5, [req.body.productID, req.body.quantity, req.body.orderID, req.body.reason, 'pending', results2[0].customerID]);
     let requestID = results5.insertId;
 
     //assign a random sales manager to the request
@@ -187,13 +200,13 @@ const updateRequestStatus = async (req, res) => {
       });
     }
 
-    if (req.body.status === "complete"){
+    if (req.body.status === "completed"){
       return res.status(400).json({
-        msg: "you're not allowed to set the status to complete"
+        msg: "you're not allowed to set the status to completed"
       });
     }
 
-    if (req.body.status !== "rejected" && req.body.status !== "accepted" && req.body.status !== "awaitingProduct" && req.body.status !== "productReceived"){
+    if (req.body.status !== "approved" && req.body.status !== "productReceived" && req.body.status !== "rejected"){
       return res.status(400).json({
         msg: "invalid status"
       });
@@ -211,6 +224,13 @@ const updateRequestStatus = async (req, res) => {
         await db.promise().query(updateStockSQL, [returnDetails[0].quantity, returnDetails[0].productID]);
       }
     }
+
+    // If status is rejected, update refund status to rejected as well
+    if (req.body.status === "rejected") {
+      let sqlReject = 'UPDATE SalesManagerApprovesRefundReturn SET approvalStatus = ? WHERE requestID = ?';
+      const [results, fields] = await db.promise().query(sqlReject, ['rejected', req.params.id]);
+    }
+
 
     let sql = 'UPDATE Returns SET returnStatus = ? WHERE requestID = ?';
     const [results, fields] = await db.promise().query(sql, [req.body.status, req.params.id]);
@@ -249,7 +269,7 @@ const deleteRequest = async (req, res) => {
     let sql = 'SELECT returnStatus FROM Returns WHERE requestID = ?';
     const [results, fields] = await db.promise().query(sql, [req.params.id]);
 
-    if(results[0].returnStatus === 'productReceived' || results[0].returnStatus === 'complete' || results[0].returnStatus === 'rejected') {
+    if(results[0].returnStatus === 'productReceived' || results[0].returnStatus === 'completed' || results[0].returnStatus === 'rejected') {
       return res.status(400).json({
         msg: 'Request cannot be deleted'
       });
@@ -363,5 +383,6 @@ module.exports = {
   deleteRequest,
   authorizePayment,
   getCost,
-  getCustomerRequests
+  getCustomerRequests,
+  getRefundStatus
 }
