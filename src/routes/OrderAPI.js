@@ -55,8 +55,8 @@ router.put('/orderitems/:id', authenticateToken, (req, res) => {
     return orderController.updateOrderItems(req, res);
 });
 
-router.delete('/orderitems/:id', authenticateToken, (req, res) => {
-    return orderController.deleteOrderItems(req, res);
+router.delete('/orderitems/:orderid/:productid', authenticateToken, (req, res) => {
+    return orderController.deleteOrderItem(req, res);
 });
 
 module.exports = router;

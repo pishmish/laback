@@ -12,7 +12,6 @@ const getOrder = async (req, res) => {
     //get order items
     let sql2 = 'SELECT * FROM `OrderOrderItemsProduct` WHERE orderID = ?';
     const [results2, fields2] = await db.promise().query(sql2, [id]);
-    console.log("Order items retrieved");
 
     //put product names in json result in results2
     for (let i = 0; i < results2.length; i++) {
@@ -267,7 +266,7 @@ const createOrder = async (req, res) => {
 
     let sql4 = 'INSERT INTO `Order` (orderNumber, totalPrice, deliveryID, deliveryStatus, deliveryAddressID, estimatedArrival, customerID) VALUES (?, ?, ?, ?, ?, ?, ?)';
     const [results4, fields4] = await db.promise().query(sql4, [orderNumber, totalPrice, deliveryID, deliveryStatus, addressID, esimtatedArrival, customerID]);
-    console.log("Order table entry created");
+    //console.log("Order table entry created");
 
     //add cart items to orderitems table and update product stocks
     let orderID = results4.insertId;
@@ -285,14 +284,14 @@ const createOrder = async (req, res) => {
       let sql5 = 'INSERT INTO OrderOrderItemsProduct (orderID, productID, quantity, purchasePrice) VALUES (?, ?, ?, ?)';
       const [results5, fields5] = await db.promise().query(sql5, [orderID, cartItems[i].productID, cartItems[i].quantity, purchasePrice]);
     }
-    console.log("Order items created and stocks updated");
+    //console.log("Order items created and stocks updated");
 
     //delete cart
     let sql8 = 'DELETE FROM Cart WHERE cartID = ?';
     const [results8, fields8] = await db.promise().query(sql8, [cartID]);
-    console.log("Cart deleted");
+    //console.log("Cart deleted");
 
-    console.log("Order created");
+    //console.log("Order created");
     res.status(200).json({
       msg: "Order created",
       orderID: orderID});
@@ -424,35 +423,27 @@ const updateOrderItems = async (req, res) => {
   }
 }
 
-const deleteOrderItems = async (req, res) => {
+const deleteOrderItem = async (req, res) => {
   try {
-    let orderID = req.params.id;
-
-    if (!req.body.products || req.body.products.length === 0) {
-      res.status(400).json({msg: "No products to delete"});
+    let orderID = req.params.orderid;
+    let productID = req.params.productid;
+    //validate
+    if (!productID || await validateProduct(productID, orderID) === false) {
+      res.status(400).json({msg: "Invalid product"});
       return;
     }
 
-    for (let i=0; i<req.body.products.length; i++) {
-      let product = req.body.products[i];
-      //validate
-      if (!product.productID || await validateProduct(product.productID, orderID) === false) {
-        res.status(400).json({msg: "Invalid product"});
-        return;
-      }
+    // Get quantity of item being deleted
+    let sqlGetQuantity = 'SELECT quantity FROM OrderOrderItemsProduct WHERE productID = ? AND orderID = ?';
+    const [quantityResults] = await db.promise().query(sqlGetQuantity, [productID, orderID]);
+    
+    // Update stock in Product table 
+    let updateStockSQL = 'UPDATE Product SET stock = stock + ? WHERE productID = ?';
+    await db.promise().query(updateStockSQL, [quantityResults[0].quantity, productID]);
 
-      // Get quantity of item being deleted
-      let sqlGetQuantity = 'SELECT quantity FROM OrderOrderItemsProduct WHERE productID = ? AND orderID = ?';
-      const [quantityResults] = await db.promise().query(sqlGetQuantity, [product.productID, orderID]);
-      
-      // Update stock in Product table
-      let updateStockSQL = 'UPDATE Product SET stock = stock + ? WHERE productID = ?';
-      await db.promise().query(updateStockSQL, [quantityResults[0].quantity, product.productID]);
-
-      //delete
-      let sql = 'DELETE FROM OrderOrderItemsProduct WHERE productID = ? AND orderID = ?';
-      const [results, fields] = await db.promise().query(sql, [product.productID, orderID]);
-    }
+    //delete
+    let sql = 'DELETE FROM OrderOrderItemsProduct WHERE productID = ? AND orderID = ?';
+    const [results, fields] = await db.promise().query(sql, [productID, orderID]);
 
     //update total price
     //The order might be empty, but we have a delete-no-order policy, so it stays
@@ -516,8 +507,7 @@ module.exports = {
   updateOrder,
   cancelOrder,
   updateOrderItems,
-  deleteOrderItems,
   getOrderDataWrapper,
-  deleteOrderItems,
+  deleteOrderItem,
   getAllOrder
 }

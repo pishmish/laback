@@ -27,6 +27,10 @@ router.get('/request/:id/status', authenticateToken, (req, res) => {
     return returnsController.getRequestStatus(req, res);
 });
 
+router.get('/refund/:id/status', authenticateToken, (req, res) => {
+    return returnsController.getRefundStatus(req, res);
+});
+
 router.post('/newrequest', authenticateToken, authenticateRole('customer'), (req, res) => {
     return returnsController.newRequest(req, res);
 });

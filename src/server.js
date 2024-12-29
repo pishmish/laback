@@ -51,7 +51,7 @@ app.use('/assets', express.static(path.join(__dirname, 'src/assets')));
 app.use(helmet());
 
 // Use 'combined' for detailed logs or 'tiny' for minimal logs
-app.use(morgan('combined'));
+//app.use(morgan('combined'));
 
 // Use the storeapi defined in route.js
 app.use('/store', storeapi);
