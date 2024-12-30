@@ -227,7 +227,6 @@ const getWishlistByID = async (req, res) => {
 const sendSaleEmail = async (req, res) => {
     try {
         const  { productIDs } = req.body;
-        // console.log(productIDs);
 
         if (!productIDs || !Array.isArray(productIDs) || productIDs.length === 0) {
             return res.status(400).send('Product IDs are required');

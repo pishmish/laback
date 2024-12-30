@@ -244,12 +244,24 @@ const updateProduct = async (req, res) => {
 
 const updateProductPrice = async (req, res) => {
   try {
+    let newPrice = req.body.unitPrice;
     let sql = 'UPDATE `Product` SET unitPrice = ? WHERE productID = ?';
-    const [results, fields] = await db.promise().query(sql, [req.body.newPrice, req.params.id]);
+    const [results, fields] = await db.promise().query(sql, [newPrice, req.params.id]);
     res.status(200).json({msg: "Product price updated"});
   } catch(err) {
     console.log(err);
     res.status(500).json({msg: "Error updating product price"});
+  }
+}
+
+const updateProductDiscountPercentage = async (req, res) => {
+  try {
+    let sql = 'UPDATE `Product` SET discountPercentage = ? WHERE productID = ?';
+    const [results, fields] = await db.promise().query(sql, [req.body.discountPercentage, req.params.id]);
+    res.status(200).json({msg: "Product discount percentage updated"});
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({msg: "Error updating product discount percentage"});
   }
 }
 
@@ -466,7 +478,6 @@ const sortProductsUtil = (products, sortBy, sortOrder) => {
 };
 
 //helper function
-
 function getMainCategoryName(categoryNumber) {
   const categories = {
       1: "Handbags",
@@ -480,7 +491,6 @@ function getMainCategoryName(categoryNumber) {
   return categories[categoryNumber] || "Unknown Category";
 }
 
-
 module.exports = {
   getAllProducts,
   getProductById,
@@ -493,5 +503,6 @@ module.exports = {
   searchProducts,
   sortProducts,
   getSupplierInfoByProductId,
-  getProductImage
+  getProductImage,
+  updateProductDiscountPercentage
 };
