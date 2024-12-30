@@ -25,7 +25,6 @@ const paymentapi = require('./routes/PaymentAPI');
 const wishlistapi = require('./routes/WishlistAPI');
 const analyticsapi = require('./routes/AnalyticsAPI');
 const returnapi = require('./routes/ReturnsAPI');
-const salesmanagerapi = require('./routes/SalesManagerAPI');
 const imagesRouter = require('./routes/ImagesAPI');
 
 
@@ -65,7 +64,6 @@ app.use('/payment', paymentapi);
 app.use('/wishlist', wishlistapi);
 app.use('/analytics', analyticsapi);
 app.use('/returns', returnapi);
-app.use('/salesManager', salesmanagerapi);
 app.use('/images', imagesRouter);
 
 
