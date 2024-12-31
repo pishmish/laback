@@ -82,6 +82,7 @@ const getYearlySales = async (req, res) => {
 
 const getSalesComparison = async (req, res) => {
     try {
+        console.log('req.query:', req.query);
         const { start1, end1, start2, end2 } = req.query;
 
         if (!start1 || !end1 || !start2 || !end2) {

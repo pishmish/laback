@@ -226,8 +226,7 @@ const getWishlistByID = async (req, res) => {
 
 const sendSaleEmail = async (req, res) => {
     try {
-        const  { productIDs } = req.body;
-        // console.log(productIDs);
+        const { productIDs } = req.body;
 
         if (!productIDs || !Array.isArray(productIDs) || productIDs.length === 0) {
             return res.status(400).send('Product IDs are required');
@@ -250,6 +249,12 @@ const sendSaleEmail = async (req, res) => {
             }
 
             const product = productDetails[0];
+
+            // Skip products with zero discount
+            if (product.discountPercentage === 0) {
+                console.log(`Skipping product ID: ${productID} - No discount`);
+                continue;
+            }
 
             // Fetch the wishlists containing the product
             const [wishlistItems] = await pool.promise().query('SELECT wishlistID FROM WishlistItems WHERE productID = ?', [productID]);
@@ -319,8 +324,20 @@ const sendSaleEmail = async (req, res) => {
             }
         }
 
+        // Check if we have any products to send
+        if (customerProductsMap.size === 0) {
+            console.log('No emails to send - all products have zero discount');
+            return res.status(200).send('No discount emails to send');
+        }
+
         // Send an email to each customer with their discounted products
         for (const [customerEmail, products] of customerProductsMap.entries()) {
+            // Skip customers with no discounted products
+            if (products.length === 0) {
+                console.log(`Skipping email to ${customerEmail} - no discounted products`);
+                continue;
+            }
+
             let emailContent = `
                 <html>
                 <h1 style="color: #333;">Exciting Discounts Just for You!</h1>
