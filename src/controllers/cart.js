@@ -85,7 +85,7 @@ const getOrCreateCart = async (req, res) => {
 
     // Fetch products in the cart
     const [cartProducts] = await pool.promise().query(
-      'SELECT p.productID, p.name, p.unitPrice, ccp.quantity FROM CartContainsProduct ccp JOIN Product p ON ccp.productID = p.productID WHERE ccp.cartID = ?',
+      'SELECT p.productID, p.name, p.unitPrice, p.discountPercentage, ccp.quantity FROM CartContainsProduct ccp JOIN Product p ON ccp.productID = p.productID WHERE ccp.cartID = ?',
       [cartID]
     );
 
@@ -186,7 +186,7 @@ const addProductToCart = async (req, res) => {
 
     // Update cart totals: numProducts and totalPrice
     await pool.promise().query(
-      'UPDATE Cart SET numProducts = numProducts + 1, totalPrice = totalPrice + (SELECT unitPrice FROM Product WHERE productID = ?) WHERE cartID = ?',
+      'UPDATE Cart SET numProducts = numProducts + 1, totalPrice = totalPrice + (SELECT unitPrice * (1 - discountPercentage/100) FROM Product WHERE productID = ?) WHERE cartID = ?',
       [productID, cartID]
     );
 
@@ -270,7 +270,7 @@ const removeProductFromCart = async (req, res) => {
 
     // Update cart totals
     await pool.promise().query(
-      'UPDATE Cart SET numProducts = numProducts - 1, totalPrice = totalPrice - (SELECT unitPrice FROM Product WHERE productID = ?) WHERE cartID = ?',
+      'UPDATE Cart SET numProducts = numProducts - 1, totalPrice = totalPrice - (SELECT unitPrice * (1 - discountPercentage/100) FROM Product WHERE productID = ?) WHERE cartID = ?',
       [productID, cartID]
     );
 
@@ -323,7 +323,7 @@ const deleteProductFromCart = async (req, res) => {
 
     // Check if the product exists in the cart
     const [productRows] = await pool.promise().query(
-      'SELECT quantity, (quantity * (SELECT unitPrice FROM Product WHERE productID = ?)) AS productTotal FROM CartContainsProduct WHERE cartID = ? AND productID = ?',
+      'SELECT quantity, (quantity * (SELECT unitPrice * (1 - discountPercentage/100) FROM Product WHERE productID = ?)) AS productTotal FROM CartContainsProduct WHERE cartID = ? AND productID = ?',
       [productID, cartID, productID]
     );
 
