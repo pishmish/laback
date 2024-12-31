@@ -352,32 +352,69 @@ const sendSaleEmail = async (req, res) => {
                 const discountedPrice = (product.unitPrice * (1 - product.discountPercentage / 100)).toFixed(2);
                 const stars = '★'.repeat(product.overallRating) + '☆'.repeat(5 - product.overallRating);
                 emailContent += `
-                    <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; background-color: #dedede; padding: 15px; border-radius: 8px; border: 1px solid #f1f1f1;">
-                        <tr>
-                            <!-- Product Image -->
-                            <td style="width: 120px; text-align: center;">
-                                <img src="cid:${cid}" alt="${product.name}" style="width: 100px; border-radius: 4px;">
-                            </td>
-                            <!-- Product Details -->
-                            <td style="padding: 0 15px;">
-                                <p style="margin: 2px 0; font-size: 13px; font-weight: bold; color: #666;">${product.brand}</p>
-                                <p style="margin: 0 10px; font-size: 14px; font-style: italic; font-weight: bold; color: #333;">${product.name}</p>
-                                <p style="margin: 5px 0; color: #666;">Discount: ${product.discountPercentage}%</p>
-                                <p style="margin: 5px 0; color: #666;">Stock: ${product.stock}</p>
-                                <p style="margin: 5px 0; color: #666;">Material: ${product.material}</p>
-                                <p style="margin: 5px 0; color: #666;">Price: <s style="color: red;">$${product.unitPrice}</s> <strong style="color: green;">$${discountedPrice}</strong></p>
-                            </td>
-                            <!-- Product Description and Rating -->
-                            <td style="padding: 0 15px; vertical-align: center; text-align: center;">
-                                <p style="margin: 5px 0; color: black; font-size: 16px;">${stars}</p>
-                                <p style="margin: 5px 0; color: #555; font-style: italic; font-weight: bold; font-size: 18px;">"${product.description}"</p>
-                            </td>
-                            <!-- Follow Seller Button -->
-                            <td style="text-align: right; vertical-align: top;">
-                                <a href="http://localhost:3000/product/${product.productID}" style="text-decoration: none; background-color: #333; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 12px; margin-top: 10px;">Purchase Now</a>
-                            </td>
-                        </tr>
-                    </table>
+                    <div style="max-width: 600px; margin: 0 auto;">
+                        <table style="width: 100%; border-collapse: separate; border-spacing: 0; font-family: Arial, sans-serif; background-color: #dedede; margin-bottom: 15px; border-radius: 8px; border: 1px solid #f1f1f1;">
+                            <!-- Product Container -->
+                            <tr>
+                                <!-- Image Cell - Fixed width, responsive image -->
+                                <td style="width: 100px; min-width: 100px; padding: 15px; vertical-align: top;">
+                                    <div style="width: 100%; text-align: center;">
+                                        <img src="cid:${cid}" 
+                                             alt="${product.name}" 
+                                             style="max-width: 100px; 
+                                                    width: 100%; 
+                                                    height: auto; 
+                                                    border-radius: 4px; 
+                                                    display: block; 
+                                                    margin: 0 auto;">
+                                    </div>
+                                </td>
+                                
+                                <!-- Details Cell - Flexible width -->
+                                <td style="padding: 15px; vertical-align: top;">
+                                    <div style="min-width: 200px;">
+                                        <p style="margin: 2px 0; font-size: 13px; font-weight: bold; color: #666;">${product.brand}</p>
+                                        <p style="margin: 0 0 10px 0; font-size: 14px; font-style: italic; font-weight: bold; color: #333;">${product.name}</p>
+                                        <p style="margin: 5px 0; color: #666;">Discount: ${product.discountPercentage}%</p>
+                                        <p style="margin: 5px 0; color: #666;">Stock: ${product.stock}</p>
+                                        <p style="margin: 5px 0; color: #666;">Price: <s style="color: red;">$${product.unitPrice}</s> <strong style="color: green;">$${discountedPrice}</strong></p>
+                                    </div>
+                                </td>
+
+                                <!-- Description Cell - Hide on mobile -->
+                                <td style="padding: 15px; vertical-align: top; min-width: 150px;">
+                                    <div style="text-align: center;">
+                                        <p style="margin: 5px 0; color: black; font-size: 16px;">${stars}</p>
+                                        <p style="margin: 5px 0; color: #555; font-style: italic; font-weight: bold; font-size: 16px;">${product.description}</p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Button Row -->
+                            <tr>
+                                <td colspan="3" style="padding: 10px 15px;">
+                                    <div style="text-align: center;">
+                                        <a href="http://localhost:3000/product/${product.productID}" 
+                                           style="display: inline-block;
+                                                  width: 80%;
+                                                  max-width: 200px;
+                                                  text-decoration: none;
+                                                  background-color: rgb(225, 168, 34);
+                                                  color: #fff;
+                                                  padding: 12px 24px;
+                                                  border-radius: 4px;
+                                                  font-size: 14px;
+                                                  font-weight: bold;
+                                                  text-align: center;
+                                                  margin: 10px auto;
+                                                  box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                            Purchase Now
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 `;
 
                 if (product.imageBuffer) {
