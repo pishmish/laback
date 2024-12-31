@@ -134,11 +134,41 @@ const deleteAddress = async (req, res) => {
   }
 };
 
+const getAddressWrapper = async (req) => { // Wrapper function for invoice Areeb shenanigans
+  let addressData;
+
+  // Create a mock response object with the necessary methods
+  const mockRes = {
+    status(code) {
+      // Allow chaining by returning the same mock object
+      this.statusCode = code;
+      return this;
+    },
+    json(data) {
+      addressData = data; // Capture the JSON response data
+    },
+    send(data) {
+      addressData = data; // Capture data if `send` is used
+    }
+  };
+
+  // Call getAddress with the mock response
+  await getAddress(req, mockRes);
+
+  // Check if addressData was populated
+  if (!addressData) {
+    throw new Error('No data returned from getAddress');
+  }
+
+  return addressData;
+}
+
 module.exports = {
   getAddress,
   getUserAddress,
   createAddress,
   updateAddress,
   deleteAddress,
-  getPersonalAddress
+  getPersonalAddress,
+  getAddressWrapper
 };
