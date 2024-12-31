@@ -7,7 +7,6 @@ const getOrder = async (req, res) => {
     //get order details from Order table (without items)
     let sql = 'SELECT * FROM `Order` WHERE orderID = ?';
     const [results1, fields1] = await db.promise().query(sql, [id]);
-    console.log("Order details retrieved");
 
     //get order items
     let sql2 = 'SELECT * FROM `OrderOrderItemsProduct` WHERE orderID = ?';
