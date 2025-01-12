@@ -34,7 +34,7 @@ const registerUser = async (req, res) => {
 
 const registerCustomerInternal = async (req, res) => {
   try {
-    const {address, phone, username} = req.body;
+    const {address, phone, username, taxID} = req.body;
 
     if (!address || !phone) {
       throw new Error('Please fill in all fields (address, phone)');
@@ -47,8 +47,8 @@ const registerCustomerInternal = async (req, res) => {
     addressID = results3.insertId;
 
     //insert customer
-    sql = 'INSERT INTO `Customer` (username, addressID, phone) VALUES (?, ?, ?)';
-    const [results2, fields2] = await db.promise().query(sql, [username, addressID, phone]);
+    sql = 'INSERT INTO `Customer` (username, addressID, phone, taxID) VALUES (?, ?, ?, ?)';
+    const [results2, fields2] = await db.promise().query(sql, [username, addressID, phone, taxID]);
 
     return true;
   } catch(err) {
