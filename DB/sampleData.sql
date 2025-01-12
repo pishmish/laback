@@ -650,13 +650,10 @@ INSERT INTO `CartContainsProduct` (`cartID`, `productID`, `quantity`) VALUES
 
 
 
-/*Order Table*/
-INSERT INTO `Order` (`orderNumber`, `totalPrice`, `deliveryID`, `deliveryStatus`, `deliveryAddressID`, `estimatedArrival`, `courierID`, `cartID`, `customerID`) VALUES
-(1001, 234.97, 123134, 'Returned', 4, '2023-12-10', 1, 1, 1),
-(1002, 580.97, 324234, 'Returned', 5, '2023-12-02', 2, 2, 2);
-
 /*Sample values for graph*/
 INSERT INTO `Order` (`orderNumber`, `totalPrice`, `deliveryID`, `deliveryStatus`, `deliveryAddressID`, `estimatedArrival`, `courierID`, `customerID`, `timeOrdered`) VALUES
+(1001, 234.97, 123134, 'Delivered', 4, '2023-12-10', 1, 1, '2023-12-05 14:30:00'),
+(1002, 580.97, 324234, 'Delivered', 5, '2023-12-02', 2, 2, '2023-11-25 10:15:00'),
 (1003, 234.97, 123135, 'Delivered', 4, '2023-11-20', 1, 1, '2023-11-15 09:00:00'),
 (1004, 150.00, 324235, 'Delivered', 5, '2023-11-18', 2, 2, '2023-11-10 16:45:00'),
 (1005, 170.99, 123136, 'Delivered', 4, '2023-11-25', 1, 1, '2023-11-05 11:30:00'),
