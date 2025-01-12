@@ -88,6 +88,10 @@ router.get('/sales/category/:categoryid/comparison', authenticateToken, authenti
     return analyticsController.getCategorySalesComparison(req, res);
 });
 
+router.get('/sales/profitloss/:period', authenticateToken, authenticateRole('salesManager'), (req, res) => {
+    return analyticsController.getProfitLoss(req, res);
+});
+
 //scrapped this endpoint as address and deliveryRegion are not connected and thus there is NO REGION FOR SALES
 // router.get('/salesbyregion', (req, res) => {
 //     return analyticsController.getSalesByRegion(req, res);

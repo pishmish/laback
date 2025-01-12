@@ -685,6 +685,372 @@ const getReturnsByReason = async (req, res) => {
     }
 };
 
+const getProfit = async (supplierID) => {
+    //from the orderorderitemsproduct table, join with products (supplierID and unitprice), and get all the products with specified supplier ID
+    let sql = `
+        select p.productID, p.unitPrice, o.purchasePrice, o.quantity, o.orderID
+        from Product p, OrderOrderItemsProduct o
+        where p.productID = o.productID AND p.supplierID = ?`;
+    let [results, fields] = await db.promise().query(sql, [supplierID]);
+
+    //attach time ordered to each item in results
+    for(let i = 0; i < results.length; i++) {
+        sql = 'select timeOrdered from `Order` where orderID = ?';
+        let [timeOrdered, fields] = await db.promise().query(sql, [results[i].orderID]);
+        results[i].timeOrdered = timeOrdered[0].timeOrdered;
+    }
+
+    return results;
+}
+
+const getProfitDaily = async (supplierID) => {
+    //calculate profit and loss for each day
+
+    let sales = await getProfit(supplierID);
+
+    for (let i=0; i<sales.length; i++) {
+        //check calculate profit (purchase price - 90% of unit price)
+        sales[i].profit = sales[i].purchasePrice - (0.9 * sales[i].unitPrice);
+
+        //convert timestamp to string, leaving only yyyy-mm-dd
+        sales[i].date = sales[i].timeOrdered.toISOString().split('T')[0];
+    }
+
+    //sort sales by date to ensure grouping works correctly
+    sales.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+    //group by date
+    let profit = [];
+    for (let i=0; i<sales.length; ) {
+        let date = sales[i].date;
+        let totalRevenue = 0;
+        let totalCost = 0;
+        let unitsSold = 0;
+        let totalProfit = 0;
+
+        while (i < sales.length && sales[i].date === date) {
+            totalRevenue += sales[i].unitPrice * sales[i].quantity;
+            totalCost += sales[i].purchasePrice * sales[i].quantity;
+            unitsSold += sales[i].quantity;
+            totalProfit += sales[i].profit * sales[i].quantity;
+            i++;
+        }
+
+        profit.push({
+            date: date,
+            //totalRevenue: totalRevenue,
+            //totalCost: totalCost,
+            totalProfit: totalProfit,
+            unitsSold: unitsSold
+        });
+    }
+
+    //round total profit to 2 decimal places
+    for (let i=0; i<profit.length; i++) {
+        profit[i].totalProfit = profit[i].totalProfit.toFixed(2);
+    }
+
+    //check uniqueness of date
+    let dates = [];
+    for (let i=0; i<profit.length; i++) {
+        if (dates.includes(profit[i].date)) {
+            console.log("duplicate date: ", profit[i].date);
+            throw new Error("duplicate date found");
+        } else {
+            dates.push(profit[i].date);
+        }
+    }
+    return profit;
+}
+
+const getProfitMonthly = async (supplierID) => {
+    //calculate profit and loss for each month
+
+    let sales = await getProfit(supplierID);
+
+    for (let i=0; i<sales.length; i++) {
+        //check calculate profit (purchase price - 90% of unit price)
+        sales[i].profit = sales[i].purchasePrice - (0.9 * sales[i].unitPrice);
+
+        //convert timestamp to string, leaving only yyyy-mm-dd
+        sales[i].date = sales[i].timeOrdered.toISOString().split('T')[0];
+    }
+
+    //sort sales by date to ensure grouping works correctly
+    sales.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+    //group by month
+    //find unique months
+    let dates = [];
+    for (let i=0; i<sales.length; i++) {
+        let date = sales[i].date;
+        let monthYear = date[0] + date[1] + date[2] + date[3] + date[4] + date[5] + date[6];
+        if (!dates.includes(monthYear)) {
+            dates.push(monthYear);
+        }
+    }
+
+    dates = [...new Set(dates)];
+
+    //group by month
+    let profit = [];
+    for (let i=0; i<dates.length; i++) {
+        let totalRevenue = 0;
+        let totalCost = 0;
+        let unitsSold = 0;
+        let totalProfit = 0;
+
+        for (let j=0; j<sales.length; j++) {
+            let date = sales[j].date;
+            let monthYear = date[0] + date[1] + date[2] + date[3] + date[4] + date[5] + date[6];
+            if (monthYear === dates[i]) {
+                totalRevenue += sales[j].unitPrice * sales[j].quantity;
+                totalCost += sales[j].purchasePrice * sales[j].quantity;
+                unitsSold += sales[j].quantity;
+                totalProfit += sales[j].profit * sales[j].quantity;
+            }
+        }
+
+        profit.push({
+            month: dates[i],
+            //totalRevenue: totalRevenue,
+            //totalCost: totalCost,
+            totalProfit: totalProfit,
+            unitsSold: unitsSold
+        });
+    }
+
+    //round total profit to 2 decimal places
+    for (let i=0; i<profit.length; i++) {
+        profit[i].totalProfit = profit[i].totalProfit.toFixed(2);
+    }
+
+    //check uniqueness
+    let dates2 = [];
+    for (let i=0; i<profit.length; i++) {
+        if (dates2.includes(profit[i].month)) {
+            console.log("duplicate date found", profit[i].month);
+            throw new Error("duplicate date found");
+        } else {
+            dates2.push(profit[i].month);
+        }
+    }
+
+    return profit;
+}
+
+const getProfitQuarterly = async (supplierID) => {
+    //calculate profit and loss for each quarter
+
+    let sales = await getProfit(supplierID);
+
+    for (let i=0; i<sales.length; i++) {
+        //check calculate profit (purchase price - 90% of unit price)
+        sales[i].profit = sales[i].purchasePrice - (0.9 * sales[i].unitPrice);
+
+        //convert timestamp to string, leaving only yyyy-mm-dd
+        sales[i].date = sales[i].timeOrdered.toISOString().split('T')[0];
+    }
+
+    //sort sales by date to ensure grouping works correctly
+    sales.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+    //find unique quarters in format Qx yyyy
+    let dates = [];
+    for (let i=0; i<sales.length; i++) {
+        let date = sales[i].date;
+        let quarter = "";
+        let month = date[5] + date[6];
+        if (month === "01" || month === "02" || month === "03") {
+            quarter = "Q1";
+        } else if (month === "04" || month === "05" || month === "06") {
+            quarter = "Q2";
+        } else if (month === "07" || month === "08" || month === "09") {
+            quarter = "Q3";
+        } else {
+            quarter = "Q4";
+        }
+
+        dates.push(quarter + " " + date[0] + date[1] + date[2] + date[3]);
+    }
+
+    dates = [...new Set(dates)];
+    
+    //group by quarter
+    let profit = [];
+    for (let i=0; i<dates.length; i++) {
+        let totalRevenue = 0;
+        let totalCost = 0;
+        let totalProfit = 0;
+        let unitsSold = 0;
+
+        for (let j=0; j<sales.length; j++) {
+            let date = sales[j].date;
+            let quarter = "";
+            let month = date[5] + date[6];
+            if (month === "01" || month === "02" || month === "03") {
+                quarter = "Q1";
+            } else if (month === "04" || month === "05" || month === "06") {
+                quarter = "Q2";
+            } else if (month === "07" || month === "08" || month === "09") {
+                quarter = "Q3";
+            } else {
+                quarter = "Q4";
+            }
+
+            if (dates[i] === quarter + " " + date[0] + date[1] + date[2] + date[3]) {
+                totalRevenue += sales[j].unitPrice * sales[j].quantity;
+                totalCost += sales[j].purchasePrice * sales[j].quantity;
+                unitsSold += sales[j].quantity;
+                totalProfit += sales[j].profit * sales[j].quantity;
+            }
+        }
+
+        profit.push({
+            quarter: dates[i],
+            //totalRevenue: totalRevenue,
+            //totalCost: totalCost,
+            totalProfit: totalProfit,
+            unitsSold: unitsSold
+        });
+    }
+
+    //round total profit to 2 decimal places
+    for (let i=0; i<profit.length; i++) {
+        profit[i].totalProfit = profit[i].totalProfit.toFixed(2);
+    }
+
+    //check uniqueness
+    let dates2 = [];
+    for (let i=0; i<profit.length; i++) {
+        if (dates2.includes(profit[i].quarter)) {
+            console.log("duplicate date found", profit[i].quarter);
+            throw new Error("duplicate date found");
+        } else {
+            dates2.push(profit[i].quarter);
+        }
+    }
+
+    return profit;
+}
+
+const getProfitYearly = async (supplierID) => {
+    //calculate profit and loss for each year
+
+    let sales = await getProfit(supplierID);
+
+    for (let i=0; i<sales.length; i++) {
+        //check calculate profit (purchase price - 90% of unit price)
+        sales[i].profit = sales[i].purchasePrice - (0.9 * sales[i].unitPrice);
+
+        //convert timestamp to string, leaving only yyyy-mm-dd
+        sales[i].date = sales[i].timeOrdered.toISOString().split('T')[0];
+    }
+
+    //sort sales by date to ensure grouping works correctly
+    sales.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+    //find unique years
+    let dates = [];
+    for (let i=0; i<sales.length; i++) {
+        let date = sales[i].date;
+        let year = date[0] + date[1] + date[2] + date[3];
+        if (!dates.includes(year)) {
+            dates.push(year);
+        }
+    }
+
+    //group by year
+    let profit = [];
+    for (let i=0; i<dates.length; i++) {
+        let totalRevenue = 0;
+        let totalCost = 0;
+        let totalProfit = 0;
+        let unitsSold = 0;
+
+        for (let j=0; j<sales.length; j++) {
+            let date = sales[j].date;
+            let year = date[0] + date[1] + date[2] + date[3];
+            if (year === dates[i]) {
+                totalRevenue += sales[j].unitPrice * sales[j].quantity;
+                totalCost += sales[j].purchasePrice * sales[j].quantity;
+                unitsSold += sales[j].quantity;
+                totalProfit += sales[j].profit * sales[j].quantity;
+            }
+        }
+
+        profit.push({
+            year: dates[i],
+            //totalRevenue: totalRevenue,
+            //totalCost: totalCost,
+            totalProfit: totalProfit,
+            unitsSold: unitsSold
+        });
+    }
+
+    //round total profit to 2 decimal places
+    for (let i=0; i<profit.length; i++) {
+        profit[i].totalProfit = profit[i].totalProfit.toFixed(2);
+    }
+
+    //check uniqueness
+    let dates2 = [];
+    for (let i=0; i<profit.length; i++) {
+        if (dates2.includes(profit[i].year)) {
+            console.log("duplicate date found", profit[i].year);
+            throw new Error("duplicate date found");
+        } else {
+            dates2.push(profit[i].year);
+        }
+    }
+
+    return profit;
+}
+
+
+const getProfitLoss = async (req, res) => {
+    try{
+        //revenue is 10% of the sales
+    
+        //check if period is provided
+        console.log("req.params.period", req.params.period)
+        if (req.params.period !== "daily" && req.params.period !== "monthly" && req.params.period !== "quarterly" && req.params.period !== "yearly") {
+            return res.status(400).send("Invalid period");
+        }
+
+        //get the sales data
+        let salesData;
+
+        //get supplier ID
+        let sql = 'SELECT supplierID from SalesManager where username = ?';
+        let [results, fields] = await db.promise().query(sql, [req.username]);
+        let supplierID = results[0].supplierID;
+
+
+        if (req.params.period === "daily") {
+            salesData = await getProfitDaily(supplierID);
+        }
+
+        if (req.params.period === "monthly") {
+            salesData = await getProfitMonthly(supplierID);
+        }
+
+        if (req.params.period === "quarterly") {
+            salesData = await getProfitQuarterly(supplierID);
+        }
+
+        if (req.params.period === "yearly") {
+            salesData = await getProfitYearly(supplierID);
+        }
+
+        res.status(200).json(salesData);
+
+    } catch(err) {
+        console.error("Error calculating profit/loss, ", err);
+        res.status(500).send("failed to calculate profit/loss")
+    }
+}
+
 module.exports = {
     getAllSales,
     getMonthlySales,
@@ -696,6 +1062,7 @@ module.exports = {
     getProductQuarterlySales,
     getProductYearlySales,
     getProductSalesComparison,
+    getProfitLoss,
     // getSalesByRegion,
     getSalesByProvince,
     getSalesByCity,
