@@ -433,6 +433,8 @@ const sendRefundApprovalEmail = async (req, res) => {
           WHERE s.requestId = ?
       `, [requestId]);
 
+      console.log(refundDetails[0]);
+
       if (refundDetails.length === 0) {
           return res.status(404).json({ msg: 'No refund details found for the given requestId' });
       }
@@ -520,7 +522,7 @@ const sendRefundApprovalEmail = async (req, res) => {
 
       // Send email
       await transporter.sendMail({
-          from: 'your-email@gmail.com', // Replace with your email
+          from: 'zadados308@gmail.com', // Replace with your email
           to: refund.email,
           subject: 'Refund Approved',
           html: emailContent,
