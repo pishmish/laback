@@ -1010,49 +1010,76 @@ const getProfitYearly = async (supplierID) => {
     return profit;
 }
 
+const getProfitComparisonUsingDaily = async (supplierID, start1, end1, start2, end2) => {
+    const dailyProfits = await getProfitDaily(supplierID);
+
+    const profit1 = dailyProfits
+        .filter(profit => new Date(profit.date) >= new Date(start1) && new Date(profit.date) <= new Date(end1))
+        .reduce((acc, profit) => {
+            acc.totalProfit += parseFloat(profit.totalProfit);
+            acc.unitsSold += profit.unitsSold;
+            return acc;
+        }, { totalProfit: 0, unitsSold: 0 });
+
+    const profit2 = dailyProfits
+        .filter(profit => new Date(profit.date) >= new Date(start2) && new Date(profit.date) <= new Date(end2))
+        .reduce((acc, profit) => {
+            acc.totalProfit += parseFloat(profit.totalProfit);
+            acc.unitsSold += profit.unitsSold;
+            return acc;
+        }, { totalProfit: 0, unitsSold: 0 });
+
+    return {
+        period1: { start: start1, end: end1, totalProfit: profit1.totalProfit.toFixed(2), unitsSold: profit1.unitsSold },
+        period2: { start: start2, end: end2, totalProfit: profit2.totalProfit.toFixed(2), unitsSold: profit2.unitsSold }
+    };
+};
 
 const getProfitLoss = async (req, res) => {
-    try{
-        //revenue is 10% of the sales
-    
-        //check if period is provided
-        console.log("req.params.period", req.params.period)
-        if (req.params.period !== "daily" && req.params.period !== "monthly" && req.params.period !== "quarterly" && req.params.period !== "yearly") {
+    try {
+        // Check if period is provided
+        console.log("req.params.period", req.params.period);
+        if (req.params.period !== "daily" && req.params.period !== "monthly" && req.params.period !== "quarterly" && req.params.period !== "yearly" && req.params.period !== "comparison") {
             return res.status(400).send("Invalid period");
         }
 
-        //get the sales data
-        let salesData;
-
-        //get supplier ID
+        // Get supplier ID
         let sql = 'SELECT supplierID from SalesManager where username = ?';
-        let [results, fields] = await db.promise().query(sql, [req.username]);
+        let [results] = await db.promise().query(sql, [req.username]);
         let supplierID = results[0].supplierID;
 
+        // Get the sales data
+        let salesData;
 
         if (req.params.period === "daily") {
             salesData = await getProfitDaily(supplierID);
-        }
-
-        if (req.params.period === "monthly") {
+        } else if (req.params.period === "monthly") {
             salesData = await getProfitMonthly(supplierID);
-        }
-
-        if (req.params.period === "quarterly") {
+        } else if (req.params.period === "quarterly") {
             salesData = await getProfitQuarterly(supplierID);
-        }
-
-        if (req.params.period === "yearly") {
+        } else if (req.params.period === "yearly") {
             salesData = await getProfitYearly(supplierID);
+        } else if (req.params.period === "comparison") {
+            const { start1, end1, start2, end2 } = req.query;
+
+            if (!start1 || !end1 || !start2 || !end2) {
+                return res.status(400).send("Missing date range for comparison");
+            }
+
+            const profitComparison = await getProfitComparisonUsingDaily(supplierID, start1, end1, start2, end2);
+            salesData = {
+                period: "comparison",
+                comparison: profitComparison
+            };
         }
 
         res.status(200).json(salesData);
 
-    } catch(err) {
+    } catch (err) {
         console.error("Error calculating profit/loss, ", err);
-        res.status(500).send("failed to calculate profit/loss")
+        res.status(500).send("Failed to calculate profit/loss");
     }
-}
+};
 
 module.exports = {
     getAllSales,
