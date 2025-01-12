@@ -9,6 +9,7 @@ const getAllSales = async (req, res) => {
             FROM \`Order\` o
             JOIN OrderOrderItemsProduct ooip ON o.orderID = ooip.orderID
             GROUP BY DATE_FORMAT(o.timeOrdered, '%Y-%m-%d')
+            ORDER BY date
         `);
         res.status(200).json(salesData);
     } catch (err) {
@@ -133,6 +134,7 @@ const getProductSales = async (req, res) => {
             JOIN OrderOrderItemsProduct ooip ON o.orderID = ooip.orderID
             WHERE ooip.productID = ?
             GROUP BY DATE_FORMAT(o.timeOrdered, '%Y-%m-%d')
+            ORDER BY date
         `, [productID]);
 
         // if (productSalesData.length === 0) {
@@ -277,6 +279,7 @@ const getCategorySales = async (req, res) => {
             JOIN Category c ON ccp.categoryID = c.categoryID
             WHERE c.categoryID = ?
             GROUP BY DATE_FORMAT(o.timeOrdered, '%Y-%m-%d'), c.name
+            ORDER BY date
         `, [categoryID]);
         res.status(200).json(categorySalesData);
     } catch (err) {
