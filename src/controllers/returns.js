@@ -1,4 +1,7 @@
 const db = require('../config/database');
+const { transporter } = require('../Services/mailTransporter');
+const fs = require('fs');
+const path = require('path');
 
 const getAllReturns = async (req, res) => {
   try {
@@ -373,6 +376,167 @@ const getCustomerRequests = async (req, res) => {
   }
 }
 
+const getProductImagePath = async (productID) => {
+  try {
+      const sql = 'SELECT picturePath FROM `Pictures` WHERE productID = ?';
+      const [results] = await db.promise().query(sql, [productID]);
+
+      if (results.length > 0) {
+          return path.join(__dirname, '..', results[0].picturePath); // Adjust the path as necessary
+      } else {
+          console.log("Image not found");
+          return null;
+      }
+  } catch (err) {
+      console.log(err);
+      return null;
+  }
+};
+
+const sendRefundApprovalEmail = async (req, res) => {
+  const requestId = req.body.requestId || req.params.requestId;
+
+  if (!requestId) {
+      return res.status(400).json({ msg: 'Request ID is required' });
+  }
+
+  try {
+      // Fetch refund details from Returns table
+      let sql = 'SELECT * FROM Returns WHERE requestID = ?';
+      const [results] = await db.promise().query(sql, [requestId]);
+
+      if (results.length === 0) {
+          return res.status(400).json({
+              msg: 'RequestID not found'
+          });
+      }
+
+      // Get the purchase price from order items
+      let sql2 = "SELECT purchasePrice * quantity AS refundAmount FROM OrderOrderItemsProduct WHERE orderID = ? AND productID = ?";
+      const [results2] = await db.promise().query(sql2, [results[0].orderID, results[0].productID]);
+
+      if (results2.length === 0) {
+          return res.status(400).json({
+              msg: 'Order item not found'
+          });
+      }
+
+      const refundAmount = results2[0].refundAmount;
+
+      // Fetch refund details
+      const [refundDetails] = await db.promise().query(`
+          SELECT s.requestId, r.customerID, r.reason, c.username, u.email
+          FROM SalesManagerApprovesRefundReturn s
+          JOIN Returns r ON s.requestId = r.requestId
+          JOIN Customer c ON r.customerID = c.customerID
+          JOIN User u ON c.username = u.username
+          WHERE s.requestId = ?
+      `, [requestId]);
+
+      if (refundDetails.length === 0) {
+          return res.status(404).json({ msg: 'No refund details found for the given requestId' });
+      }
+
+      const refund = refundDetails[0];
+
+      // Fetch product image path
+      const imagePath = await getProductImagePath(results[0].productID);
+
+      // Read the image file
+      let imageBuffer = null;
+      if (imagePath) {
+          try {
+              imageBuffer = fs.readFileSync(imagePath);
+          } catch (err) {
+              console.error(`Error reading image file for product ID: ${results[0].productID}`, err);
+          }
+      }
+
+      const cid = `product${results[0].productID}@yourstore.com`;
+
+      const approvalDate = new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+      });
+
+      // Email content
+      let emailContent = `
+          <html>
+          <head>
+              <style>
+                  /* Ensure the email content is displayed in full */
+                  .full-content {
+                      display: block !important;
+                      max-height: none !important;
+                      overflow: visible !important;
+                  }
+              </style>
+          </head>
+          <body class="full-content">
+              <h1 style="color: #333;">Refund Approved</h1>
+              <h5 style="color: #333;">Your refund request has been approved. Here are the details:</h5>
+              <div style="font-family: Arial, sans-serif; line-height: 1.6; background-color: #dedede; padding: 15px; border-radius: 8px; border: 1px solid #666;">
+                  <div style="max-width: 600px; margin: 0 auto;">
+                      <table style="width: 100%; border-collapse: separate; border-spacing: 0; font-family: Arial, sans-serif; background-color: #dedede; margin-bottom: 15px; border-radius: 8px; border: 1px solid #f1f1f1;">
+                          <tr>
+                              <td style="width: 100px; min-width: 100px; padding: 15px; vertical-align: top;">
+                                  <div style="width: 100%; text-align: center;">
+                                      <img src="cid:${cid}" 
+                                           alt="Product Image" 
+                                           style="max-width: 100px; 
+                                                  width: 100%; 
+                                                  height: auto; 
+                                                  border-radius: 4px; 
+                                                  display: block; 
+                                                  margin: 0 auto;">
+                                  </div>
+                              </td>
+                              <td style="padding: 15px; vertical-align: top;">
+                                  <div style="min-width: 200px;">
+                                      <p style="margin: 2px 0; font-size: 13px; font-weight: bold; color: #666;">Request ID: ${refund.requestId}</p>
+                                      <p style="margin: 0 0 10px 0; font-size: 14px; font-style: italic; font-weight: bold; color: #333;">Refund Amount: $${refundAmount}</p>
+                                      <p style="margin: 5px 0; color: #666;">Refund Reason: ${refund.reason}</p>
+                                      <p style="margin: 5px 0; color: #666;">Approval Date: ${approvalDate}</p>
+                                  </div>
+                              </td>
+                          </tr>
+                      </table>
+                  </div>
+              </div>
+              <p style="font-size: 0.9em; color: #666;">Thank you for shopping with us.</p>
+          </body>
+          </html>
+      `;
+
+      const attachments = [];
+      if (imageBuffer) {
+          attachments.push({
+              filename: `${results[0].productID}.png`,
+              content: imageBuffer,
+              cid: cid
+          });
+      }
+
+      // Send email
+      await transporter.sendMail({
+          from: 'your-email@gmail.com', // Replace with your email
+          to: refund.email,
+          subject: 'Refund Approved',
+          html: emailContent,
+          attachments
+      });
+
+      console.log('Refund approval email sent successfully');
+      res.status(200).json({ msg: 'Refund approval email sent successfully' });
+  } catch (error) {
+      console.error('Error sending refund approval email:', error.message);
+      console.error('Error details:', error);
+      res.status(500).json({ msg: 'Error sending refund approval email' });
+  }
+};
+
+
 module.exports = {
   getAllReturns,
   getRequest,
@@ -384,5 +548,6 @@ module.exports = {
   authorizePayment,
   getCost,
   getCustomerRequests,
-  getRefundStatus
+  getRefundStatus,
+  sendRefundApprovalEmail
 }
