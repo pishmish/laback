@@ -51,6 +51,10 @@ router.put('/product/price/:id', authenticateToken, authenticateRole('salesManag
   return productController.updateProductPrice(req, res);
 });
 
+router.put('/product/discount/:id', authenticateToken, authenticateRole('salesManager'), (req, res) => {
+  return productController.updateProductDiscountPercentage(req, res);
+});
+
 router.delete('/product/:id', authenticateToken, authenticateRole(['salesManager', 'productManager']), (req, res) => {
   return productController.deleteProduct(req, res);
 });

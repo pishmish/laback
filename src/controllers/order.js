@@ -7,7 +7,6 @@ const getOrder = async (req, res) => {
     //get order details from Order table (without items)
     let sql = 'SELECT * FROM `Order` WHERE orderID = ?';
     const [results1, fields1] = await db.promise().query(sql, [id]);
-    console.log("Order details retrieved");
 
     //get order items
     let sql2 = 'SELECT * FROM `OrderOrderItemsProduct` WHERE orderID = ?';
@@ -272,9 +271,9 @@ const createOrder = async (req, res) => {
     let orderID = results4.insertId;
     for (let i = 0; i < cartItems.length; i++) {
       //Get current product Price
-      let sql6 = 'SELECT unitPrice FROM Product WHERE productID = ?';
+      let sql6 = 'SELECT unitPrice, discountPercentage FROM Product WHERE productID = ?';
       const [results6, fields6] = await db.promise().query(sql6, [cartItems[i].productID]);
-      let purchasePrice = results6[0].unitPrice;
+      let purchasePrice = results6[0].unitPrice * (1 - results6[0].discountPercentage/100);
 
       //Update current product stock
       let sql7 = 'UPDATE Product SET stock = stock - ? WHERE productID = ?';
