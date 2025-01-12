@@ -556,9 +556,9 @@ insert into `ProdManagerContactsCourier` (`deliveryAddressID`, `capacityPoints`,
 
 /* Customer Table */
 insert into `Customer` (`username`, `addressID`, `phone`, `taxID`) values 
-('guang', 1, 90689837852, NULL),
-('frankmiller', 2, 90457822013, NULL),
-('evegreen', 3, 90586735267, NULL);
+('guang', 1, 90689837852, 123),
+('frankmiller', 2, 90457822013, 234),
+('evegreen', 3, 90586735267, 345);
 
 
 
