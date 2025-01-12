@@ -88,9 +88,9 @@ VALUES ('BagMasters', 905551234567, 11);
 /*-- Products for Tote Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
 VALUES
-(0, 'Sahar Voyage', 75.99, 0, 10, 'A versatile tote for daily adventures.', 'Terre Nomade', 1, 'Canvas', 15.5, 12, 'SN-TB-S01', 85, 'Khaki'),
+(10, 'Sahar Voyage', 75.99, 0, 10, 'A versatile tote for daily adventures.', 'Terre Nomade', 1, 'Canvas', 15.5, 12, 'SN-TB-S01', 85, 'Khaki'),
 (40, 'Zad Pérégrin', 69.99, 0, 5, 'Stylish and functional for urban explorers.', 'Étoile du Voyage', 1, 'Leather', 13.0, 12, 'SN-TB-S02', 92, 'Black'),
-(30, 'Atlas Errant', 89.99, 0, 8, 'A spacious tote inspired by journeys.', 'Évasion', 1, 'Recycled Polyester', 16.2, 12, 'SN-TB-S03', 77, 'Navy');
+(0, 'Atlas Errant', 89.99, 0, 8, 'A spacious tote inspired by journeys.', 'Évasion', 1, 'Recycled Polyester', 16.2, 12, 'SN-TB-S03', 77, 'Navy');
 
 /*-- Products for Crossbody Bags */
 INSERT INTO Product (stock, name, unitPrice, overallRating, discountPercentage, description, brand, supplierID, material, capacityLitres, warrantyMonths, serialNumber, popularity, color)
@@ -513,7 +513,7 @@ insert into `User` (`name`, `email`, `username`, `password`) values
 ('Charlie Brown', 'charlie.sales@company.com', 'charliebrown', '$2b$12$B23U7bCQBQgH48XYdMXAw.mbKvbI/xPS2WrDc6fK3V74uxfXdMgWG'), /*password: CB123*/
 ('David Williams', 'david.sales@company.com', 'davidwilliams', '$2b$12$pTJ2KOQlyXFEJkcV8RnL6OlWVvl.xekWmt1GkZG29QIWJ6ZGvsvmq'), /*password: DW123*/
 
-('Eva Davis', 'eva.davis@gmail.com', 'evadavis', '$2b$12$Am60sgiHr6mu1BPfPpX5n.JqOUKsMGVsgocnXISyWsG/WeERalurW'), /*password: ED123*/
+('Guanghui', 'guanghui.ma@sabanciuniv.edu', 'guang', '$2b$12$toNVmS8LZn2OrEI5nS23x.lLBQmjK89s3mgTb0LnSszoN37y6uSrG'), /*password: guang*/
 ('Frank Miller', 'frank.miller@yahoo.com', 'frankmiller', '$2b$12$4ttyt.gmQi6Ov3sG4TbI2ulaeDfcA7PaudhIcVyNi/oNRQR0zKFky'), /*password: FM123*/
 ('Eve Green', 'eve.green@gmail.com', 'evegreen', '$2b$12$4Awi28tlIbNQ2nt15DDAZ.WJdxHPGXpaS7X6Z/1Lxm5ojBQxK2LYO'); /*password: EG123*/
 
@@ -556,7 +556,7 @@ insert into `ProdManagerContactsCourier` (`deliveryAddressID`, `capacityPoints`,
 
 /* Customer Table */
 insert into `Customer` (`username`, `addressID`, `phone`, `taxID`) values 
-('evadavis', 1, 90689837852, NULL),
+('guang', 1, 90689837852, NULL),
 ('frankmiller', 2, 90457822013, NULL),
 ('evegreen', 3, 90586735267, NULL);
 
@@ -724,8 +724,10 @@ INSERT INTO `Order` (`orderNumber`, `totalPrice`, `deliveryID`, `deliveryStatus`
 (1067, 170.99, 123167, 'Delivered', 4, '2024-12-01', 1, 1, '2024-11-15 15:10:00'),
 (1068, 99.98, 324267, 'Delivered', 5, '2024-12-10', 2, 2, '2024-11-25 17:00:00'),
 (1069, 184.98, 123168, 'Delivered', 4, '2024-12-15', 1, 1, '2024-12-01 12:00:00'),
-(1070, 229.99, 324268, 'Shipped', 5, '2024-12-20', 2, 2, '2024-12-05 14:45:00'),
-(1071, 170.99, 123169, 'Processing', 4, '2025-01-01', 1, 1, '2024-12-15 09:30:00');
+(1070, 229.99, 324268, 'In-transit', 5, '2024-12-20', 2, 2, '2024-12-05 14:45:00'),
+(1071, 65.99, 123169, 'Delivered', 4, '2025-01-01', 1, 1, '2024-12-15 09:30:00'),
+(1072, 76.70, 123170, 'In-transit', 4, '2025-01-01', 1, 1, '2024-12-16 09:31:00'),
+(1077, 67.05, 123171, 'Processing', 4, '2025-01-01', 1, 1, '2024-12-17 09:32:00');
 
 
 
@@ -890,7 +892,9 @@ INSERT INTO `OrderOrderItemsProduct` (`orderID`, `productID`, `quantity`, `purch
 (70, 34, 1, 99.99),
 (70, 45, 1, 130.00),
 (71, 51, 1, 105.00),
-(71, 7, 1, 65.99);
+(71, 7, 1, 65.99),
+(72, 12, 1, 76.70),
+(73, 13, 1, 67.05);
 
 
 
