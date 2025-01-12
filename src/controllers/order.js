@@ -225,6 +225,7 @@ const createOrder = async (req, res) => {
   try{
     //Assumes the billing information has been added and the payment is done already.
 
+    await db.promise().query('START TRANSACTION');
     //add address to address table
     if (!validateAddress(req.body.address)) {
       res.status(400).json({msg: "Invalid address"});
@@ -256,6 +257,21 @@ const createOrder = async (req, res) => {
     let sql3 = 'SELECT * FROM CartContainsProduct WHERE cartID = ?';
     const [results3, fields3] = await db.promise().query(sql3, [cartID]);
     cartItems = results3;
+
+    // Check stock availability
+    for (let item of cartItems) {
+      const [stockResult] = await db.promise().query(
+        'SELECT stock FROM Product WHERE productID = ? FOR UPDATE',
+        [item.productID]
+      );
+      
+      if (!stockResult[0] || stockResult[0].stock < item.quantity) {
+        await db.promise().query('ROLLBACK');
+        return res.status(400).json({
+          msg: "Insufficient stock for one or more items in your cart"
+        });
+      }
+    }
 
     //create order
     let orderNumber = Math.floor(Math.random() * 1000000000);
@@ -290,11 +306,14 @@ const createOrder = async (req, res) => {
     const [results8, fields8] = await db.promise().query(sql8, [cartID]);
     //console.log("Cart deleted");
 
-    //console.log("Order created");
+    await db.promise().query('COMMIT');
     res.status(200).json({
       msg: "Order created",
-      orderID: orderID});
+      orderID: orderID
+    });
+
   } catch (err) {
+    await db.promise().query('ROLLBACK');
     console.log(err);
     res.status(500).json({msg: "Error creating order"});
   }
