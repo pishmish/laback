@@ -59,4 +59,8 @@ router.get('/request/customer/:username', authenticateToken, (req, res) => {
     return returnsController.getCustomerRequests(req, res);
 });
 
+router.post('/request/:requestId/sendRefundNotifMail', (req, res) => {
+    return returnsController.sendRefundApprovalEmail(req, res);
+});
+
 module.exports = router;
