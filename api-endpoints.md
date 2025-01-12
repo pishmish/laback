@@ -99,6 +99,7 @@ analytics
   GET /sales/category/:categoryid/quarterly
   GET /sales/category/:categoryid/yearly
   GET /sales/category/:categoryid/comparison
+  GET /sales/getprofitloss/:period
   GET /salesByProvince
   GET /salesByCity
   GET /salesByCountry
